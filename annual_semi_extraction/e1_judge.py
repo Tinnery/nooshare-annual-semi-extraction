@@ -173,12 +173,14 @@ class E1Judge:
         # 解析适用版本
         version = self.resolve_version(period, disclosure_date)
         standard = version["standard"]
-        version_str = version["version"]
+        document_no = version["document_no"]
         effective_from = version["effective_from"]
         
         # 获取法定必披章节
         # 使用 original_file 字段构建 key（如 "no2_2016_31"）
-        legal_key = version["original_file"].replace(".pdf", "")
+        # original_file 格式为 "regulatory_texts/no2_2016_31.pdf"
+        original_file = version["original_file"]
+        legal_key = Path(original_file).stem  # 去掉路径和后缀
         legal_info = self.legal_chapters["chapters"].get(legal_key)
         if legal_info is None:
             raise ValueError(f"未找到法定章节清单：{legal_key}")
@@ -239,7 +241,7 @@ class E1Judge:
         return ChapterCompliance(
             report_id=report_id,
             standard=standard,
-            version=version_str,
+            version=document_no,
             effective_from=effective_from,
             required_chapters=required_order,
             disclosed_chapters=disclosed_chapters,

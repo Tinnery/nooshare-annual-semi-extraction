@@ -49,28 +49,26 @@ class SpecLoader:
                 return anchor
         raise ValueError(f"未找到锚: {anchor_id}")
     
-    def get_regulatory_version(self, standard: str, version: str) -> dict[str, Any]:
+    def get_regulatory_version(self, standard: str, document_no: str) -> dict[str, Any]:
         """获取指定法规版本的信息。
         
         Args:
             standard: "第2号" 或 "第3号"
-            version: 如 "〔2025〕3号"
+            document_no: 如 "证监会公告〔2025〕3号"
         """
         versions = self.load_regulatory_versions()
         for v in versions["versions"]:
-            if v["standard"] == standard and v["version"] == version:
+            if v["standard"] == standard and v["document_no"] == document_no:
                 return v
-        raise ValueError(f"未找到法规版本: {standard} {version}")
+        raise ValueError(f"未找到法规版本: {standard} {document_no}")
     
-    def get_legal_chapters(self, standard: str, version: str) -> dict[str, Any]:
+    def get_legal_chapters(self, legal_key: str) -> dict[str, Any]:
         """获取指定法规版本的法定章节清单。
         
         Args:
-            standard: "第2号" 或 "第3号"
-            version: 如 "〔2025〕3号"
+            legal_key: 法规版本键，如 "no2_2025_3"（对应 regulatory_versions.json 中的 original_file 字段去掉路径和后缀）
         """
         chapters = self.load_legal_chapters()
-        key = f"{standard}_{version}"
-        if key not in chapters["chapters"]:
-            raise ValueError(f"未找到法定章节清单: {key}")
-        return chapters["chapters"][key]
+        if legal_key not in chapters["chapters"]:
+            raise ValueError(f"未找到法定章节清单: {legal_key}")
+        return chapters["chapters"][legal_key]
