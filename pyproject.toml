@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nooshare-annual-semi-extraction"
+version = "0.1.0"
+description = "A-share annual/semi-annual report MD content extraction & feature matrix production. Downstream of nooshare-annual-semi."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "boto3>=1.34.0",            # RustFS S3 GET（取上游交付的 MD）
+    "psycopg2-binary>=2.9.0",   # 读上游交付表 reconciled_report
+    "python-dotenv>=1.0.0",
+    "typer>=0.12.0",            # CLI
+    "pandas>=2.0.0",            # 特征矩阵 / 表格 DataFrame
+    "jieba>=0.42.1",            # 中文分词（R'2 句子级 + R'3 词典）
+]
+
+[project.scripts]
+nooshare-annual-semi-extraction = "annual_semi_extraction.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["annual_semi_extraction"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
