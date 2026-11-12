@@ -1,6 +1,16 @@
 """CLI 入口（骨架，按 R'0-R'9 逐步填充）。"""
 
+import logging
+
 import typer
+
+from annual_semi_extraction.config import LOG_LEVEL
+
+logging.basicConfig(
+    level=LOG_LEVEL,
+    format="%(levelname)s: %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 app = typer.Typer(help="A 股年报/半年报 MD 内容抽取与特征矩阵生产。")
 

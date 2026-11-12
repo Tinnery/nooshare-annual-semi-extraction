@@ -1,9 +1,28 @@
+# UV & Virtual Env
 .venv/
+
+# Python Bytecode
 __pycache__/
-*.pyc
+*.py[cod]
+
+# Env Files
 .env
-*.egg-info/
+.env.*
+
+# Test Artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build & Distribution
 dist/
 build/
-.pytest_cache/
+*.egg-info/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+
+# DVC (data version control)
 .dvc/
