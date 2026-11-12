@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REQ = ROOT / "deliverables" / "01-requirement.md"
 ANCHORS = ROOT / "annual_semi_extraction" / "spec" / "anchors.json"
 VERSIONS = ROOT / "annual_semi_extraction" / "spec" / "regulatory_versions.json"
+LEGAL_CHAPTERS = ROOT / "annual_semi_extraction" / "spec" / "legal_chapters.json"
 PYPROJECT = ROOT / "pyproject.toml"
 
 
@@ -36,6 +37,7 @@ def test_registry_pins_match_actual_files():
     req_text = REQ.read_text(encoding="utf-8")
     assert _pin("ANCHOR_REGISTRY_SHA256", req_text) == _sha256(ANCHORS)
     assert _pin("REGULATORY_VERSIONS_SHA256", req_text) == _sha256(VERSIONS)
+    assert _pin("LEGAL_CHAPTERS_SHA256", req_text) == _sha256(LEGAL_CHAPTERS)
 
 
 def test_anchors_are_exactly_e1_e6_with_qualified_identity():

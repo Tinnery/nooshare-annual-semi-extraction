@@ -30,8 +30,9 @@
 **注册表 sha256 登记**（由 `tests/test_spec.py` 校验；任一注册表变更未同步本处即测试失败，强制走变更流程）：
 
 ```
-ANCHOR_REGISTRY_SHA256 = 6ad7c84288fcf2c003293bf57f0e545e2b4aeca6e429f4b39864fe741f49ee12
+ANCHOR_REGISTRY_SHA256 = 3f9da983d3eed2b25a4caf2a4d88e55e42c2aae7df048fe0b89e3070827a2b64
 REGULATORY_VERSIONS_SHA256 = 9a47dad3780b158eea103cc023b5fce36c6396ca1d571e3f29f84378d5c2e7ac
+LEGAL_CHAPTERS_SHA256 = 6ed45254219cf9867bf18cc7edf3602db2547d11f404667fb86fa06cdd601a6f
 ```
 
 **仍未决、禁止 Agent 自行裁决**：
