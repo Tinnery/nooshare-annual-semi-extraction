@@ -50,7 +50,7 @@
       "failure_taxonomy": ["法规版本选错", "年报/半年报准则串用", "NOT_APPLICABLE 误报为缺失", "EXTRACTION_FAILURE 伪装成未披露", "标题误升格"],
       "bound_requirements": ["R'1"],
       "phase": 1,
-      "blocked_until": "法规原文 PDF 采集并登记 sha256 之前，本判定程序不得运行"
+      "blocked_until": "regulatory_versions.json 的 applicability_rule_status 仍为 UNRESOLVED（reg_version 自变量按披露日还是报告期末未裁决）。原文 PDF 已采集并登记 sha256（2026-11-13），但适用规则未定前本判定程序不得运行"
     },
     {
       "id": "E2",

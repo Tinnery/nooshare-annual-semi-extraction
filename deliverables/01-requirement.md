@@ -30,15 +30,15 @@
 **注册表 sha256 登记**（由 `tests/test_spec.py` 校验；任一注册表变更未同步本处即测试失败，强制走变更流程）：
 
 ```
-ANCHOR_REGISTRY_SHA256 = b371fec89750d8660a47f584e50f727030144e0b6c196e8d378832096c99b71b
-REGULATORY_VERSIONS_SHA256 = d18c3e8b538829ef904422e81a879f4c0775ecc4295a0733e69ea61df3e2b108
+ANCHOR_REGISTRY_SHA256 = 6ad7c84288fcf2c003293bf57f0e545e2b4aeca6e429f4b39864fe741f49ee12
+REGULATORY_VERSIONS_SHA256 = 9a47dad3780b158eea103cc023b5fce36c6396ca1d571e3f29f84378d5c2e7ac
 ```
 
 **仍未决、禁止 Agent 自行裁决**：
 
 1. `reg_version` 自变量按**披露日**还是**报告期末** —— solution-architect 裁决；未裁决前 E1 判定程序不得运行。
-2. 法规原文 PDF 尚未采集，`original_sha256` 全为 `null`（`PENDING_ACQUISITION`）；禁止臆造，采集后须同步版本表并重跑 E1。
-3. 第3号 2025 修订版**文号与发布日期未核实**（`PENDING_VERIFICATION`），只确认了施行日与废止关系。
+2. ~~法规原文 PDF 尚未采集~~ **已解除**（2026-11-13）：5 份 PDF 已从证监会官网下载并登记 sha256，存放于 `annual_semi_extraction/spec/regulatory_texts/`。
+3. ~~第3号 2025 修订版文号未核实~~ **已解除**（2026-11-13）：文号为**证监会公告〔2025〕4号**，发布日 2025-03-21，施行日 2025-07-01。
 4. 源 HTML / trash 快照 / `sina_bulletin.db` **未授权**纳入取数契约；若需纳入，须 Human Gate 批准并变更本节与 R'0。
 
 ---

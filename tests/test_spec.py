@@ -100,14 +100,18 @@ def test_regulatory_timeline_ordered_and_no_fabricated_hash():
     versions = _json(VERSIONS)
     # 适用规则未裁决前 E1 不得运行；防止有人悄悄把 UNRESOLVED 改成已定。
     assert versions["applicability_rule_status"] == "UNRESOLVED"
-    assert versions["acquisition_status"] == "PENDING_ACQUISITION"
+    # 法规原文已采集并登记 sha256
+    assert versions["acquisition_status"] == "COMPLETED"
     by_standard = {}
     for version in versions["versions"]:
         by_standard.setdefault(version["standard"], []).append(version)
-        # 法规原文未采集，禁止臆造 sha；未核实的文号必须带 status 说明。
-        assert version["original_sha256"] is None
-        if version["document_no"] is None:
-            assert "PENDING_VERIFICATION" in version["document_no_status"]
+        # 法规原文已采集，sha256 必须非空且为 64 位十六进制
+        assert version["original_sha256"] is not None
+        assert len(version["original_sha256"]) == 64
+        assert all(c in "0123456789abcdef" for c in version["original_sha256"])
+        # 原文文件必须存在
+        original_file = ROOT / "annual_semi_extraction" / "spec" / version["original_file"]
+        assert original_file.exists(), f"原文文件不存在：{version['original_file']}"
     assert set(by_standard) == {"第2号", "第3号"}
     for standard, rows in by_standard.items():
         dates = [r["effective_from"] for r in rows]
@@ -118,9 +122,16 @@ def test_regulatory_timeline_ordered_and_no_fabricated_hash():
 
 def test_unresolved_gates_are_explicit():
     req_text = REQ.read_text(encoding="utf-8")
-    for marker in ("未裁决前 E1 判定程序不得运行", "PENDING_ACQUISITION",
-                   "PENDING_VERIFICATION", "Human Gate"):
-        assert marker in req_text, f"未决项未显式标注：{marker}"
+    # 适用规则未裁决前 E1 不得运行
+    assert "未裁决前 E1 判定程序不得运行" in req_text
+    # 法规原文已采集并登记 sha256（2026-11-13 解除）
+    assert "已解除" in req_text
+    assert "5 份 PDF 已从证监会官网下载并登记 sha256" in req_text
+    # 第3号 2025 版文号已核实（2026-11-13 解除）
+    assert "证监会公告〔2025〕4号" in req_text
+    # 源 HTML/trash 仍未授权
+    assert "未授权" in req_text
+    assert "Human Gate" in req_text
 
 
 def test_consumer_contract_declares_zero_consumers():
