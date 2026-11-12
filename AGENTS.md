@@ -2,7 +2,9 @@
 
 ## 铁律
 
-1. **spec-driven**：所有实现以 `deliverables/01-requirement.md` 的 R'0-R'9 为唯一权威。每个 R 绑外部客观标准（E1-E6），做完了对得上锚才算数，做不上即 fail——不允许"做出来了"就交付。
+1. **spec-driven**：所有实现以 `deliverables/01-requirement.md`（v2）的 R'0-R'9 为唯一权威。每个 R 绑外部客观标准（E1-E6），做完了对得上锚才算数，做不上即 fail——不允许"做出来了"就交付。
+   - 锚身份注册表 `annual_semi_extraction/spec/anchors.json`、法规版本表 `annual_semi_extraction/spec/regulatory_versions.json`；两者 sha256 登记在 01 §〇，由 `tests/test_spec.py` 校验，改动未同步即测试失败。
+   - `deliverables/02`、`03`、`04` 为执行参考 / 归档，**非需求权威**；其 R'' / R''' 编号与另一套 E1-E6 语义已作废。
 2. **取数边界**：只走 PG 交付表 + RustFS GET，禁止直连 /backup。
 3. **可复现**：特征矩阵带四元 hash 锚（输入 sha set + 词典版本 + 分词器版本 + 管线 commit）；同输入同版本 byte-identical 重跑可证（E4）。
 4. **简洁为荣**：禁止重复实现、过度封装；优先复用上游 nooshare-annual-semi 已有能力（SlotKey/slot_key 等公共类型）。

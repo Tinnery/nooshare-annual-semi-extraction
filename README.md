@@ -43,4 +43,12 @@ CLI (Typer) → Tasks → Units (chapter / sentence / sentiment / table / forwar
 
 ## 冻结需求
 
-`deliverables/01-requirement.md` —— R'0-R'9 + 6 个外部客观标准，本 repo 的唯一需求权威。
+`deliverables/01-requirement.md`（v2）—— R'0-R'9 + 6 个外部客观标准，本 repo 的**唯一需求权威**。
+
+规格登记表（机器可读，sha256 锚定、测试校验）：
+
+- `annual_semi_extraction/spec/anchors.json` —— E1-E6 锚身份、判定程序、失败分类、授权/禁止数据源
+- `annual_semi_extraction/spec/regulatory_versions.json` —— 年报第2号 / 半年报第3号版本时间轴
+- `deliverables/05-consumer-contract.md` —— 消费者与维护规则契约
+
+`deliverables/02`、`03`、`04` 为执行参考 / 变更归档，**非需求权威**；其中 R'' / R''' 编号、另一套 E1-E6 语义、Phase 1 结构丢失诊断、源 HTML / trash 恢复条款均已由 01 v2 §四裁定作废。

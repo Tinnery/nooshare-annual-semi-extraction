@@ -1,9 +1,14 @@
 # Framing & Chunks 深度需求重写
 
 > Date: 2026-11-13
-> Status: Draft — 等待用户确认
-> Authority: deliverables/02-framing-deep-requirements.md
-> Supersedes: ashare-project 工程契约 frame-v2.md + frame-generation-model.md（视角更深，不直接取代其规范效力）
+> **Status: 执行参考（非需求权威）— 2026-11-13 由 01 v2 §七收敛**
+> **Authority: 无。唯一需求权威为 `deliverables/01-requirement.md`（v2）。**
+>
+> 本文件中的 **R''0-R''9 编号与另一套 E1-E6 语义已作废**，不得作为验收依据：
+> Recall@10 / cell-level 人工准确率 / Cohen's κ / 引用覆盖率 / 多粒度提升 10% 均不属本 repo 验收（01 v2 §2.3）。
+> "从源 HTML 重建结构"（R''1）依 01 v2 §四未获取数授权；"frame_text ≡ source[start:end] 从未被验证"与
+> `f0-statistics.md:134-147`（源保真 8/8 PASS）不符；"Provenance chain"与 `frame-v2.md` 既有字段重复。
+> 诊断、工具清单可继续参考；任何验收、门禁、取数路径一律以 01 v2 为准。
 
 ---
 

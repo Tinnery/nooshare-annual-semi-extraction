@@ -1,10 +1,14 @@
 # Framing & Chunks 落地策略与执行手册
 
 > Date: 2026-11-13
-> Status: Draft — 等待用户确认
-> Authority: deliverables/03-framing-execution-plan.md
-> Depends on: deliverables/02-framing-deep-requirements.md (R''0-R''9 + E1-E6)
-> 原则: **更深，不是更大**——每一步有硬门禁、可测量的产出、明确的前置依赖
+> **Status: 历史执行草案（非需求权威）— 2026-11-13 由 01 v2 §七收敛**
+> **Authority: 无。唯一需求权威为 `deliverables/01-requirement.md`（v2）。**
+>
+> 作废条款：R'''0-R'''7 编号、9 阶段关键路径与 29-49 天估算、**Phase 1 结构丢失诊断实验**、
+> `source/html/sina|cfi` / ninefzt / `.trash_20261109` / `sina_bulletin.db` 的取数与 trash 恢复写入、
+> ollama / qdrant / spacy / sentence-transformers / networkx 主链路。
+> 依据：01 v2 §四（取数边界裁定，实然不证应然）、§五（停止规则）、§2.3（E1-E6 判定程序）。
+> 本文件保留为执行思路的历史记录，**不得据此启动任何 Phase**。
 
 ---
 
