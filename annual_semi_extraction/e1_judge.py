@@ -177,12 +177,15 @@ class E1Judge:
         effective_from = version["effective_from"]
         
         # 获取法定必披章节
-        legal_key = f"{standard}_{version_str}"
+        # 使用 original_file 字段构建 key（如 "no2_2016_31"）
+        legal_key = version["original_file"].replace(".pdf", "")
         legal_info = self.legal_chapters["chapters"].get(legal_key)
         if legal_info is None:
             raise ValueError(f"未找到法定章节清单：{legal_key}")
         
         sections = legal_info["sections"]
+        
+        # 分类：always required vs conditional
         required_sections = [s for s in sections if s["required"] == "always"]
         conditional_sections = [s for s in sections if s["required"] == "conditional"]
         
@@ -194,22 +197,24 @@ class E1Judge:
         disclosed_set = set(disclosed_chapters)
         
         for section in required_sections:
-            section_title = f"{section['marker']} {section['name']}"
-            if section_title in disclosed_set:
+            # 构建章节标题（如 "第一节 重要提示"）
+            chapter_title = f"{section['marker']} {section['name']}"
+            
+            if chapter_title in disclosed_set:
                 # 已披露
                 pass
             else:
                 # 检查是否为抽取失败（如章节标题格式异常导致未识别）
                 # TODO: 实现抽取失败判定（如检查原文是否存在疑似章节标记）
                 # 当前简化处理：视为 NOT_DISCLOSED
-                missing.append(section_title)
+                missing.append(chapter_title)
         
         for section in conditional_sections:
-            section_title = f"{section['marker']} {section['name']}"
             # 条件必披章节：根据条件判断是否适用
             # TODO: 实现条件判定逻辑（如"是否含优先股"）
             # 当前简化处理：视为 NOT_APPLICABLE
-            not_applicable.append(section_title)
+            chapter_title = f"{section['marker']} {section['name']}"
+            not_applicable.append(chapter_title)
         
         # 顺序检查
         order_violations = []
