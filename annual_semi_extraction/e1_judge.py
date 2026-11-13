@@ -8,10 +8,11 @@ E1 外部客观标准 = 章节完备性 = §2 号准则当年版本
 失败归类：版本选错 / 准则串用 / 三态混计 / 标题误升格
 
 本模块实现 E1 判定程序的代码框架。
-前提条件：reg_version 适用规则须由 Human Gate 裁决（披露日 vs 报告期末）。
+前提条件：reg_version 适用规则已于 2026-11-13 由 Human Gate 裁决为 by_period_end。
 """
 
 import json
+import re
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -61,8 +62,128 @@ class ChapterCompliance:
         applicable = [c for c in self.required_chapters if c not in self.not_applicable]
         if not applicable:
             return 1.0
-        disclosed = [c for c in applicable if c in self.disclosed_chapters]
+        disclosed = [c for c in applicable if self._is_disclosed(c)]
         return len(disclosed) / len(applicable)
+    
+    def _is_disclosed(self, required: str) -> bool:
+        """检查法定章节是否已披露（支持模糊匹配 + 拆分匹配）。"""
+        # 先尝试单章节匹配
+        for disclosed in self.disclosed_chapters:
+            if self._matches(required, disclosed):
+                return True
+        # 再尝试拆分匹配（法定章节被拆分成多个实际章节）
+        if self._matches_split(required, self.disclosed_chapters):
+            return True
+        return False
+    
+    @staticmethod
+    def _matches(required: str, disclosed: str) -> bool:
+        """检查披露章节是否匹配法定章节（模糊匹配）。
+        
+        匹配规则：
+        1. 完全相等
+        2. 章节标记可以互换（"第X章" 和 "第X节" 在某些情况下等价）
+        3. 披露章节包含法定章节的关键词（如 "第一节 公司简介" 匹配 "第一节 公司简介和主要财务指标"）
+        4. 法定章节名称是披露章节的子串（如 "重要提示" 在 "重要提示、目录和释义" 中）
+        5. 标题措辞差异（如 "与" vs "和"）
+        6. 拆分匹配：法定章节被拆分成多个实际章节（如 "公司简介和主要财务指标" 被拆成 "公司简介" + "会计数据和财务指标"）
+        """
+        # 完全相等
+        if required == disclosed:
+            return True
+        
+        # 提取 marker 和 name
+        req_parts = required.split(" ", 1)
+        disc_parts = disclosed.split(" ", 1)
+        
+        if len(req_parts) == 2 and len(disc_parts) == 2:
+            req_marker, req_name = req_parts
+            disc_marker, disc_name = disc_parts
+            
+            # 检查 marker 是否匹配（允许"章"和"节"互换）
+            marker_matches = (
+                req_marker == disc_marker or
+                (req_marker.replace("章", "节") == disc_marker.replace("章", "节"))
+            )
+            
+            if marker_matches:
+                # 标准化标题（替换"与"为"和"，去除多余空格）
+                req_name_norm = req_name.replace("与", "和").replace("  ", " ").strip()
+                disc_name_norm = disc_name.replace("与", "和").replace("  ", " ").strip()
+                
+                # name 互相包含即可
+                if req_name_norm in disc_name_norm or disc_name_norm in req_name_norm:
+                    return True
+                
+                # 提取关键词进行匹配
+                req_keywords = set(req_name_norm)
+                disc_keywords = set(disc_name_norm)
+                # 如果关键词重叠度超过 70%，认为匹配
+                if len(req_keywords) > 0 and len(disc_keywords) > 0:
+                    overlap = len(req_keywords & disc_keywords)
+                    similarity = overlap / max(len(req_keywords), len(disc_keywords))
+                    if similarity > 0.7:
+                        return True
+        
+        # 子串匹配（兜底）
+        if required in disclosed or disclosed in required:
+            return True
+        
+        return False
+    
+    @staticmethod
+    def _matches_split(required: str, disclosed_list: list[str]) -> bool:
+        """检查法定章节是否被拆分成多个实际章节。
+        
+        例如：法定章节 "第二节 公司简介和主要财务指标" 可能被拆分成：
+        - "第一章  公司简介"
+        - "第二章  会计数据和财务指标"
+        
+        匹配逻辑：
+        1. 提取法定章节的关键词（如 "公司简介", "财务指标"）
+        2. 检查这些关键词是否分散在多个实际章节中（不要求 marker 匹配，因为拆分后编号可能不同）
+        3. 如果关键词覆盖率超过阈值，认为匹配
+        """
+        # 提取 marker 和 name
+        req_parts = required.split(" ", 1)
+        if len(req_parts) != 2:
+            return False
+        
+        req_marker, req_name = req_parts
+        req_name_norm = req_name.replace("与", "和").replace("  ", " ").strip()
+        
+        # 提取关键词（按"和"、"及"、"、"分割）
+        keywords = []
+        for sep in ["和", "及", "、"]:
+            if sep in req_name_norm:
+                keywords = [k.strip() for k in req_name_norm.split(sep)]
+                break
+        
+        if not keywords:
+            # 没有分隔符，无法判断拆分
+            return False
+        
+        # 过滤空关键词
+        keywords = [k for k in keywords if k]
+        if not keywords:
+            return False
+        
+        # 检查每个关键词是否在实际章节中出现（不要求 marker 匹配）
+        matched_keywords = set()
+        for keyword in keywords:
+            for disclosed in disclosed_list:
+                disc_parts = disclosed.split(" ", 1)
+                if len(disc_parts) == 2:
+                    disc_marker, disc_name = disc_parts
+                    disc_name_norm = disc_name.replace("与", "和").replace("  ", " ").strip()
+                    
+                    # 关键词匹配（不检查 marker，因为拆分后编号可能不同）
+                    if keyword in disc_name_norm:
+                        matched_keywords.add(keyword)
+                        break
+        
+        # 如果关键词覆盖率超过 50%，认为匹配
+        return len(matched_keywords) >= len(keywords) * 0.5
 
 
 class E1Judge:
@@ -76,7 +197,7 @@ class E1Judge:
         - 法规原文已采集并登记 sha256（已完成）
         - 章节结构已提取（已完成）
         - 法定必披章节清单已构建（已完成）
-        - reg_version 适用规则已裁决（待 Human Gate）
+        - reg_version 适用规则已裁决（by_period_end，2026-11-13 Human Gate）
     """
     
     def __init__(self, spec_loader: SpecLoader):
@@ -94,11 +215,18 @@ class E1Judge:
         else:
             self._applicability_resolved = True
     
-    def resolve_version(self, period: int, disclosure_date: str) -> dict:
-        """根据期间和披露日确定适用法规版本。
+    def resolve_version(self, period: int, report_year: int, disclosure_date: str = None) -> dict:
+        """根据期间和报告年份确定适用法规版本。
         
         前提：applicability_rule 已裁决。
-        当前 applicability_rule_status = "UNRESOLVED"，此方法不得调用。
+        
+        Args:
+            period: 报告期间（2=半年报，4=年报）
+            report_year: 报告年份（如 2024 表示 2024 年年报或 2024 年半年报）
+            disclosure_date: 披露日期（YYYY-MM-DD），仅 by_disclosure_date 模式需要
+        
+        Returns:
+            适用的法规版本字典
         """
         if not self._applicability_resolved:
             raise RuntimeError(
@@ -121,18 +249,19 @@ class E1Judge:
             if v["standard"] == standard
         ]
         
-        # 按施行日排序，找到披露日时有效的版本
+        # 按施行日排序
         versions.sort(key=lambda v: v["effective_from"])
         
         if rule == "by_disclosure_date":
+            if disclosure_date is None:
+                raise ValueError("by_disclosure_date 模式必须提供 disclosure_date")
             effective_date = disclosure_date
         elif rule == "by_period_end":
             # 报告期末：period=4 → "YYYY-12-31"；period=2 → "YYYY-06-30"
-            year = int(disclosure_date[:4])
             if period == 4:
-                effective_date = f"{year}-12-31"
+                effective_date = f"{report_year}-12-31"
             else:
-                effective_date = f"{year}-06-30"
+                effective_date = f"{report_year}-06-30"
         else:
             raise ValueError(f"未知的适用规则: {rule}")
         
@@ -146,8 +275,8 @@ class E1Judge:
         
         if applicable is None:
             raise ValueError(
-                f"无法确定适用版本：period={period}, disclosure_date={disclosure_date}, "
-                f"effective_date={effective_date}"
+                f"无法确定适用版本：period={period}, report_year={report_year}, "
+                f"disclosure_date={disclosure_date}, effective_date={effective_date}"
             )
         
         return applicable
@@ -156,22 +285,37 @@ class E1Judge:
         self,
         report_id: str,
         period: int,
-        disclosure_date: str,
+        report_year: int,
         disclosed_chapters: list[str],
+        disclosure_date: str = None,
     ) -> ChapterCompliance:
         """判定单份报告的章节完备性。
         
         Args:
             report_id: 报告唯一标识（如 "000001_2023_4"）
             period: 报告期间（2=半年报，4=年报）
-            disclosure_date: 披露日期（YYYY-MM-DD）
+            report_year: 报告年份（如 2023 表示 2023 年年报或 2023 年半年报）
             disclosed_chapters: 实际披露的一级章节标题列表（按顺序）
+            disclosure_date: 披露日期（YYYY-MM-DD），仅 by_disclosure_date 模式需要
         
         Returns:
             ChapterCompliance 对象，包含三态分类与合规判定
         """
+        # 复用上游 slot_key 契约校验 report_id，防止串报告（铁律 4）。
+        # 上游不在 sys.path 时（如独立打包运行）跳过格式校验，不引入强依赖。
+        try:
+            from annual_semi.completeness import parse_slot_key
+            code, parsed_year, parsed_period = parse_slot_key(report_id)
+            if parsed_year != report_year or parsed_period != period:
+                raise ValueError(
+                    f"report_id 与 period/report_year 不一致: {report_id} "
+                    f"(period={period}, report_year={report_year})"
+                )
+        except ImportError:
+            pass
+
         # 解析适用版本
-        version = self.resolve_version(period, disclosure_date)
+        version = self.resolve_version(period, report_year, disclosure_date)
         standard = version["standard"]
         document_no = version["document_no"]
         effective_from = version["effective_from"]
@@ -196,13 +340,23 @@ class E1Judge:
         not_applicable = []
         extraction_failures = []
         
-        disclosed_set = set(disclosed_chapters)
+        # 使用模糊匹配函数（支持单章节匹配 + 拆分匹配）
+        def is_disclosed(required_title: str) -> bool:
+            """检查法定章节是否已披露（支持模糊匹配和拆分匹配）。"""
+            # 先尝试单章节匹配
+            for disclosed in disclosed_chapters:
+                if ChapterCompliance._matches(required_title, disclosed):
+                    return True
+            # 再尝试拆分匹配（法定章节被拆分成多个实际章节）
+            if ChapterCompliance._matches_split(required_title, disclosed_chapters):
+                return True
+            return False
         
         for section in required_sections:
             # 构建章节标题（如 "第一节 重要提示"）
             chapter_title = f"{section['marker']} {section['name']}"
             
-            if chapter_title in disclosed_set:
+            if is_disclosed(chapter_title):
                 # 已披露
                 pass
             else:
@@ -218,25 +372,45 @@ class E1Judge:
             chapter_title = f"{section['marker']} {section['name']}"
             not_applicable.append(chapter_title)
         
-        # 顺序检查
+        # 顺序检查（使用模糊匹配）
         order_violations = []
         required_order = [f"{s['marker']} {s['name']}" for s in required_sections]
-        disclosed_required = [c for c in disclosed_chapters if c in required_order]
         
-        for i in range(len(disclosed_required) - 1):
-            curr = disclosed_required[i]
-            next_ = disclosed_required[i + 1]
-            curr_idx = required_order.index(curr)
-            next_idx = required_order.index(next_)
-            if curr_idx > next_idx:
-                order_violations.append((curr, next_))
+        # 构建披露章节与法定章节的映射
+        disclosed_to_required = {}
+        for disc in disclosed_chapters:
+            for req in required_order:
+                if ChapterCompliance._matches(req, disc):
+                    disclosed_to_required[disc] = req
+                    break
         
-        # 多余章节检查
-        all_legal_titles = [f"{s['marker']} {s['name']}" for s in sections]
-        extra_chapters = [
-            c for c in disclosed_chapters
-            if c not in all_legal_titles
+        # 按披露顺序检查法定章节顺序
+        disclosed_required_in_order = [
+            disclosed_to_required[disc] 
+            for disc in disclosed_chapters 
+            if disc in disclosed_to_required
         ]
+        
+        for i in range(len(disclosed_required_in_order) - 1):
+            curr = disclosed_required_in_order[i]
+            next_ = disclosed_required_in_order[i + 1]
+            if curr in required_order and next_ in required_order:
+                curr_idx = required_order.index(curr)
+                next_idx = required_order.index(next_)
+                if curr_idx > next_idx:
+                    order_violations.append((curr, next_))
+        
+        # 多余章节检查（使用模糊匹配）
+        all_legal_titles = [f"{s['marker']} {s['name']}" for s in sections]
+        extra_chapters = []
+        for disc in disclosed_chapters:
+            is_extra = True
+            for legal in all_legal_titles:
+                if ChapterCompliance._matches(legal, disc):
+                    is_extra = False
+                    break
+            if is_extra:
+                extra_chapters.append(disc)
         
         return ChapterCompliance(
             report_id=report_id,
@@ -254,7 +428,7 @@ class E1Judge:
 
 
 def main():
-    """示例用法（需先裁决适用规则）。"""
+    """示例用法（适用规则已裁决为 by_period_end）。"""
     import sys
     
     spec_dir = Path(__file__).parent / "spec"
@@ -267,12 +441,13 @@ def main():
         sys.exit(1)
     
     # 示例：判定一份年报
-    # 注意：当前 applicability_rule_status = "UNRESOLVED"，调用 judge() 会失败
+    # report_id 必须符合上游 slot_key 契约（code_year_period）；
+    # 适用规则已裁决为 by_period_end，按报告期末选版本。
     try:
         result = judge.judge(
             report_id="000001_2023_4",
             period=4,  # 年报
-            disclosure_date="2024-03-15",
+            report_year=2023,
             disclosed_chapters=[
                 "第一节 重要提示、目录和释义",
                 "第二节 公司简介和主要财务指标",

@@ -26,3 +26,8 @@ build/
 
 # DVC (data version control)
 .dvc/
+
+# Large data files
+data/md_cache/
+*.pdf
+*.tar.gz

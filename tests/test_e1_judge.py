@@ -21,7 +21,7 @@ def spec_loader():
 
 @pytest.fixture
 def e1_judge(spec_loader):
-    """创建 E1 判定程序（适用规则未裁决）。"""
+    """创建 E1 判定程序（适用规则已裁决 by_period_end）。"""
     return E1Judge(spec_loader)
 
 
@@ -84,55 +84,54 @@ class TestE1JudgeInit:
     """测试 E1 判定程序初始化。"""
     
     def test_init_success(self, spec_loader):
-        """测试成功初始化。"""
+        """适用规则已裁决，初始化即可运行判定。"""
         judge = E1Judge(spec_loader)
-        assert judge._applicability_resolved is False
+        assert judge._applicability_resolved is True
     
-    def test_init_with_unresolved_applicability(self, spec_loader):
-        """测试适用规则未裁决时的初始化。"""
+    def test_init_with_resolved_applicability(self, spec_loader):
+        """Human Gate 已裁决 by_period_end，E1 判定程序解除阻断。"""
         judge = E1Judge(spec_loader)
-        # 应该允许初始化，但不允许运行 judge()
-        assert judge._applicability_resolved is False
+        assert judge._applicability_resolved is True
+        assert judge.regulatory_versions["applicability_rule"] == "by_period_end"
 
 
 class TestE1JudgeResolveVersion:
     """测试版本解析。"""
     
-    def test_resolve_version_unresolved(self, e1_judge):
-        """测试适用规则未裁决时调用 resolve_version。"""
-        with pytest.raises(RuntimeError, match="适用规则未裁决"):
-            e1_judge.resolve_version(period=4, disclosure_date="2024-03-15")
+    def test_resolve_version_resolved(self, e1_judge):
+        """适用规则已裁决：resolve_version 不再抛错，按报告期末选版本。"""
+        version = e1_judge.resolve_version(period=4, report_year=2023)
+        assert version["document_no"] == "证监会公告〔2021〕15号"
     
     def test_resolve_version_by_disclosure_date(self, spec_loader):
-        """测试按披露日解析版本。"""
-        # 手动设置适用规则为已裁决
+        """测试按披露日解析版本（备用规则，仍须可运行）。"""
         judge = E1Judge(spec_loader)
         judge._applicability_resolved = True
         judge.regulatory_versions["applicability_rule"] = "by_disclosure_date"
         
-        # 2024-03-15 披露的年报，应适用 2021 版（2025-07-01 前）
-        version = judge.resolve_version(period=4, disclosure_date="2024-03-15")
+        # 2024-03-15 披露的 2023 年报，应适用 2021 版（2025-07-01 前）
+        version = judge.resolve_version(period=4, report_year=2023, disclosure_date="2024-03-15")
         assert version["standard"] == "第2号"
         assert version["document_no"] == "证监会公告〔2021〕15号"
         
         # 2025-08-01 披露的年报，应适用 2025 版
-        version = judge.resolve_version(period=4, disclosure_date="2025-08-01")
+        version = judge.resolve_version(period=4, report_year=2024, disclosure_date="2025-08-01")
         assert version["standard"] == "第2号"
         assert version["document_no"] == "证监会公告〔2025〕3号"
     
     def test_resolve_version_by_period_end(self, spec_loader):
-        """测试按报告期末解析版本。"""
+        """测试按报告期末解析版本（当前生效规则）。"""
         judge = E1Judge(spec_loader)
         judge._applicability_resolved = True
         judge.regulatory_versions["applicability_rule"] = "by_period_end"
         
         # 2023 年年报（期末 2023-12-31），应适用 2021 版
-        version = judge.resolve_version(period=4, disclosure_date="2024-03-15")
+        version = judge.resolve_version(period=4, report_year=2023)
         assert version["standard"] == "第2号"
         assert version["document_no"] == "证监会公告〔2021〕15号"
         
         # 2025 年年报（期末 2025-12-31），应适用 2025 版
-        version = judge.resolve_version(period=4, disclosure_date="2026-03-15")
+        version = judge.resolve_version(period=4, report_year=2025)
         assert version["standard"] == "第2号"
         assert version["document_no"] == "证监会公告〔2025〕3号"
     
@@ -143,7 +142,7 @@ class TestE1JudgeResolveVersion:
         judge.regulatory_versions["applicability_rule"] = "by_disclosure_date"
         
         with pytest.raises(ValueError, match="period 必须是 2 或 4"):
-            judge.resolve_version(period=3, disclosure_date="2024-03-15")
+            judge.resolve_version(period=3, report_year=2023, disclosure_date="2024-03-15")
     
     def test_resolve_version_semi_annual(self, spec_loader):
         """测试半年报版本解析。"""
@@ -152,7 +151,7 @@ class TestE1JudgeResolveVersion:
         judge.regulatory_versions["applicability_rule"] = "by_disclosure_date"
         
         # 2024 年半年报，应适用第3号
-        version = judge.resolve_version(period=2, disclosure_date="2024-08-15")
+        version = judge.resolve_version(period=2, report_year=2024, disclosure_date="2024-08-15")
         assert version["standard"] == "第3号"
         assert version["document_no"] == "证监会公告〔2021〕16号"
 
@@ -162,10 +161,10 @@ class TestE1JudgeCompliance:
     
     @pytest.fixture
     def resolved_judge(self, spec_loader):
-        """创建已裁决适用规则的判定程序。"""
+        """创建按当前生效规则（by_period_end）运行的判定程序。"""
         judge = E1Judge(spec_loader)
         judge._applicability_resolved = True
-        judge.regulatory_versions["applicability_rule"] = "by_disclosure_date"
+        judge.regulatory_versions["applicability_rule"] = "by_period_end"
         return judge
     
     def test_judge_compliant_report(self, resolved_judge):
@@ -183,14 +182,14 @@ class TestE1JudgeCompliance:
         ]
         
         result = resolved_judge.judge(
-            report_id="test_001",
+            report_id="000001_2024_4",
             period=4,
-            disclosure_date="2024-03-15",
+            report_year=2024,
             disclosed_chapters=disclosed_chapters,
         )
         
         assert isinstance(result, ChapterCompliance)
-        assert result.report_id == "test_001"
+        assert result.report_id == "000001_2024_4"
         assert result.standard == "第2号"
         assert result.version == "证监会公告〔2021〕15号"
         # 条件必披章节（优先股、债券）应为 NOT_APPLICABLE
@@ -214,9 +213,9 @@ class TestE1JudgeCompliance:
         ]
         
         result = resolved_judge.judge(
-            report_id="test_002",
+            report_id="000002_2024_4",
             period=4,
-            disclosure_date="2024-03-15",
+            report_year=2024,
             disclosed_chapters=disclosed_chapters,
         )
         
@@ -238,9 +237,9 @@ class TestE1JudgeCompliance:
         ]
         
         result = resolved_judge.judge(
-            report_id="test_003",
+            report_id="000003_2024_4",
             period=4,
-            disclosure_date="2024-03-15",
+            report_year=2024,
             disclosed_chapters=disclosed_chapters,
         )
         
@@ -261,9 +260,9 @@ class TestE1JudgeCompliance:
         ]
         
         result = resolved_judge.judge(
-            report_id="test_004",
+            report_id="000004_2024_4",
             period=4,
-            disclosure_date="2024-03-15",
+            report_year=2024,
             disclosed_chapters=disclosed_chapters,
         )
         
@@ -284,14 +283,25 @@ class TestE1JudgeCompliance:
         ]
         
         result = resolved_judge.judge(
-            report_id="test_005",
+            report_id="000005_2024_4",
             period=4,
-            disclosure_date="2024-03-15",
+            report_year=2024,
             disclosed_chapters=disclosed_chapters,
         )
         
         # 合规率 = 7/8 = 0.875
         assert result.compliance_rate == 0.875
+
+    def test_report_id_mismatch_rejected(self, resolved_judge):
+        """report_id 与 period/report_year 不一致即判 fail，防止串报告（铁律 4）。"""
+        pytest.importorskip("annual_semi.completeness")
+        with pytest.raises(ValueError, match="不一致"):
+            resolved_judge.judge(
+                report_id="000001_2023_4",
+                period=4,
+                report_year=2024,
+                disclosed_chapters=["第一节 重要提示、目录和释义"],
+            )
 
 
 class TestMissingState:

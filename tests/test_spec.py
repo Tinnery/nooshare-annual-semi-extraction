@@ -100,8 +100,10 @@ def test_data_boundary_forbids_retired_ashare_bulletin_assets():
 
 def test_regulatory_timeline_ordered_and_no_fabricated_hash():
     versions = _json(VERSIONS)
-    # 适用规则未裁决前 E1 不得运行；防止有人悄悄把 UNRESOLVED 改成已定。
-    assert versions["applicability_rule_status"] == "UNRESOLVED"
+    # 适用规则已由 Human Gate 于 2026-11-13 裁决为 by_period_end；
+    # 防止有人悄悄改回 UNRESOLVED 或换成另一规则而不走变更流程。
+    assert versions["applicability_rule_status"] == "RESOLVED"
+    assert versions["applicability_rule"] == "by_period_end"
     # 法规原文已采集并登记 sha256
     assert versions["acquisition_status"] == "COMPLETED"
     by_standard = {}
@@ -124,8 +126,10 @@ def test_regulatory_timeline_ordered_and_no_fabricated_hash():
 
 def test_unresolved_gates_are_explicit():
     req_text = REQ.read_text(encoding="utf-8")
-    # 适用规则未裁决前 E1 不得运行
+    # 原条款作为历史记录保留；适用规则已裁决，E1 不再阻断
     assert "未裁决前 E1 判定程序不得运行" in req_text
+    assert "by_period_end" in req_text
+    assert "Human Gate 2026-11-13 追认" in req_text
     # 法规原文已采集并登记 sha256（2026-11-13 解除）
     assert "已解除" in req_text
     assert "5 份 PDF 已从证监会官网下载并登记 sha256" in req_text

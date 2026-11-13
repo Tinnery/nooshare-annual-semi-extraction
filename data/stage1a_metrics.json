@@ -1,0 +1,77 @@
+{
+  "n_samples": 491,
+  "resolve": {
+    "ok": 484,
+    "no_pdf": 7
+  },
+  "download": {
+    "downloaded": 484,
+    "no_pdf": 7
+  },
+  "extract_ok": 482,
+  "extract_err": 9,
+  "strategy": {
+    "numbering": 427,
+    "bookmark": 21,
+    "font_fallback": 34
+  },
+  "numbering_hit_rate": 0.886,
+  "purity_mean_numbering": 0.966,
+  "continuous_rate_numbering": 0.934,
+  "era_numbering": {
+    "new_annual": 422,
+    "old_semi": 3,
+    "old_annual": 2
+  },
+  "avg_headings_numbering": 10.7,
+  "md_alignment_numbering": {
+    "general_complete": {
+      "md_total": 1709,
+      "md_matched": 1550,
+      "align_rate": 0.907,
+      "n_samples": 148
+    },
+    "y2021_complete": {
+      "md_total": 575,
+      "md_matched": 521,
+      "align_rate": 0.906,
+      "n_samples": 50
+    },
+    "ch_zh_incomplete": {
+      "md_total": 629,
+      "md_matched": 551,
+      "align_rate": 0.876,
+      "n_samples": 74
+    },
+    "md_h1_incomplete": {
+      "md_total": 181,
+      "md_matched": 7,
+      "align_rate": 0.039,
+      "n_samples": 77
+    },
+    "md_h1_complete": {
+      "md_total": 53,
+      "md_matched": 33,
+      "align_rate": 0.623,
+      "n_samples": 4
+    },
+    "bank_format": {
+      "md_total": 499,
+      "md_matched": 434,
+      "align_rate": 0.87,
+      "n_samples": 49
+    },
+    "retry_stage0": {
+      "md_total": 15,
+      "md_matched": 13,
+      "align_rate": 0.867,
+      "n_samples": 2
+    }
+  },
+  "gates": {
+    "numbering_hit_ge_80pct": true,
+    "purity_ge_88pct": true,
+    "pass": true
+  },
+  "elapsed_sec": 276.9
+}

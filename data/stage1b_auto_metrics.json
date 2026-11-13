@@ -1,0 +1,28 @@
+{
+  "n_extracted": 482,
+  "toc_alignment": {
+    "n_with_toc": 399,
+    "n_no_toc": 83,
+    "mean_align_rate": 0.999,
+    "align_ge_97pct": 398,
+    "align_100pct": 398
+  },
+  "triple_source_agree": {
+    "count": 219,
+    "rate": 0.454
+  },
+  "worksheet": {
+    "n": 301,
+    "quotas": {
+      "general_complete": 92,
+      "md_h1_incomplete": 55,
+      "ch_zh_incomplete": 46,
+      "bank_format": 44,
+      "y2021_complete": 31,
+      "none_incomplete": 24,
+      "md_h1_complete": 6,
+      "retry_stage0": 2,
+      "rare_method": 1
+    }
+  }
+}

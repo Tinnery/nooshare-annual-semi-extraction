@@ -1,0 +1,702 @@
+[
+  {
+    "stock_code": "002153",
+    "report_year": 2024,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/002153/002153_2024_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "603367",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/603367/603367_2024_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "688011",
+    "report_year": 2024,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/688011/688011_2024_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "603216",
+    "report_year": 2023,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/603216/603216_2023_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "002723",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/002723/002723_2024_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "600396",
+    "report_year": 2023,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/600396/600396_2023_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "600191",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 12,
+    "missing_always_sections": [],
+    "winner_md_path": "published/600191/600191_2023_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "000767",
+    "report_year": 2021,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/000767/000767_2021_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "600506",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 12,
+    "missing_always_sections": [],
+    "winner_md_path": "published/600506/600506_2023_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "300100",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/300100/300100_2024_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "002831",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/002831/002831_2023_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "600030",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 10,
+    "missing_always_sections": [],
+    "winner_md_path": "published/600030/600030_2023_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "301135",
+    "report_year": 2024,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/301135/301135_2024_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "000819",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/000819/000819_2024_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "603660",
+    "report_year": 2023,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/603660/603660_2023_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "688249",
+    "report_year": 2024,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/688249/688249_2024_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "000561",
+    "report_year": 2021,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/000561/000561_2021_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "688297",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/688297/688297_2024_4.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "000055",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/000055/000055_2021_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "600706",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": true,
+    "n_headings": 11,
+    "missing_always_sections": [],
+    "winner_md_path": "published/600706/600706_2021_2.md",
+    "layer": "ch_zh_complete"
+  },
+  {
+    "stock_code": "603186",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 6,
+    "missing_always_sections": [
+      2,
+      3,
+      5
+    ],
+    "winner_md_path": "published/603186/603186_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "603368",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 10,
+    "missing_always_sections": [
+      6
+    ],
+    "winner_md_path": "published/603368/603368_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "601012",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 9,
+    "missing_always_sections": [
+      5
+    ],
+    "winner_md_path": "published/601012/601012_2024_4.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "601668",
+    "report_year": 2022,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 10,
+    "missing_always_sections": [
+      1
+    ],
+    "winner_md_path": "published/601668/601668_2022_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "600520",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 9,
+    "missing_always_sections": [
+      2,
+      3
+    ],
+    "winner_md_path": "published/600520/600520_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "002236",
+    "report_year": 2022,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 10,
+    "missing_always_sections": [
+      1
+    ],
+    "winner_md_path": "published/002236/002236_2022_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "601001",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 5,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "winner_md_path": "published/601001/601001_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "600760",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 8,
+    "missing_always_sections": [
+      5
+    ],
+    "winner_md_path": "published/600760/600760_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "603165",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 9,
+    "missing_always_sections": [
+      2,
+      5
+    ],
+    "winner_md_path": "published/603165/603165_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "688590",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "ch_zh",
+    "is_complete_l1": false,
+    "n_headings": 8,
+    "missing_always_sections": [
+      2,
+      4,
+      5
+    ],
+    "winner_md_path": "published/688590/688590_2021_2.md",
+    "layer": "ch_zh_incomplete"
+  },
+  {
+    "stock_code": "603958",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/603958/603958_2021_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "600592",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/600592/600592_2023_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "601901",
+    "report_year": 2023,
+    "period": 4,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 102,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      7
+    ],
+    "winner_md_path": "published/601901/601901_2023_4.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "688789",
+    "report_year": 2022,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/688789/688789_2022_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "603200",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/603200/603200_2023_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "600030",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/600030/600030_2021_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "601919",
+    "report_year": 2022,
+    "period": 4,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 2,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/601919/601919_2022_4.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "300713",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/300713/300713_2021_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "601658",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 224,
+    "missing_always_sections": [
+      3
+    ],
+    "winner_md_path": "published/601658/601658_2023_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "688289",
+    "report_year": 2022,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": false,
+    "n_headings": 1,
+    "missing_always_sections": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      10
+    ],
+    "winner_md_path": "published/688289/688289_2022_2.md",
+    "layer": "md_h1_incomplete"
+  },
+  {
+    "stock_code": "601939",
+    "report_year": 2024,
+    "period": 2,
+    "extraction_method": "md_h1",
+    "is_complete_l1": true,
+    "n_headings": 150,
+    "missing_always_sections": [],
+    "winner_md_path": "published/601939/601939_2024_2.md",
+    "layer": "md_h1_complete"
+  },
+  {
+    "stock_code": "600233",
+    "report_year": 2022,
+    "period": 4,
+    "extraction_method": "md_h1",
+    "is_complete_l1": true,
+    "n_headings": 12,
+    "missing_always_sections": [],
+    "winner_md_path": "published/600233/600233_2022_4.md",
+    "layer": "md_h1_complete"
+  },
+  {
+    "stock_code": "601658",
+    "report_year": 2023,
+    "period": 4,
+    "extraction_method": "md_h1",
+    "is_complete_l1": true,
+    "n_headings": 320,
+    "missing_always_sections": [],
+    "winner_md_path": "published/601658/601658_2023_4.md",
+    "layer": "md_h1_complete"
+  },
+  {
+    "stock_code": "601988",
+    "report_year": 2022,
+    "period": 4,
+    "extraction_method": "none",
+    "is_complete_l1": false,
+    "n_headings": 0,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "winner_md_path": "published/601988/601988_2022_4.md",
+    "layer": "none_incomplete"
+  },
+  {
+    "stock_code": "601601",
+    "report_year": 2021,
+    "period": 2,
+    "extraction_method": "none",
+    "is_complete_l1": false,
+    "n_headings": 0,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "winner_md_path": "published/601601/601601_2021_2.md",
+    "layer": "none_incomplete"
+  },
+  {
+    "stock_code": "002485",
+    "report_year": 2021,
+    "period": 4,
+    "extraction_method": "none",
+    "is_complete_l1": false,
+    "n_headings": 0,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "winner_md_path": "published/002485/002485_2021_4.md",
+    "layer": "none_incomplete"
+  },
+  {
+    "stock_code": "000686",
+    "report_year": 2024,
+    "period": 4,
+    "extraction_method": "none",
+    "is_complete_l1": false,
+    "n_headings": 0,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "winner_md_path": "published/000686/000686_2024_4.md",
+    "layer": "none_incomplete"
+  },
+  {
+    "stock_code": "601288",
+    "report_year": 2023,
+    "period": 2,
+    "extraction_method": "none",
+    "is_complete_l1": false,
+    "n_headings": 0,
+    "missing_always_sections": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "winner_md_path": "published/601288/601288_2023_2.md",
+    "layer": "none_incomplete"
+  },
+  {
+    "stock_code": "000063",
+    "report_year": 2022,
+    "period": 2,
+    "extraction_method": "cn_dun",
+    "is_complete_l1": false,
+    "n_headings": 14,
+    "missing_always_sections": [
+      1,
+      4,
+      7
+    ],
+    "winner_md_path": "published/000063/000063_2022_2.md",
+    "layer": "cn_dun"
+  }
+]

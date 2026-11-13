@@ -26,18 +26,24 @@
 | 取数边界 | 交付表 + RustFS GET | **不变**；源 HTML / trash / `sina_bulletin.db` 明确列为未授权 | 04 §1 |
 | 权威文档 | 01 一份 | 仍为 01 一份；02/03/04 降级为执行参考或归档 | 04 §8 |
 | 文件首行 | 残缺 `"""` docstring | 修正为 markdown 标题 | 格式瑕疵修正 |
+| `reg_version` 适用规则 | 未裁决（`UNRESOLVED`） | **已裁决 `by_period_end`（按报告期末）** | Human Gate 2026-11-13 追认（见下方变更登记 v2.1） |
+| E1 gate | `blocked_until` 标注未裁决 | `blocked_until = null`，判定程序解除阻断 | Human Gate 2026-11-13 |
 
 **注册表 sha256 登记**（由 `tests/test_spec.py` 校验；任一注册表变更未同步本处即测试失败，强制走变更流程）：
 
 ```
-ANCHOR_REGISTRY_SHA256 = 3f9da983d3eed2b25a4caf2a4d88e55e42c2aae7df048fe0b89e3070827a2b64
-REGULATORY_VERSIONS_SHA256 = 9a47dad3780b158eea103cc023b5fce36c6396ca1d571e3f29f84378d5c2e7ac
+ANCHOR_REGISTRY_SHA256 = cb4aeb67963b5c21dc370a033271c1502c4a8d1718a8231c4a74be4f2f33b135
+REGULATORY_VERSIONS_SHA256 = 0fba0f30808bea310aaccf61fea4a3130455ae296fa0335debd675a3c29584d6
 LEGAL_CHAPTERS_SHA256 = 6ed45254219cf9867bf18cc7edf3602db2547d11f404667fb86fa06cdd601a6f
 ```
 
+**变更登记 v2.1**（2026-11-13，Human Gate 批准 `①A`）：
+- 用户此前已裁决 `reg_version` 按**报告期末**（`by_period_end`），`regulatory_versions.json` 已置 `RESOLVED` 并登记 5 份法规原文 sha256；但本文件 §〇 的 sha 登记、未决清单、`anchors.json` 的 `blocked_until`、`tests/test_spec.py` 的断言未同步，造成 14 项测试失败与 gate 状态不一致。本次统一补齐，不改 R'0-R'9 编号、不改 E1-E6 原义、不改取数边界。
+- 原条款「未裁决前 E1 判定程序不得运行」在裁决前有效，现因前提解除而失效；**保留该表述作为历史条款记录**，不代表当前仍处于阻断状态。
+
 **仍未决、禁止 Agent 自行裁决**：
 
-1. `reg_version` 自变量按**披露日**还是**报告期末** —— solution-architect 裁决；未裁决前 E1 判定程序不得运行。
+1. ~~`reg_version` 自变量按**披露日**还是**报告期末**~~ **已解除**（2026-11-13 Human Gate 追认）：适用规则为 **`by_period_end`（按报告期末）**。例：2024 年年报（期末 2024-12-31）适用〔2021〕15号；2025 年年报（期末 2025-12-31）适用〔2025〕3号。原条款「未裁决前 E1 判定程序不得运行」仅在裁决前有效。
 2. ~~法规原文 PDF 尚未采集~~ **已解除**（2026-11-13）：5 份 PDF 已从证监会官网下载并登记 sha256，存放于 `annual_semi_extraction/spec/regulatory_texts/`。
 3. ~~第3号 2025 修订版文号未核实~~ **已解除**（2026-11-13）：文号为**证监会公告〔2025〕4号**，发布日 2025-03-21，施行日 2025-07-01。
 4. 源 HTML / trash 快照 / `sina_bulletin.db` **未授权**纳入取数契约；若需纳入，须 Human Gate 批准并变更本节与 R'0。

@@ -1,0 +1,32 @@
+{"slot_key": "000005_2024_4", "method": "ch_zh", "missing_always": [2, 3, 5, 6, 7]}
+{"slot_key": "000032_2022_2", "method": "ch_zh", "missing_always": [1]}
+{"slot_key": "000039_2021_2", "method": "ch_zh", "missing_always": [1]}
+{"slot_key": "000039_2021_4", "method": "ch_zh", "missing_always": [1]}
+{"slot_key": "000039_2023_2", "method": "ch_zh", "missing_always": [7]}
+{"slot_key": "000039_2024_2", "method": "ch_zh", "missing_always": [7]}
+{"slot_key": "000046_2023_4", "method": "ch_zh", "missing_always": [2, 3, 5, 6, 7]}
+{"slot_key": "000046_2024_4", "method": "ch_zh", "missing_always": [2, 3, 5, 6, 7]}
+{"slot_key": "000060_2021_2", "method": "md_h1", "missing_always": [1, 2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000060_2021_4", "method": "md_h1", "missing_always": [1, 2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000060_2023_4", "method": "ch_zh", "missing_always": [10]}
+{"slot_key": "000063_2021_2", "method": "none", "missing_always": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+{"slot_key": "000063_2022_2", "method": "cn_dun", "missing_always": [1, 4, 7]}
+{"slot_key": "000063_2023_2", "method": "ch_zh", "missing_always": [5, 7]}
+{"slot_key": "000063_2024_2", "method": "ch_zh", "missing_always": [7]}
+{"slot_key": "000100_2022_4", "method": "ch_zh", "missing_always": [10]}
+{"slot_key": "000100_2023_4", "method": "ch_zh", "missing_always": [10]}
+{"slot_key": "000100_2024_4", "method": "ch_zh", "missing_always": [10]}
+{"slot_key": "000150_2023_4", "method": "ch_zh", "missing_always": [2, 3, 5, 6, 7]}
+{"slot_key": "000166_2023_2", "method": "md_h1", "missing_always": [2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000166_2024_2", "method": "md_h1", "missing_always": [2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000408_2023_2", "method": "md_h1", "missing_always": [1, 2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000408_2023_4", "method": "md_h1", "missing_always": [1, 2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000408_2024_4", "method": "ch_zh", "missing_always": [2, 4, 5]}
+{"slot_key": "000416_2024_4", "method": "ch_zh", "missing_always": [2, 3, 5, 6, 7]}
+{"slot_key": "000420_2021_2", "method": "ch_zh", "missing_always": [4]}
+{"slot_key": "000426_2022_4", "method": "md_h1", "missing_always": [1, 2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000502_2022_4", "method": "ch_zh", "missing_always": [2, 3, 5, 6, 7]}
+{"slot_key": "000513_2023_2", "method": "md_h1", "missing_always": [1, 2, 3, 4, 5, 6, 7, 10]}
+{"slot_key": "000518_2021_2", "method": "ch_zh", "missing_always": [1]}
+{"slot_key": "000521_2023_2", "method": "none", "missing_always": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+{"slot_key": "000532_2024_4", "method": "ch_zh", "missing_always": [6]}

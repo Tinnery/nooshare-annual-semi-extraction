@@ -1,0 +1,612 @@
+{
+  "n_pairs": 60,
+  "n_resolved": 0,
+  "n_errors": 60,
+  "threshold": 0.3,
+  "n_divergent": 0,
+  "verdict_counts": {},
+  "h1_delta_distribution": {},
+  "numbered_delta_distribution": {},
+  "pairs": [
+    {
+      "slot_key": "000065_2022_4",
+      "winner_md_path": "structured/provider/000065/9495162.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 88,
+      "fail_md_path": "published/000065/000065_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 491828,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "000333_2021_4",
+      "winner_md_path": "structured/final/000333/000333_2021Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/000333/000333_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 669176,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "000619_2021_4",
+      "winner_md_path": "structured/provider/000619/000619_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 82,
+      "fail_md_path": "published/000619/000619_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 471070,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "000619_2022_4",
+      "winner_md_path": "structured/provider/000619/4b2e54e218a107a1d189a80eefa30e14.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 82,
+      "fail_md_path": "published/000619/000619_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 449682,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "000619_2024_4",
+      "winner_md_path": "structured/provider/000619/afdc542e321be7772e06512ac142d17a.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 82,
+      "fail_md_path": "published/000619/000619_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 504482,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "000858_2023_4",
+      "winner_md_path": "structured/final/000858/000858_2023Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/000858/000858_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 449740,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "000915_2022_4",
+      "winner_md_path": "structured/provider/000915/000915_2022Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 81,
+      "fail_md_path": "published/000915/000915_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 598112,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "001289_2024_4",
+      "winner_md_path": "structured/provider/001289/dc1d5cbd007ca258dadebaf2e0540540.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 47,
+      "fail_md_path": "published/001289/001289_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 622696,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002028_2021_4",
+      "winner_md_path": "structured/provider/002028/4342eb890e4416d0bbbd73e70c9996b8.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 87,
+      "fail_md_path": "published/002028/002028_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 432194,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002028_2023_4",
+      "winner_md_path": "structured/provider/002028/002028_2023Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 87,
+      "fail_md_path": "published/002028/002028_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 514066,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002262_2024_4",
+      "winner_md_path": "structured/final/002262/002262_2024Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/002262/002262_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 62550,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002273_2022_4",
+      "winner_md_path": "structured/provider/002273/125c1ba172852a7a3367597f95c7debf.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/002273/002273_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 5237,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002273_2023_4",
+      "winner_md_path": "structured/provider/002273/002273_2023Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/002273/002273_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 5628,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002337_2022_4",
+      "winner_md_path": "structured/provider/002337/002337_2022Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 60,
+      "fail_md_path": "published/002337/002337_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1053,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002429_2021_4",
+      "winner_md_path": "structured/provider/002429/261ca283c79ca77b91eb8f7495828098.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 73,
+      "fail_md_path": "published/002429/002429_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 535,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002429_2022_4",
+      "winner_md_path": "structured/provider/002429/002429_2022Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 73,
+      "fail_md_path": "published/002429/002429_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 559,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002429_2023_4",
+      "winner_md_path": "structured/final/002429/002429_2023Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/002429/002429_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 499,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "002429_2024_4",
+      "winner_md_path": "structured/final/002429/002429_2024Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/002429/002429_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 497,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300003_2022_4",
+      "winner_md_path": "structured/final/300003/300003_2022Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/300003/300003_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 40275,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300058_2021_4",
+      "winner_md_path": "structured/provider/300058/996ea478c8dfa5439e0e55347ee34ece.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 72,
+      "fail_md_path": "published/300058/300058_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1284,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300135_2021_4",
+      "winner_md_path": "structured/provider/300135/300135_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 69,
+      "fail_md_path": "published/300135/300135_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 956,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300143_2021_4",
+      "winner_md_path": "structured/provider/300143/300143_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 72,
+      "fail_md_path": "published/300143/300143_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1159,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300179_2021_4",
+      "winner_md_path": "structured/provider/300179/300179_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 72,
+      "fail_md_path": "published/300179/300179_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 427315,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300240_2021_4",
+      "winner_md_path": "structured/provider/300240/300240_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 71,
+      "fail_md_path": "published/300240/300240_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1297,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300256_2022_4",
+      "winner_md_path": "structured/provider/300256/300256_2022Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 80,
+      "fail_md_path": "published/300256/300256_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1406,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300281_2023_4",
+      "winner_md_path": "structured/final/300281/300281_2023Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/300281/300281_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 233,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300310_2023_4",
+      "winner_md_path": "structured/provider/300310/300310_2023Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 68,
+      "fail_md_path": "published/300310/300310_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 86000,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300332_2022_4",
+      "winner_md_path": "structured/provider/300332/b43f11280fb6f0c8a56e5d3fda064956.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 66,
+      "fail_md_path": "published/300332/300332_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 103315,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300333_2021_4",
+      "winner_md_path": "structured/provider/300333/e7f5bce448328e76a4353f67924345be.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 72,
+      "fail_md_path": "published/300333/300333_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 2202,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300469_2022_4",
+      "winner_md_path": "structured/sina/300469/300469_2022_4.md",
+      "selection_rule": "backup_l3",
+      "candidate_count": 1,
+      "fail_md_path": "published/300469/300469_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 450914,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300469_2023_4",
+      "winner_md_path": "structured/provider/300469/300469_2023Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 60,
+      "fail_md_path": "published/300469/300469_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 490968,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300473_2022_4",
+      "winner_md_path": "structured/provider/300473/97ceed6d3c900320f24e15745bbd9c26.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 60,
+      "fail_md_path": "published/300473/300473_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 215,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300707_2021_4",
+      "winner_md_path": "structured/provider/300707/300707_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 48,
+      "fail_md_path": "published/300707/300707_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1585,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300726_2021_4",
+      "winner_md_path": "structured/provider/300726/300726_2021Q4.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 54,
+      "fail_md_path": "published/300726/300726_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1316,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "300771_2021_4",
+      "winner_md_path": "structured/provider/300771/0b41ad4656b90019e15eb897638acf2d.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 49,
+      "fail_md_path": "published/300771/300771_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 639,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600016_2021_4",
+      "winner_md_path": "structured/provider/600016/3a97754bcd80ad0e8a0aa2359c530824.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 56,
+      "fail_md_path": "published/600016/600016_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 787,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600025_2022_4",
+      "winner_md_path": "structured/provider/600025/bed14d117acdc10f9384681086aa34a3.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 34,
+      "fail_md_path": "published/600025/600025_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 4834,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600036_2022_4",
+      "winner_md_path": "structured/provider/600036/68091c482ed9dd837c997b9cefd3f011.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 56,
+      "fail_md_path": "published/600036/600036_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 396,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600036_2023_4",
+      "winner_md_path": "structured/provider/600036/737851337a33dade9520953650d9a6ec.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 56,
+      "fail_md_path": "published/600036/600036_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 622,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600036_2024_4",
+      "winner_md_path": "structured/provider/600036/0de40d958fb28e02e91ae1b2a779c0a0.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 56,
+      "fail_md_path": "published/600036/600036_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 583,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600055_2021_4",
+      "winner_md_path": "structured/provider/600055/1d13ab1d3e4a2beb6a908aa84a1fbc78.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 63,
+      "fail_md_path": "published/600055/600055_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 75462,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600097_2023_4",
+      "winner_md_path": "structured/provider/600097/9d0fc49333724493ccf44f6af50eb7f9.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/600097/600097_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 61330,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600125_2021_4",
+      "winner_md_path": "structured/provider/600125/1c42effc24cedce25e82b873595e4174.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/600125/600125_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 33840,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600125_2022_4",
+      "winner_md_path": "structured/provider/600125/1b3dd11d489231653aa42fd34fc61b9c.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/600125/600125_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 36895,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600125_2023_4",
+      "winner_md_path": "structured/provider/600125/59dbc53b24b40015c55929c3fa240f98.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/600125/600125_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 34038,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600125_2024_4",
+      "winner_md_path": "structured/provider/600125/51e978a97bbfd5acb663a03d298e6adc.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/600125/600125_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 35653,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600234_2023_4",
+      "winner_md_path": "structured/provider/600234/91d6b7ab676bbdae96e0c1d7f85a46e9.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 69,
+      "fail_md_path": "published/600234/600234_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 83367,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600258_2021_4",
+      "winner_md_path": "structured/provider/600258/85a2d4714aecd14a6ec92965a4d368cd.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 81,
+      "fail_md_path": "published/600258/600258_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 105981,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600258_2022_4",
+      "winner_md_path": "structured/provider/600258/4ade147f3365444b55874fa31f8eafce.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 81,
+      "fail_md_path": "published/600258/600258_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 5535,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600258_2023_4",
+      "winner_md_path": "structured/provider/600258/0fd7678519f28d6e38b1475095b05671.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 81,
+      "fail_md_path": "published/600258/600258_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 7207,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600258_2024_4",
+      "winner_md_path": "structured/provider/600258/24ec470298826736c0c4c3d733e0e07a.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 81,
+      "fail_md_path": "published/600258/600258_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 7866,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600309_2022_4",
+      "winner_md_path": "structured/provider/600309/054bf52e778c13e0e9daef8e203b51e1.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 79,
+      "fail_md_path": "published/600309/600309_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 6742,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600373_2023_4",
+      "winner_md_path": "structured/provider/600373/a836b045552b5dcae5ae387294d11b4c.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 77,
+      "fail_md_path": "published/600373/600373_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 8939,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600380_2024_4",
+      "winner_md_path": "structured/final/600380/600380_2024Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/600380/600380_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 817279,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600753_2023_4",
+      "winner_md_path": "structured/final/600753/600753_2023Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/600753/600753_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 93357,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "600829_2022_4",
+      "winner_md_path": "structured/final/600829/600829_2022Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/600829/600829_2022_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 3013,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "601111_2024_4",
+      "winner_md_path": "structured/final/601111/601111_2024Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/601111/601111_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 469626,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "601727_2024_4",
+      "winner_md_path": "structured/final/601727/601727_2024Q4.md",
+      "selection_rule": "backup_l1",
+      "candidate_count": 1,
+      "fail_md_path": "published/601727/601727_2024_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 664866,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "601899_2021_4",
+      "winner_md_path": "structured/provider/601899/7899174.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 40,
+      "fail_md_path": "published/601899/601899_2021_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 1095593,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    },
+    {
+      "slot_key": "688235_2023_4",
+      "winner_md_path": "structured/provider/688235/10112380.md",
+      "selection_rule": "backup_l2",
+      "candidate_count": 27,
+      "fail_md_path": "published/688235/688235_2023_4.md",
+      "fail_reason": "terminal_sections",
+      "fail_md_size": 876056,
+      "error": "fetch fail=error:ClientError:An error occurred (404) when calling the HeadObject operation: Not Found winner=downloaded"
+    }
+  ]
+}

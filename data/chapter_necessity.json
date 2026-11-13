@@ -1,0 +1,327 @@
+{
+  "n_sample": 1200,
+  "n_read": 1200,
+  "seed": 42,
+  "min_hits": 2,
+  "confusion": {
+    "A1_B1": 4289,
+    "A1_B0": 1412,
+    "A0_B0": 182,
+    "A0_B1": 117
+  },
+  "n_section_pairs": 6000,
+  "title_method_miss_but_content_present": 117,
+  "title_method_present_but_content_absent": 1412,
+  "leak_rate_among_all_A0": 0.3913,
+  "disagreement_rate": 0.2548,
+  "by_section": {
+    "matters": {
+      "A0_B1_leak": 21,
+      "A1_B0_false": 4,
+      "leak_rate_among_A0": 0.4667
+    },
+    "shares": {
+      "A0_B1_leak": 24,
+      "A1_B0_false": 87,
+      "leak_rate_among_A0": 0.4138
+    },
+    "company_profile": {
+      "A0_B1_leak": 21,
+      "A1_B0_false": 679,
+      "leak_rate_among_A0": 0.6
+    },
+    "financial": {
+      "A0_B1_leak": 30,
+      "A1_B0_false": 7,
+      "leak_rate_among_A0": 0.8824
+    },
+    "mda": {
+      "A0_B1_leak": 21,
+      "A1_B0_false": 635,
+      "leak_rate_among_A0": 0.1654
+    }
+  },
+  "disagreement_examples": [
+    {
+      "slot_key": "603078_2021_2",
+      "section": "mda",
+      "nonheading_hits": 2,
+      "n_h1": 11,
+      "n_numbered": 7
+    },
+    {
+      "slot_key": "601998_2021_2",
+      "section": "matters",
+      "nonheading_hits": 60,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601998_2021_2",
+      "section": "shares",
+      "nonheading_hits": 9,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601998_2021_2",
+      "section": "company_profile",
+      "nonheading_hits": 3,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601998_2021_2",
+      "section": "financial",
+      "nonheading_hits": 82,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601998_2021_2",
+      "section": "mda",
+      "nonheading_hits": 3,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "600654_2021_2",
+      "section": "matters",
+      "nonheading_hits": 21,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "600654_2021_2",
+      "section": "shares",
+      "nonheading_hits": 13,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "600654_2021_2",
+      "section": "company_profile",
+      "nonheading_hits": 10,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "600654_2021_2",
+      "section": "financial",
+      "nonheading_hits": 105,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "600654_2021_2",
+      "section": "mda",
+      "nonheading_hits": 2,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "300281_2021_4",
+      "section": "matters",
+      "nonheading_hits": 26,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "300281_2021_4",
+      "section": "shares",
+      "nonheading_hits": 18,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "300281_2021_4",
+      "section": "company_profile",
+      "nonheading_hits": 5,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "300281_2021_4",
+      "section": "financial",
+      "nonheading_hits": 150,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "300281_2021_4",
+      "section": "mda",
+      "nonheading_hits": 4,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "603355_2021_2",
+      "section": "financial",
+      "nonheading_hits": 3,
+      "n_h1": 8,
+      "n_numbered": 4
+    },
+    {
+      "slot_key": "601319_2021_2",
+      "section": "shares",
+      "nonheading_hits": 3,
+      "n_h1": 3,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601319_2021_2",
+      "section": "mda",
+      "nonheading_hits": 3,
+      "n_h1": 3,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "000156_2021_2",
+      "section": "matters",
+      "nonheading_hits": 25,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "000156_2021_2",
+      "section": "shares",
+      "nonheading_hits": 11,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "000156_2021_2",
+      "section": "company_profile",
+      "nonheading_hits": 5,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "000156_2021_2",
+      "section": "financial",
+      "nonheading_hits": 76,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "000156_2021_2",
+      "section": "mda",
+      "nonheading_hits": 5,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "603041_2021_2",
+      "section": "financial",
+      "nonheading_hits": 2,
+      "n_h1": 5,
+      "n_numbered": 1
+    },
+    {
+      "slot_key": "601398_2021_2",
+      "section": "matters",
+      "nonheading_hits": 5,
+      "n_h1": 4,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601398_2021_2",
+      "section": "shares",
+      "nonheading_hits": 4,
+      "n_h1": 4,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "601107_2022_2",
+      "section": "matters",
+      "nonheading_hits": 3,
+      "n_h1": 8,
+      "n_numbered": 4
+    },
+    {
+      "slot_key": "600668_2021_2",
+      "section": "shares",
+      "nonheading_hits": 3,
+      "n_h1": 10,
+      "n_numbered": 6
+    },
+    {
+      "slot_key": "600028_2022_2",
+      "section": "shares",
+      "nonheading_hits": 2,
+      "n_h1": 3,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "002450_2021_4",
+      "section": "shares",
+      "nonheading_hits": 3,
+      "n_h1": 3,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "603929_2021_2",
+      "section": "shares",
+      "nonheading_hits": 2,
+      "n_h1": 10,
+      "n_numbered": 6
+    },
+    {
+      "slot_key": "600708_2021_4",
+      "section": "financial",
+      "nonheading_hits": 18,
+      "n_h1": 11,
+      "n_numbered": 7
+    },
+    {
+      "slot_key": "600636_2021_2",
+      "section": "company_profile",
+      "nonheading_hits": 2,
+      "n_h1": 10,
+      "n_numbered": 6
+    },
+    {
+      "slot_key": "600977_2022_2",
+      "section": "financial",
+      "nonheading_hits": 2,
+      "n_h1": 3,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "002091_2021_4",
+      "section": "matters",
+      "nonheading_hits": 41,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "002091_2021_4",
+      "section": "shares",
+      "nonheading_hits": 14,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "002091_2021_4",
+      "section": "company_profile",
+      "nonheading_hits": 7,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "002091_2021_4",
+      "section": "financial",
+      "nonheading_hits": 130,
+      "n_h1": 0,
+      "n_numbered": 0
+    },
+    {
+      "slot_key": "002091_2021_4",
+      "section": "mda",
+      "nonheading_hits": 4,
+      "n_h1": 0,
+      "n_numbered": 0
+    }
+  ],
+  "interpretation": "A0_B1 = 标题签名未识别到该节，但正文非标题行有 >=min_hits 次内容锚点。若该值显著，则以一级标题识别为前提的 E1 判定会系统性制造假 NOT_DISCLOSED。"
+}
