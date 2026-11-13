@@ -31,3 +31,4 @@ build/
 data/md_cache/
 *.pdf
 *.tar.gz
+data/*.jsonl

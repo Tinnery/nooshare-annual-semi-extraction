@@ -1,0 +1,142 @@
+{
+  "n_total": 36899,
+  "n_flagged": 762,
+  "flagged_rate": 0.0207,
+  "by_root_cause": {
+    "pdf_quality_partial": 254,
+    "legal_noncompliance": 219,
+    "no_pdf:not_found": 177,
+    "md_legal_noncompliance": 71,
+    "pdf_quality_weak": 22,
+    "cross_pipeline_disagreement_low": 15,
+    "pdf_extraction_failed": 4
+  },
+  "by_category": {
+    "版式异常": 290,
+    "算法边界": 276,
+    "数据缺失": 181,
+    "跨源冲突": 15
+  },
+  "by_fixability": {
+    "部分可修复": 290,
+    "可修复": 280,
+    "难修复": 177,
+    "需人工": 15
+  },
+  "leaves": [
+    {
+      "root": "pdf_quality_partial",
+      "n": 254,
+      "category": "算法边界",
+      "fixability": "可修复",
+      "fix_path": "人工复核后升级为 pdf_replace"
+    },
+    {
+      "root": "legal_noncompliance",
+      "n": 219,
+      "category": "版式异常",
+      "fixability": "部分可修复",
+      "fix_path": "专项模板：H股版式/银行版式/编号不连续"
+    },
+    {
+      "root": "no_pdf:not_found",
+      "n": 177,
+      "category": "数据缺失",
+      "fixability": "难修复",
+      "fix_path": "巨潮侧无此报告；尝试备用源或标记永久缺失"
+    },
+    {
+      "root": "md_legal_noncompliance",
+      "n": 71,
+      "category": "版式异常",
+      "fixability": "部分可修复",
+      "fix_path": "MD 通道法定符合率低：用 PDF 通道复核或专项模板"
+    },
+    {
+      "root": "pdf_quality_weak",
+      "n": 22,
+      "category": "算法边界",
+      "fixability": "可修复",
+      "fix_path": "放宽编号连续性校验或改用目录页结构"
+    },
+    {
+      "root": "cross_pipeline_disagreement_low",
+      "n": 15,
+      "category": "跨源冲突",
+      "fixability": "需人工",
+      "fix_path": "三源并排底稿人工裁定"
+    },
+    {
+      "root": "pdf_extraction_failed",
+      "n": 4,
+      "category": "数据缺失",
+      "fixability": "可修复",
+      "fix_path": "PDF 已下载但无标题产出：重试解析；扫描件走 OCR"
+    }
+  ],
+  "by_year_period": {
+    "2021_P2": {
+      "版式异常": 45,
+      "算法边界": 78,
+      "数据缺失": 15,
+      "跨源冲突": 1
+    },
+    "2021_P4": {
+      "版式异常": 27,
+      "算法边界": 36,
+      "数据缺失": 10,
+      "跨源冲突": 6
+    },
+    "2022_P2": {
+      "版式异常": 39,
+      "算法边界": 27,
+      "数据缺失": 5
+    },
+    "2022_P4": {
+      "版式异常": 28,
+      "算法边界": 32,
+      "数据缺失": 34,
+      "跨源冲突": 3
+    },
+    "2023_P2": {
+      "版式异常": 41,
+      "算法边界": 29,
+      "数据缺失": 20,
+      "跨源冲突": 1
+    },
+    "2023_P4": {
+      "数据缺失": 34,
+      "版式异常": 29,
+      "算法边界": 30,
+      "跨源冲突": 1
+    },
+    "2024_P2": {
+      "版式异常": 37,
+      "算法边界": 22,
+      "数据缺失": 21,
+      "跨源冲突": 2
+    },
+    "2024_P4": {
+      "数据缺失": 42,
+      "版式异常": 44,
+      "算法边界": 22,
+      "跨源冲突": 1
+    }
+  },
+  "by_strategy": {
+    "numbering|算法边界": 249,
+    "numbering|版式异常": 110,
+    "font_fallback|版式异常": 74,
+    "bookmark|版式异常": 49,
+    "font_fallback|算法边界": 19,
+    "bookmark|跨源冲突": 10,
+    "bookmark|算法边界": 8,
+    "font_fallback|跨源冲突": 5,
+    "font_fallback|数据缺失": 1
+  },
+  "strategy_distribution": {
+    "bookmark": 67,
+    "font_fallback": 100,
+    "numbering": 8266
+  }
+}

@@ -1,0 +1,763 @@
+﻿slot_key,stock_code,report_year,period,source,legal_rate,cross_agreement,pdf_strategy,pdf_purity,failure_mode,category,fixability,fix_path,n_headings,md_complete
+000671_2023_4,000671,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+000005_2024_4,000005,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+000039_2021_2,000039,2021,2,pdf_low_conf,0.4,1.0,numbering,0.615,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+000039_2021_4,000039,2021,4,pdf_low_conf,0.5,1.0,numbering,0.533,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,15,False
+000039_2022_2,000039,2022,2,md,0.5,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,15,True
+000039_2022_4,000039,2022,4,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,15,True
+000039_2023_2,000039,2023,2,pdf_low_conf,0.6,0.846,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+000039_2023_4,000039,2023,4,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+000039_2024_2,000039,2024,2,pdf_low_conf,0.6,0.846,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+000039_2024_4,000039,2024,4,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+000046_2023_4,000046,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000046_2024_4,000046,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000060_2023_4,000060,2023,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000686_2021_2,000686,2021,2,pdf_low_conf,0.1,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,159,False
+000063_2021_2,000063,2021,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,2,False
+000063_2022_2,000063,2022,2,pdf_low_conf,0.0,0.0,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,2,False
+000063_2023_2,000063,2023,2,pdf_low_conf,0.4,0.857,numbering,0.714,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+000063_2024_2,000063,2024,2,pdf_low_conf,0.4,0.938,numbering,0.714,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+000100_2022_4,000100,2022,4,pdf_replace_review,0.9,0.889,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,9,False
+000100_2023_4,000100,2023,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000100_2024_4,000100,2024,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601318_2022_2,601318,2022,2,pdf_low_conf,0.0,0.073,bookmark,0.111,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+000150_2023_4,000150,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000166_2023_2,000166,2023,2,pdf_replace_review,0.9,0.312,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,16,False
+000166_2024_2,000166,2024,2,pdf_replace_review,0.9,0.312,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,16,False
+000402_2021_2,000402,2021,2,md,0.7,1.0,numbering,0.909,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+000402_2022_2,000402,2022,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+000402_2023_2,000402,2023,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+000402_2024_2,000402,2024,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+000732_2023_4,000732,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000416_2024_4,000416,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+000420_2021_2,000420,2021,2,pdf_replace_review,1.0,0.871,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+603555_2024_4,603555,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+000502_2022_4,000502,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000518_2021_2,000518,2021,2,pdf_replace_review,1.0,0.818,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+000521_2023_2,000521,2023,2,pdf_replace_review,0.9,,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,9,False
+000540_2023_4,000540,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000585_2022_4,000585,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000587_2022_4,000587,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000587_2023_4,000587,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000606_2023_2,000606,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+000606_2023_4,000606,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000611_2022_4,000611,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000613_2022_4,000613,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000616_2023_2,000616,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000616_2023_4,000616,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000617_2021_2,000617,2021,2,pdf_low_conf,1.0,0.513,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,75,False
+000617_2021_4,000617,2021,4,pdf_low_conf,1.0,,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,106,False
+000617_2022_2,000617,2022,2,pdf_low_conf,1.0,0.521,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,70,False
+000617_2022_4,000617,2022,4,pdf_low_conf,1.0,0.406,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,97,False
+000619_2024_2,000619,2024,2,pdf_replace_review,1.0,0.0,bookmark,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000617_2023_2,000617,2023,2,pdf_low_conf,1.0,0.521,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,71,False
+000617_2023_4,000617,2023,4,pdf_low_conf,1.0,0.436,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,98,False
+000617_2024_2,000617,2024,2,pdf_low_conf,1.0,0.521,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,71,False
+000617_2024_4,000617,2024,4,pdf_low_conf,1.0,0.53,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,101,False
+000619_2021_2,000619,2021,2,pdf_replace_review,1.0,,bookmark,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000619_2022_2,000619,2022,2,pdf_replace_review,1.0,,bookmark,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000619_2023_2,000619,2023,2,pdf_replace_review,1.0,,bookmark,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000619_2023_4,000619,2023,4,pdf_replace_review,1.0,0.0,bookmark,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000667_2023_2,000667,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000667_2023_4,000667,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000668_2022_4,000668,2022,4,unrepairable,0.4,,,,pdf_extraction_failed,数据缺失,可修复,PDF 已下载但无标题产出：重试解析；扫描件走 OCR,11,False
+000671_2023_2,000671,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+000673_2022_4,000673,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000687_2022_4,000687,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+000690_2021_2,000690,2021,2,pdf_low_conf,0.0,0.0,bookmark,0.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+000703_2021_2,000703,2021,2,pdf_replace_review,1.0,0.857,numbering,0.714,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,14,False
+000732_2023_2,000732,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+000750_2021_4,000750,2021,4,unrepairable,0.9,,font_fallback,,pdf_extraction_failed,数据缺失,可修复,PDF 已下载但无标题产出：重试解析；扫描件走 OCR,9,False
+000756_2021_2,000756,2021,2,pdf_low_conf,0.3,0.958,numbering,0.545,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+000756_2022_2,000756,2022,2,md,0.4,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+000756_2023_2,000756,2023,2,md,0.4,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+000756_2024_2,000756,2024,2,md,0.4,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+000806_2023_2,000806,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000806_2023_4,000806,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000816_2023_4,000816,2023,4,pdf_replace_review,1.0,0.859,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+000836_2024_2,000836,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000836_2024_4,000836,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000839_2023_4,000839,2023,4,pdf_low_conf,0.8,0.0,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+000839_2024_4,000839,2024,4,pdf_low_conf,0.8,0.0,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+000861_2024_4,000861,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000862_2022_2,000862,2022,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+000918_2023_2,000918,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000918_2023_4,000918,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000961_2024_2,000961,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000961_2024_4,000961,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+000971_2024_2,000971,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+000982_2024_4,000982,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+000996_2024_4,000996,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+001227_2024_4,001227,2024,4,pdf_low_conf,0.8,0.95,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002006_2022_4,002006,2022,4,pdf_replace_review,1.0,0.515,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+002089_2023_4,002089,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002089_2024_4,002089,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002113_2023_2,002113,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002113_2023_4,002113,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002118_2023_2,002118,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002147_2022_4,002147,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002252_2022_4,002252,2022,4,pdf_replace_review,1.0,0.859,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+002260_2022_4,002260,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002325_2024_2,002325,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002280_2024_2,002280,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002280_2024_4,002280,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002308_2023_4,002308,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002308_2024_2,002308,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002308_2024_4,002308,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002325_2024_4,002325,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002327_2023_4,002327,2023,4,pdf_replace_review,1.0,0.704,numbering,0.9,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,20,False
+002341_2024_2,002341,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002341_2024_4,002341,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002411_2023_2,002411,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002411_2023_4,002411,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002417_2023_2,002417,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002417_2023_4,002417,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002435_2024_2,002435,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002433_2024_2,002433,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+002433_2024_4,002433,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+002447_2022_4,002447,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002450_2021_4,002450,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002463_2021_2,002463,2021,2,pdf_low_conf,0.8,0.95,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002463_2022_2,002463,2022,2,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+002463_2023_2,002463,2023,2,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+002463_2024_2,002463,2024,2,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+002464_2022_4,002464,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002468_2021_4,002468,2021,4,pdf_low_conf,1.0,0.51,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,158,False
+002468_2022_4,002468,2022,4,pdf_replace_review,1.0,0.607,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+002468_2023_4,002468,2023,4,pdf_replace_review,1.0,0.276,numbering,0.526,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+002468_2024_4,002468,2024,4,pdf_replace_review,1.0,0.772,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,16,False
+002473_2022_4,002473,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002502_2024_4,002502,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002503_2023_2,002503,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002503_2023_4,002503,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002504_2023_2,002504,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002504_2023_4,002504,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,5,False
+002505_2024_4,002505,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002610_2024_2,002610,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002618_2022_4,002618,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002621_2024_2,002621,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,15,False
+002621_2024_4,002621,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002665_2024_4,002665,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002703_2021_2,002703,2021,2,pdf_low_conf,0.6,0.944,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002703_2021_4,002703,2021,4,pdf_low_conf,0.7,1.0,numbering,0.818,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+002703_2022_2,002703,2022,2,pdf_low_conf,0.7,0.944,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002703_2022_4,002703,2022,4,pdf_low_conf,0.7,1.0,numbering,0.818,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+002703_2023_2,002703,2023,2,pdf_low_conf,0.7,1.0,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002703_2023_4,002703,2023,4,pdf_low_conf,0.7,0.773,numbering,0.818,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+002703_2024_2,002703,2024,2,pdf_low_conf,0.7,1.0,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002703_2024_4,002703,2024,4,pdf_low_conf,0.7,0.773,numbering,0.818,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+002711_2021_2,002711,2021,2,unrepairable,0.7,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+002711_2021_4,002711,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002736_2022_4,002736,2022,4,pdf_low_conf,1.0,0.542,bookmark,0.833,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,12,False
+002740_2023_4,002740,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+002740_2024_4,002740,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002751_2023_2,002751,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002770_2022_4,002770,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+002776_2023_4,002776,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002776_2024_4,002776,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002781_2023_2,002781,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002781_2023_4,002781,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+002845_2021_2,002845,2021,2,md,1.0,0.0,bookmark,0.077,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,11,True
+002936_2021_2,002936,2021,2,pdf_low_conf,0.7,1.0,numbering,0.727,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+002936_2021_4,002936,2021,4,pdf_low_conf,0.7,0.955,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+002936_2022_2,002936,2022,2,pdf_low_conf,0.7,0.833,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+002936_2023_2,002936,2023,2,pdf_low_conf,0.6,1.0,numbering,0.857,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+002936_2024_2,002936,2024,2,pdf_low_conf,0.6,1.0,numbering,0.857,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+002936_2024_4,002936,2024,4,pdf_low_conf,0.6,0.889,numbering,0.778,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+002950_2024_4,002950,2024,4,pdf_replace_review,1.0,0.913,numbering,0.917,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+003009_2021_2,003009,2021,2,pdf_replace_review,1.0,,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+300023_2022_4,300023,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+300038_2022_4,300038,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+300089_2023_2,300089,2023,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+300089_2023_4,300089,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+300110_2021_2,300110,2021,2,unrepairable,0.9,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,10,False
+300116_2024_2,300116,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+300116_2024_4,300116,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+300202_2022_2,300202,2022,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+300202_2022_4,300202,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+300262_2024_2,300262,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+300262_2024_4,300262,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+300273_2023_2,300273,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+300325_2022_4,300325,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+300330_2023_4,300330,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+300362_2021_4,300362,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+300435_2021_4,300435,2021,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+300494_2021_4,300494,2021,4,pdf_low_conf,0.8,1.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+300494_2022_4,300494,2022,4,pdf_low_conf,0.8,1.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+300526_2023_2,300526,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+300534_2021_2,300534,2021,2,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+300589_2021_2,300589,2021,2,pdf_replace_review,1.0,,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+300686_2021_4,300686,2021,4,pdf_low_conf,0.8,0.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+300723_2021_4,300723,2021,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+300799_2024_2,300799,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+300799_2024_4,300799,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+300865_2022_2,300865,2022,2,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+300888_2024_4,300888,2024,4,pdf_replace_review,1.0,0.853,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,17,False
+301091_2022_2,301091,2022,2,pdf_low_conf,0.0,0.0,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,1,False
+600008_2021_4,600008,2021,4,pdf_replace_review,1.0,0.871,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600008_2022_4,600008,2022,4,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600011_2021_4,600011,2021,4,md,1.0,0.0,bookmark,0.0,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,11,True
+600015_2024_2,600015,2024,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+600015_2024_4,600015,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+600016_2021_2,600016,2021,2,unrepairable,0.8,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,12,False
+600016_2022_2,600016,2022,2,pdf_low_conf,0.6,,numbering,0.9,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600016_2022_4,600016,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,16,True
+600016_2023_2,600016,2023,2,pdf_low_conf,0.6,,numbering,0.9,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600016_2023_4,600016,2023,4,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,16,True
+600016_2024_2,600016,2024,2,pdf_low_conf,0.6,,numbering,0.9,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600016_2024_4,600016,2024,4,pdf_low_conf,0.5,0.962,numbering,0.75,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+600023_2024_4,600023,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600028_2021_4,600028,2021,4,pdf_low_conf,0.7,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,1582,False
+600028_2022_2,600028,2022,2,pdf_low_conf,0.9,,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,1224,False
+600028_2022_4,600028,2022,4,pdf_low_conf,0.8,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,1162,False
+600028_2023_2,600028,2023,2,pdf_low_conf,0.8,0.5,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,1230,False
+600028_2023_4,600028,2023,4,pdf_low_conf,0.8,0.5,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,1422,False
+600028_2024_2,600028,2024,2,pdf_low_conf,0.0,0.0,bookmark,0.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,6,False
+600028_2024_4,600028,2024,4,pdf_low_conf,0.6,0.5,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,1360,False
+600029_2021_2,600029,2021,2,pdf_replace_review,1.0,0.739,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600029_2021_4,600029,2021,4,pdf_replace_review,0.9,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,9,False
+600030_2021_2,600030,2021,2,pdf_replace_review,1.0,0.0,numbering,0.917,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600030_2021_4,600030,2021,4,pdf_replace_review,0.9,0.958,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600030_2022_2,600030,2022,2,pdf_replace_review,0.9,0.607,numbering,0.917,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600035_2021_2,600035,2021,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600036_2021_2,600036,2021,2,pdf_low_conf,0.6,,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600036_2021_4,600036,2021,4,pdf_low_conf,0.6,0.0,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600036_2022_2,600036,2022,2,pdf_low_conf,0.5,,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600036_2023_2,600036,2023,2,pdf_low_conf,0.5,,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600036_2024_2,600036,2024,2,pdf_low_conf,0.5,,numbering,0.875,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600048_2021_2,600048,2021,2,pdf_replace_review,1.0,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600048_2021_4,600048,2021,4,pdf_replace_review,1.0,0.955,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600048_2022_2,600048,2022,2,pdf_replace_review,1.0,1.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600050_2022_2,600050,2022,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600050_2023_2,600050,2023,2,pdf_replace_review,1.0,0.859,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600050_2023_4,600050,2023,4,pdf_replace_review,0.9,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600050_2024_2,600050,2024,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600050_2024_4,600050,2024,4,pdf_replace_review,1.0,0.859,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600061_2021_4,600061,2021,4,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600071_2021_2,600071,2021,2,pdf_replace_review,1.0,0.822,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+600071_2022_4,600071,2022,4,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,16,False
+600076_2021_4,600076,2021,4,md,1.0,0.0,font_fallback,,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,11,True
+600077_2023_2,600077,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600077_2023_4,600077,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600083_2024_4,600083,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600086_2021_4,600086,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600091_2022_4,600091,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600093_2022_4,600093,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600139_2023_4,600139,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600112_2024_2,600112,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600112_2024_4,600112,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600122_2023_4,600122,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600128_2021_2,600128,2021,2,unrepairable,0.8,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600132_2023_4,600132,2023,4,pdf_low_conf,0.2,0.254,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,112,False
+600132_2024_4,600132,2024,4,pdf_low_conf,1.0,0.255,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,103,False
+600139_2022_4,600139,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600141_2021_2,600141,2021,2,pdf_replace_review,1.0,0.854,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600145_2021_2,600145,2021,2,unrepairable,0.7,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+600156_2022_4,600156,2022,4,pdf_replace_review,1.0,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600158_2021_2,600158,2021,2,pdf_low_conf,0.8,0.875,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600188_2021_2,600188,2021,2,pdf_low_conf,0.1,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,31,False
+600196_2021_4,600196,2021,4,pdf_replace_review,1.0,0.955,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600209_2022_4,600209,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600213_2024_4,600213,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600220_2024_2,600220,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600220_2024_4,600220,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600225_2024_4,600225,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600233_2021_4,600233,2021,4,pdf_low_conf,1.0,0.501,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,530,False
+600233_2023_4,600233,2023,4,pdf_low_conf,1.0,0.251,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,530,False
+600233_2024_4,600233,2024,4,pdf_low_conf,1.0,0.251,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,520,False
+600275_2022_4,600275,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600276_2021_2,600276,2021,2,pdf_replace_review,1.0,0.801,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600277_2024_2,600277,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600277_2024_4,600277,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600290_2023_4,600290,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600290_2024_4,600290,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600291_2022_4,600291,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600292_2021_2,600292,2021,2,pdf_replace_review,1.0,0.79,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,17,False
+600293_2021_2,600293,2021,2,unrepairable,0.8,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600293_2022_2,600293,2022,2,unrepairable,1.0,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,10,False
+600297_2024_2,600297,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600306_2024_4,600306,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600307_2021_4,600307,2021,4,pdf_replace_review,1.0,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600309_2021_2,600309,2021,2,pdf_replace_review,1.0,0.905,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600311_2021_2,600311,2021,2,pdf_low_conf,0.8,0.729,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600311_2022_4,600311,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600311_2023_4,600311,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600321_2024_4,600321,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600332_2024_2,600332,2024,2,pdf_replace_review,0.9,0.295,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600338_2021_2,600338,2021,2,pdf_replace_review,0.9,0.844,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,18,False
+600351_2021_2,600351,2021,2,pdf_replace_review,1.0,0.644,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600353_2023_2,600353,2023,2,pdf_replace_review,1.0,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600368_2021_2,600368,2021,2,pdf_low_conf,0.8,0.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600368_2023_2,600368,2023,2,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,15,False
+600375_2023_2,600375,2023,2,pdf_replace_review,1.0,0.917,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,15,False
+600382_2022_4,600382,2022,4,pdf_low_conf,0.7,0.417,numbering,0.917,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+600385_2022_2,600385,2022,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+600386_2021_2,600386,2021,2,pdf_low_conf,0.8,0.804,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600390_2022_4,600390,2022,4,pdf_replace_review,1.0,0.818,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600393_2023_2,600393,2023,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600393_2023_4,600393,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+600398_2021_2,600398,2021,2,pdf_low_conf,0.6,0.54,numbering,0.909,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+600405_2024_4,600405,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600808_2023_4,600808,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+600466_2023_4,600466,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600488_2023_4,600488,2023,4,pdf_replace_review,1.0,0.871,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600488_2024_2,600488,2024,2,pdf_replace_review,1.0,0.871,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600497_2023_2,600497,2023,2,pdf_replace_review,1.0,0.614,numbering,0.5,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,22,False
+600500_2021_4,600500,2021,4,pdf_replace_review,0.9,0.591,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600500_2022_4,600500,2022,4,pdf_low_conf,0.8,0.191,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600505_2022_4,600505,2022,4,pdf_low_conf,0.8,0.95,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+600510_2021_2,600510,2021,2,pdf_replace_review,1.0,0.701,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600528_2021_2,600528,2021,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600528_2021_4,600528,2021,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600528_2022_2,600528,2022,2,pdf_replace_review,1.0,0.859,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600528_2022_4,600528,2022,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600528_2023_4,600528,2023,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600532_2023_4,600532,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600552_2024_2,600552,2024,2,pdf_replace_review,1.0,0.827,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,17,False
+600555_2022_2,600555,2022,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+600555_2022_4,600555,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600808_2024_4,600808,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+600565_2024_2,600565,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600585_2021_2,600585,2021,2,pdf_low_conf,0.2,0.528,bookmark,0.111,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,18,False
+600585_2021_4,600585,2021,4,pdf_low_conf,0.1,0.0,bookmark,0.1,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600585_2022_2,600585,2022,2,pdf_low_conf,0.1,0.278,bookmark,0.056,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,18,False
+600585_2022_4,600585,2022,4,pdf_low_conf,0.1,0.217,bookmark,0.1,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600585_2023_2,600585,2023,2,pdf_low_conf,0.1,0.279,bookmark,0.059,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,17,False
+600585_2023_4,600585,2023,4,pdf_low_conf,0.1,0.55,bookmark,0.1,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600585_2024_2,600585,2024,2,pdf_low_conf,0.1,0.531,bookmark,0.062,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,16,False
+600585_2024_4,600585,2024,4,pdf_low_conf,0.1,0.55,bookmark,0.1,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600614_2021_4,600614,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600629_2021_4,600629,2021,4,md,1.0,0.0,font_fallback,,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,11,True
+600634_2021_2,600634,2021,2,unrepairable,0.8,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600647_2024_4,600647,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600652_2022_4,600652,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600653_2021_2,600653,2021,2,pdf_replace_review,1.0,0.701,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600662_2022_4,600662,2022,4,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600671_2023_2,600671,2023,2,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600685_2021_4,600685,2021,4,md,1.0,0.083,bookmark,0.083,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,12,True
+600687_2021_4,600687,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600688_2021_2,600688,2021,2,pdf_low_conf,0.1,0.094,bookmark,0.077,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+600688_2021_4,600688,2021,4,pdf_low_conf,0.6,0.749,numbering,0.588,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,17,False
+600688_2022_2,600688,2022,2,pdf_low_conf,0.1,0.084,bookmark,0.077,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+600688_2022_4,600688,2022,4,pdf_low_conf,0.8,0.749,numbering,0.706,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,17,False
+600688_2023_2,600688,2023,2,pdf_low_conf,0.1,0.084,bookmark,0.077,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+600688_2023_4,600688,2023,4,pdf_low_conf,0.8,0.744,numbering,0.684,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,19,False
+600688_2024_2,600688,2024,2,pdf_low_conf,0.8,0.812,numbering,0.857,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,14,False
+600688_2024_4,600688,2024,4,pdf_low_conf,0.8,0.744,numbering,0.684,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,19,False
+600695_2022_4,600695,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600701_2021_4,600701,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600712_2021_4,600712,2021,4,md,1.0,0.0,font_fallback,,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,11,True
+600714_2023_4,600714,2023,4,pdf_replace_review,1.0,0.533,numbering,0.667,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,15,False
+600716_2021_2,600716,2021,2,unrepairable,0.9,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,10,False
+600737_2023_4,600737,2023,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600743_2021_2,600743,2021,2,pdf_replace_review,1.0,0.729,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600749_2024_4,600749,2024,4,pdf_replace_review,1.0,0.0,numbering,0.526,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+600755_2021_2,600755,2021,2,pdf_replace_review,1.0,0.756,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600767_2023_4,600767,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+600793_2021_2,600793,2021,2,pdf_low_conf,0.7,0.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+600793_2022_2,600793,2022,2,pdf_low_conf,0.7,0.938,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+600793_2022_4,600793,2022,4,pdf_low_conf,0.7,0.938,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+600793_2023_2,600793,2023,2,pdf_low_conf,0.7,0.938,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+600800_2021_2,600800,2021,2,pdf_replace_review,1.0,0.0,numbering,0.149,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,67,False
+600800_2021_4,600800,2021,4,pdf_replace_review,1.0,0.489,numbering,0.147,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,68,False
+600800_2023_2,600800,2023,2,pdf_replace_review,1.0,0.0,numbering,0.145,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,69,False
+600800_2023_4,600800,2023,4,pdf_replace_review,1.0,0.489,numbering,0.147,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,68,False
+600800_2024_2,600800,2024,2,pdf_replace_review,1.0,0.0,numbering,0.149,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,67,False
+600808_2021_2,600808,2021,2,pdf_low_conf,0.7,0.65,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600811_2024_4,600811,2024,4,unrepairable,1.0,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,10,False
+600816_2024_4,600816,2024,4,pdf_replace_review,1.0,0.0,numbering,0.917,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+600823_2022_2,600823,2022,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600823_2024_4,600823,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600826_2021_2,600826,2021,2,pdf_replace_review,1.0,0.644,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600828_2021_2,600828,2021,2,pdf_low_conf,0.8,0.729,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600830_2021_2,600830,2021,2,pdf_replace_review,1.0,0.808,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600834_2021_4,600834,2021,4,pdf_replace_review,1.0,0.582,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600834_2022_4,600834,2022,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600836_2024_2,600836,2024,2,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600856_2021_2,600856,2021,2,pdf_replace_review,1.0,0.784,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+600856_2022_4,600856,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600958_2024_4,600958,2024,4,unrepairable,0.0,,,,pdf_extraction_failed,数据缺失,可修复,PDF 已下载但无标题产出：重试解析；扫描件走 OCR,0,False
+600866_2024_2,600866,2024,2,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600870_2022_2,600870,2022,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,8,False
+600871_2021_2,600871,2021,2,md,0.7,0.95,numbering,1.0,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+600871_2021_4,600871,2021,4,md,0.7,0.917,numbering,0.833,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+600871_2022_2,600871,2022,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+600871_2022_4,600871,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+600871_2023_4,600871,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+600871_2024_4,600871,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+600874_2021_2,600874,2021,2,unrepairable,0.6,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600875_2021_2,600875,2021,2,pdf_replace_review,1.0,0.6,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2021_4,600875,2021,4,pdf_replace_review,0.9,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2022_2,600875,2022,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2022_4,600875,2022,4,pdf_replace_review,0.9,1.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2023_2,600875,2023,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2023_4,600875,2023,4,pdf_replace_review,0.9,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2024_2,600875,2024,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+600875_2024_4,600875,2024,4,pdf_low_conf,0.8,0.95,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+600882_2021_4,600882,2021,4,pdf_replace_review,1.0,0.883,numbering,0.857,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,14,False
+600882_2022_4,600882,2022,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+600890_2022_4,600890,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600891_2021_4,600891,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600919_2022_4,600919,2022,4,pdf_low_conf,0.7,0.0,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600919_2023_2,600919,2023,2,pdf_low_conf,0.7,0.955,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+600919_2023_4,600919,2023,4,pdf_low_conf,0.7,0.0,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+600919_2024_4,600919,2024,4,pdf_low_conf,0.7,0.0,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+600926_2021_2,600926,2021,2,md,0.6,0.871,numbering,0.909,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+600926_2021_4,600926,2021,4,pdf_low_conf,0.7,1.0,numbering,0.909,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+600926_2022_2,600926,2022,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+600926_2022_4,600926,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+600926_2023_2,600926,2023,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+600926_2023_4,600926,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+600926_2024_2,600926,2024,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+600926_2024_4,600926,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+600928_2022_2,600928,2022,2,pdf_low_conf,0.7,0.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+600938_2023_2,600938,2023,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,2,False
+600938_2024_2,600938,2024,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,2,False
+600941_2023_2,600941,2023,2,pdf_low_conf,0.5,0.545,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+600941_2024_2,600941,2024,2,pdf_low_conf,0.4,0.571,bookmark,0.571,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,7,False
+600958_2023_2,600958,2023,2,pdf_low_conf,0.2,,bookmark,0.4,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,5,False
+600958_2023_4,600958,2023,4,pdf_low_conf,0.2,,bookmark,0.4,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,5,False
+600958_2024_2,600958,2024,2,pdf_low_conf,0.2,,bookmark,0.4,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,5,False
+600973_2021_2,600973,2021,2,unrepairable,0.6,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+600978_2021_4,600978,2021,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+600979_2021_2,600979,2021,2,pdf_replace_review,1.0,0.747,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601988_2023_2,601988,2023,2,pdf_low_conf,0.6,0.504,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,118,False
+601988_2023_4,601988,2023,4,pdf_low_conf,0.7,0.198,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,216,False
+601988_2024_2,601988,2024,2,pdf_low_conf,0.6,0.504,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,124,False
+601988_2024_4,601988,2024,4,pdf_low_conf,0.2,0.101,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,131,False
+601006_2021_2,601006,2021,2,unrepairable,0.6,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+601008_2024_4,601008,2024,4,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601009_2021_4,601009,2021,4,pdf_replace_review,0.9,0.0,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+601012_2024_4,601012,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+601021_2023_2,601021,2023,2,pdf_replace_review,1.0,0.679,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+601021_2024_4,601021,2024,4,pdf_replace_review,1.0,0.859,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601058_2021_2,601058,2021,2,pdf_replace_review,1.0,0.689,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601066_2024_4,601066,2024,4,pdf_replace_review,0.9,0.359,numbering,0.474,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+601068_2021_2,601068,2021,2,pdf_replace_review,1.0,0.729,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601068_2021_4,601068,2021,4,pdf_low_conf,0.9,0.515,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,33,False
+601068_2022_4,601068,2022,4,pdf_replace_review,1.0,0.625,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+601068_2023_2,601068,2023,2,pdf_replace_review,1.0,0.859,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601068_2023_4,601068,2023,4,pdf_replace_review,1.0,0.923,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+601068_2024_2,601068,2024,2,pdf_replace_review,1.0,0.871,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601068_2024_4,601068,2024,4,pdf_replace_review,1.0,0.923,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+601077_2021_2,601077,2021,2,pdf_low_conf,0.7,0.917,numbering,0.583,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601077_2021_4,601077,2021,4,pdf_low_conf,0.6,1.0,numbering,0.5,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,14,False
+601077_2022_2,601077,2022,2,pdf_low_conf,0.6,1.0,numbering,0.545,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+601077_2023_2,601077,2023,2,pdf_low_conf,0.6,0.923,numbering,0.545,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+601088_2021_2,601088,2021,2,md,0.6,0.958,numbering,0.727,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601088_2021_4,601088,2021,4,md,0.7,0.962,numbering,0.667,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601088_2022_2,601088,2022,2,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601088_2022_4,601088,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601088_2023_2,601088,2023,2,pdf_low_conf,0.6,1.0,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601088_2023_4,601088,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601088_2024_2,601088,2024,2,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+601088_2024_4,601088,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601117_2021_2,601117,2021,2,pdf_replace_review,1.0,0.864,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601117_2021_4,601117,2021,4,pdf_replace_review,1.0,0.818,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601127_2022_2,601127,2022,2,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601128_2022_2,601128,2022,2,pdf_low_conf,0.7,0.516,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,61,False
+601128_2023_2,601128,2023,2,pdf_low_conf,0.7,0.508,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,64,False
+601128_2024_2,601128,2024,2,pdf_low_conf,0.6,0.562,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,68,False
+601136_2024_4,601136,2024,4,pdf_low_conf,0.0,0.542,numbering,0.083,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601166_2021_4,601166,2021,4,pdf_low_conf,0.8,1.0,numbering,0.909,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+601166_2024_2,601166,2024,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+601166_2024_4,601166,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+601187_2021_2,601187,2021,2,pdf_low_conf,0.7,0.844,numbering,0.9,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601187_2021_4,601187,2021,4,md,0.7,0.889,numbering,0.889,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+601187_2022_2,601187,2022,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+601187_2022_4,601187,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+601187_2023_2,601187,2023,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+601187_2023_4,601187,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+601187_2024_2,601187,2024,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,9,True
+601187_2024_4,601187,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+601208_2022_4,601208,2022,4,pdf_replace_review,1.0,0.515,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601211_2022_2,601211,2022,2,pdf_low_conf,0.3,0.258,numbering,0.136,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,22,False
+601225_2021_4,601225,2021,4,md,1.0,0.0,font_fallback,,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,12,True
+601229_2021_2,601229,2021,2,pdf_low_conf,0.8,1.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601229_2021_4,601229,2021,4,pdf_low_conf,0.8,1.0,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601238_2024_2,601238,2024,2,pdf_replace_review,1.0,0.872,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601288_2021_2,601288,2021,2,pdf_low_conf,0.4,0.519,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,26,False
+601288_2021_4,601288,2021,4,pdf_low_conf,0.2,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,187,False
+601288_2022_2,601288,2022,2,pdf_low_conf,0.4,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,24,False
+601288_2022_4,601288,2022,4,pdf_low_conf,0.2,0.41,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,186,False
+601288_2023_2,601288,2023,2,pdf_low_conf,0.0,,bookmark,0.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,36,False
+601288_2023_4,601288,2023,4,pdf_low_conf,0.3,0.404,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,183,False
+601288_2024_2,601288,2024,2,pdf_low_conf,0.2,0.547,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+601288_2024_4,601288,2024,4,pdf_low_conf,0.2,0.432,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,177,False
+601318_2021_2,601318,2021,2,pdf_low_conf,0.0,,bookmark,0.111,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601318_2021_4,601318,2021,4,pdf_low_conf,0.3,0.551,bookmark,0.154,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,39,False
+601318_2022_4,601318,2022,4,md,0.4,0.585,bookmark,0.154,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,125,True
+601318_2023_2,601318,2023,2,pdf_low_conf,0.0,0.074,bookmark,0.111,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601318_2023_4,601318,2023,4,md,0.4,0.59,bookmark,0.158,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,127,True
+601318_2024_2,601318,2024,2,pdf_low_conf,0.0,0.611,bookmark,0.111,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601318_2024_4,601318,2024,4,md,0.4,0.614,bookmark,0.206,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,125,True
+601319_2021_2,601319,2021,2,pdf_low_conf,0.7,0.536,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,28,False
+601319_2021_4,601319,2021,4,pdf_low_conf,0.7,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,33,False
+601319_2022_2,601319,2022,2,pdf_low_conf,0.7,0.668,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,28,False
+601319_2022_4,601319,2022,4,pdf_low_conf,0.7,0.642,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,34,False
+601319_2023_2,601319,2023,2,pdf_low_conf,0.7,0.534,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,29,False
+601319_2023_4,601319,2023,4,pdf_low_conf,0.7,0.596,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,48,False
+601319_2024_2,601319,2024,2,pdf_low_conf,0.7,0.373,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,25,False
+601319_2024_4,601319,2024,4,pdf_low_conf,0.6,0.582,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,44,False
+601328_2021_2,601328,2021,2,pdf_low_conf,0.5,0.519,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,27,False
+601328_2022_2,601328,2022,2,md,0.6,0.679,font_fallback,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601328_2023_2,601328,2023,2,md,0.6,0.542,font_fallback,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+601328_2024_2,601328,2024,2,md,0.6,0.69,font_fallback,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+601330_2021_4,601330,2021,4,pdf_replace_review,1.0,0.967,numbering,0.8,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,15,False
+601330_2023_2,601330,2023,2,pdf_replace_review,1.0,0.72,numbering,0.917,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+601336_2021_2,601336,2021,2,pdf_low_conf,0.7,0.0,numbering,0.069,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,130,False
+601336_2022_2,601336,2022,2,pdf_low_conf,0.7,0.0,numbering,0.089,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,90,False
+601336_2023_2,601336,2023,2,pdf_low_conf,0.7,,numbering,0.045,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,179,False
+601336_2023_4,601336,2023,4,pdf_low_conf,0.5,0.709,numbering,0.423,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,26,False
+601336_2024_2,601336,2024,2,pdf_low_conf,0.6,,numbering,0.082,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,98,False
+601366_2021_2,601366,2021,2,pdf_replace_review,1.0,0.644,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601368_2021_2,601368,2021,2,pdf_replace_review,1.0,0.698,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+601398_2021_2,601398,2021,2,pdf_low_conf,0.1,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,55,False
+601398_2021_4,601398,2021,4,pdf_low_conf,0.2,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,61,False
+601398_2022_2,601398,2022,2,pdf_low_conf,0.1,0.104,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,63,False
+601398_2022_4,601398,2022,4,pdf_low_conf,0.2,0.041,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,63,False
+601398_2023_2,601398,2023,2,pdf_low_conf,0.1,0.098,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,70,False
+601398_2023_4,601398,2023,4,pdf_low_conf,0.3,0.142,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,99,False
+601398_2024_2,601398,2024,2,pdf_low_conf,0.1,0.181,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,70,False
+601398_2024_4,601398,2024,4,pdf_low_conf,0.3,0.518,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,253,False
+601598_2021_4,601598,2021,4,pdf_replace_review,1.0,0.762,numbering,0.476,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,21,False
+601598_2022_2,601598,2022,2,pdf_replace_review,1.0,0.789,numbering,0.526,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+601598_2024_2,601598,2024,2,pdf_replace_review,1.0,0.687,numbering,0.526,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+601601_2021_2,601601,2021,2,pdf_low_conf,0.3,,bookmark,0.333,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601601_2021_4,601601,2021,4,pdf_low_conf,0.3,0.3,bookmark,0.3,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601601_2022_2,601601,2022,2,pdf_low_conf,0.3,0.306,bookmark,0.333,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601601_2022_4,601601,2022,4,pdf_low_conf,0.3,0.441,bookmark,0.3,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601601_2023_2,601601,2023,2,pdf_low_conf,0.3,0.306,bookmark,0.333,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601601_2023_4,601601,2023,4,pdf_low_conf,0.3,0.3,bookmark,0.3,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601601_2024_2,601601,2024,2,pdf_low_conf,0.3,0.306,bookmark,0.333,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+601601_2024_4,601601,2024,4,pdf_low_conf,0.3,0.3,bookmark,0.3,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601607_2021_2,601607,2021,2,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601607_2021_4,601607,2021,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601607_2023_4,601607,2023,4,pdf_replace_review,0.9,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601607_2024_4,601607,2024,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+601611_2023_2,601611,2023,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601628_2021_2,601628,2021,2,pdf_low_conf,0.5,0.0,bookmark,0.417,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601628_2021_4,601628,2021,4,pdf_low_conf,0.5,0.0,bookmark,0.417,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601628_2022_2,601628,2022,2,pdf_low_conf,0.5,0.292,bookmark,0.417,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601628_2022_4,601628,2022,4,md,0.5,0.188,bookmark,0.417,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,139,True
+601628_2023_2,601628,2023,2,pdf_low_conf,0.5,0.292,bookmark,0.417,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601628_2023_4,601628,2023,4,pdf_low_conf,0.5,0.292,bookmark,0.417,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,12,False
+601628_2024_2,601628,2024,2,md,0.5,0.239,bookmark,0.417,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,97,True
+601628_2024_4,601628,2024,4,pdf_low_conf,0.5,0.0,bookmark,0.385,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+601688_2023_2,601688,2023,2,pdf_low_conf,0.8,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,89,False
+601658_2021_2,601658,2021,2,pdf_low_conf,0.5,0.525,bookmark,0.4,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,20,False
+601658_2022_2,601658,2022,2,pdf_low_conf,0.6,0.518,bookmark,0.321,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,28,False
+601658_2022_4,601658,2022,4,md,0.7,0.22,bookmark,0.333,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,205,True
+601658_2023_2,601658,2023,2,pdf_low_conf,0.5,0.49,bookmark,0.296,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,27,False
+601658_2023_4,601658,2023,4,md,0.8,0.214,bookmark,0.35,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,320,True
+601658_2024_2,601658,2024,2,pdf_low_conf,0.7,0.531,bookmark,0.344,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,32,False
+601658_2024_4,601658,2024,4,md,0.8,0.218,bookmark,0.368,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,325,True
+601665_2022_2,601665,2022,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+601665_2022_4,601665,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+601665_2023_2,601665,2023,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+601665_2023_4,601665,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601665_2024_2,601665,2024,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+601665_2024_4,601665,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,10,True
+601688_2023_4,601688,2023,4,pdf_low_conf,0.7,0.344,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,96,False
+601677_2021_2,601677,2021,2,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601688_2021_2,601688,2021,2,pdf_low_conf,0.8,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,78,False
+601688_2022_2,601688,2022,2,pdf_low_conf,0.8,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,156,False
+601688_2022_4,601688,2022,4,pdf_low_conf,0.8,0.423,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,101,False
+601688_2024_2,601688,2024,2,pdf_low_conf,0.8,0.439,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,64,False
+601688_2024_4,601688,2024,4,pdf_low_conf,0.8,0.361,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,101,False
+601699_2024_2,601699,2024,2,pdf_replace_review,1.0,0.897,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+601818_2021_2,601818,2021,2,md,0.5,1.0,numbering,0.433,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,15,True
+601818_2021_4,601818,2021,4,pdf_low_conf,0.5,0.983,numbering,0.3,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,30,False
+601818_2022_2,601818,2022,2,md,0.5,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,14,True
+601818_2022_4,601818,2022,4,md,0.5,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,17,True
+601818_2023_2,601818,2023,2,md,0.5,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601818_2024_2,601818,2024,2,pdf_low_conf,0.5,0.981,numbering,0.346,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,26,False
+601825_2022_4,601825,2022,4,md,0.8,0.498,font_fallback,,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,20,True
+601825_2024_4,601825,2024,4,pdf_low_conf,0.6,0.503,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,369,False
+601857_2021_2,601857,2021,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,6,False
+601857_2022_2,601857,2022,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,6,False
+601857_2023_2,601857,2023,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,5,False
+601857_2024_2,601857,2024,2,pdf_low_conf,0.0,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,5,False
+601860_2021_4,601860,2021,4,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601860_2022_4,601860,2022,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601860_2023_4,601860,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601860_2024_4,601860,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,12,True
+601881_2023_2,601881,2023,2,pdf_low_conf,1.0,0.255,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,112,False
+601881_2024_2,601881,2024,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601881_2024_4,601881,2024,4,pdf_low_conf,0.8,0.33,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+601882_2022_2,601882,2022,2,pdf_replace_review,1.0,0.955,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601899_2021_2,601899,2021,2,pdf_low_conf,1.0,0.524,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,21,False
+601899_2022_2,601899,2022,2,pdf_low_conf,1.0,0.529,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,17,False
+601899_2022_4,601899,2022,4,pdf_low_conf,0.0,0.0,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,15,False
+601899_2023_4,601899,2023,4,pdf_low_conf,0.8,0.633,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,26,False
+601899_2024_4,601899,2024,4,unrepairable,0.4,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,149,False
+601901_2021_4,601901,2021,4,pdf_replace_review,1.0,0.0,numbering,0.455,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,22,False
+601901_2022_2,601901,2022,2,pdf_replace_review,1.0,0.0,numbering,0.455,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,22,False
+601901_2023_4,601901,2023,4,pdf_replace_review,1.0,0.0,numbering,0.455,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,22,False
+601901_2024_2,601901,2024,2,pdf_replace_review,1.0,0.548,numbering,0.455,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,22,False
+601901_2024_4,601901,2024,4,pdf_replace_review,1.0,0.424,numbering,0.455,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,22,False
+601916_2021_2,601916,2021,2,pdf_low_conf,0.5,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,21,False
+601916_2022_2,601916,2022,2,pdf_low_conf,0.5,0.524,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,21,False
+601916_2023_2,601916,2023,2,pdf_low_conf,0.5,0.524,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,21,False
+601916_2024_2,601916,2024,2,pdf_low_conf,0.5,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,21,False
+601916_2024_4,601916,2024,4,pdf_low_conf,0.5,0.52,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,122,False
+601939_2021_2,601939,2021,2,pdf_low_conf,0.2,,bookmark,0.154,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,13,False
+601939_2022_2,601939,2022,2,pdf_low_conf,0.2,0.0,bookmark,0.143,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,14,False
+601939_2023_2,601939,2023,2,md,0.6,0.073,bookmark,0.133,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,156,True
+601939_2024_2,601939,2024,2,md,0.6,0.078,bookmark,0.143,cross_pipeline_disagreement_low,跨源冲突,需人工,三源并排底稿人工裁定,150,True
+601963_2022_2,601963,2022,2,pdf_low_conf,0.8,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,30,False
+601963_2023_2,601963,2023,2,pdf_low_conf,0.8,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,30,False
+601963_2024_2,601963,2024,2,pdf_low_conf,0.8,,bookmark,0.556,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,18,False
+601966_2021_2,601966,2021,2,pdf_replace_review,1.0,0.644,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601966_2022_2,601966,2022,2,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601966_2023_2,601966,2023,2,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601985_2022_4,601985,2022,4,pdf_replace_review,1.0,1.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601988_2021_2,601988,2021,2,pdf_low_conf,0.5,0.508,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,118,False
+601988_2021_4,601988,2021,4,pdf_low_conf,0.7,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,220,False
+601988_2022_2,601988,2022,2,pdf_low_conf,0.6,0.508,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,119,False
+601988_2022_4,601988,2022,4,pdf_low_conf,0.2,,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,134,False
+601992_2021_2,601992,2021,2,pdf_replace_review,1.0,0.701,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+601995_2022_2,601995,2022,2,pdf_low_conf,0.9,,font_fallback,,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,103,False
+601995_2022_4,601995,2022,4,pdf_low_conf,0.7,0.136,bookmark,0.5,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,22,False
+601995_2023_2,601995,2023,2,pdf_low_conf,0.9,,bookmark,0.667,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,18,False
+601995_2024_2,601995,2024,2,pdf_low_conf,0.9,,bookmark,0.667,pdf_quality_weak,算法边界,可修复,放宽编号连续性校验或改用目录页结构,18,False
+601995_2024_4,601995,2024,4,pdf_low_conf,0.7,0.551,bookmark,0.524,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,21,False
+601998_2021_2,601998,2021,2,pdf_low_conf,0.6,1.0,numbering,0.818,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,11,False
+601998_2022_2,601998,2022,2,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601998_2023_2,601998,2023,2,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+601998_2024_2,601998,2024,2,md,0.6,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,13,True
+603017_2021_2,603017,2021,2,unrepairable,0.9,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,10,False
+603030_2024_4,603030,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+603040_2021_4,603040,2021,4,pdf_replace_review,1.0,0.9,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,10,False
+603081_2021_4,603081,2021,4,pdf_replace_review,1.0,0.567,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+603119_2024_4,603119,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+603133_2024_4,603133,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+603155_2024_4,603155,2024,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,1,False
+603157_2022_4,603157,2022,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+603158_2024_4,603158,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+603159_2021_2,603159,2021,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,1,False
+603196_2023_2,603196,2023,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603218_2023_4,603218,2023,4,pdf_low_conf,0.8,0.0,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+603229_2021_4,603229,2021,4,pdf_replace_review,1.0,0.627,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603258_2024_4,603258,2024,4,pdf_replace_review,1.0,0.878,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,15,False
+603278_2021_4,603278,2021,4,pdf_replace_review,1.0,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603300_2021_2,603300,2021,2,pdf_low_conf,0.8,0.0,numbering,0.8,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,10,False
+603300_2022_4,603300,2022,4,pdf_replace_review,1.0,,numbering,0.842,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+603300_2023_2,603300,2023,2,pdf_replace_review,1.0,0.701,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603303_2021_2,603303,2021,2,pdf_replace_review,1.0,0.771,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+603319_2024_4,603319,2024,4,pdf_low_conf,0.8,0.889,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+603360_2021_2,603360,2021,2,pdf_replace_review,1.0,0.801,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603366_2021_4,603366,2021,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603366_2022_4,603366,2022,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603386_2021_4,603386,2021,4,pdf_replace_review,1.0,0.582,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603386_2023_4,603386,2023,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603393_2021_2,603393,2021,2,unrepairable,0.6,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+603408_2024_2,603408,2024,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603488_2024_4,603488,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+603518_2023_4,603518,2023,4,pdf_replace_review,1.0,0.95,numbering,0.9,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,20,False
+603555_2023_4,603555,2023,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+603599_2023_4,603599,2023,4,pdf_replace_review,1.0,0.891,numbering,0.941,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,17,False
+603603_2023_4,603603,2023,4,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,6,False
+603603_2024_4,603603,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+603609_2024_4,603609,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+603616_2021_2,603616,2021,2,pdf_replace_review,1.0,0.859,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603616_2022_2,603616,2022,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603655_2021_2,603655,2021,2,pdf_low_conf,0.0,0.0,font_fallback,,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,2,False
+603655_2022_4,603655,2022,4,unrepairable,0.9,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,10,False
+603658_2022_2,603658,2022,2,pdf_replace_review,0.9,0.95,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,16,False
+603683_2021_2,603683,2021,2,pdf_replace_review,1.0,0.556,numbering,0.278,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,36,False
+603719_2024_4,603719,2024,4,pdf_low_conf,0.8,0.944,numbering,1.0,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,8,False
+603767_2021_2,603767,2021,2,pdf_replace_review,1.0,0.822,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+603801_2021_2,603801,2021,2,pdf_replace_review,1.0,0.819,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+603801_2021_4,603801,2021,4,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+603801_2024_2,603801,2024,2,unrepairable,0.1,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,1,False
+603867_2021_2,603867,2021,2,pdf_replace_review,1.0,0.912,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+603877_2022_4,603877,2022,4,pdf_replace_review,1.0,0.727,numbering,0.632,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+603877_2023_4,603877,2023,4,pdf_replace_review,1.0,0.753,numbering,0.632,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+603882_2021_2,603882,2021,2,pdf_replace_review,1.0,0.79,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,17,False
+603920_2021_2,603920,2021,2,pdf_replace_review,1.0,0.707,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+603927_2022_4,603927,2022,4,pdf_replace_review,1.0,0.958,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+603949_2024_2,603949,2024,2,pdf_replace_review,1.0,0.859,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603958_2022_2,603958,2022,2,pdf_replace_review,1.0,0.554,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+603958_2022_4,603958,2022,4,pdf_replace_review,1.0,0.0,numbering,0.714,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,14,False
+603960_2021_2,603960,2021,2,pdf_replace_review,1.0,0.796,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+603960_2022_4,603960,2022,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+603963_2024_4,603963,2024,4,unrepairable,0.2,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,7,False
+603968_2021_2,603968,2021,2,pdf_replace_review,1.0,0.0,numbering,0.417,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,24,False
+603968_2021_4,603968,2021,4,pdf_replace_review,1.0,0.0,numbering,0.417,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,24,False
+603968_2022_2,603968,2022,2,pdf_replace_review,1.0,0.663,numbering,0.417,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,24,False
+603968_2022_4,603968,2022,4,pdf_replace_review,1.0,0.65,numbering,0.417,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,24,False
+603968_2023_2,603968,2023,2,pdf_replace_review,1.0,0.0,numbering,0.417,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,24,False
+603968_2023_4,603968,2023,4,pdf_replace_review,1.0,0.0,numbering,0.5,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,20,False
+603968_2024_2,603968,2024,2,pdf_replace_review,1.0,0.705,numbering,0.5,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,20,False
+603968_2024_4,603968,2024,4,pdf_replace_review,1.0,0.0,numbering,0.5,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,20,False
+603992_2023_4,603992,2023,4,pdf_replace_review,1.0,0.505,numbering,0.526,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,19,False
+603993_2023_2,603993,2023,2,pdf_replace_review,0.9,,numbering,0.889,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,18,False
+603993_2024_2,603993,2024,2,pdf_replace_review,0.9,,numbering,0.8,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,20,False
+603993_2024_4,603993,2024,4,pdf_replace_review,0.9,0.909,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+605117_2022_4,605117,2022,4,unrepairable,0.1,,,,pdf_extraction_failed,数据缺失,可修复,PDF 已下载但无标题产出：重试解析；扫描件走 OCR,1,False
+605258_2021_2,605258,2021,2,pdf_replace_review,1.0,0.499,numbering,0.175,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,57,False
+605258_2023_2,605258,2023,2,pdf_replace_review,1.0,0.0,numbering,0.154,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,65,False
+605268_2022_4,605268,2022,4,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+605268_2023_2,605268,2023,2,pdf_replace_review,1.0,0.0,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688002_2022_4,688002,2022,4,pdf_replace_review,0.9,0.0,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688002_2023_2,688002,2023,2,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688002_2024_4,688002,2024,4,pdf_replace_review,0.9,0.0,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688006_2023_4,688006,2023,4,pdf_replace_review,0.9,0.582,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688021_2021_2,688021,2021,2,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688066_2021_2,688066,2021,2,pdf_replace_review,1.0,0.73,numbering,0.714,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,14,False
+688076_2022_4,688076,2022,4,pdf_replace_review,0.9,0.582,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688081_2022_2,688081,2022,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688085_2021_4,688085,2021,4,pdf_low_conf,0.8,0.0,numbering,0.889,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,9,False
+688089_2021_2,688089,2021,2,pdf_replace_review,1.0,0.771,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688093_2021_2,688093,2021,2,pdf_replace_review,1.0,0.808,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688095_2021_2,688095,2021,2,pdf_replace_review,1.0,0.0,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688101_2021_2,688101,2021,2,pdf_replace_review,1.0,0.711,numbering,0.667,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,15,False
+688111_2021_2,688111,2021,2,pdf_replace_review,1.0,0.701,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688116_2021_2,688116,2021,2,pdf_replace_review,1.0,0.707,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688117_2022_2,688117,2022,2,pdf_replace_review,1.0,0.909,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688127_2021_2,688127,2021,2,pdf_replace_review,1.0,0.955,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688129_2021_2,688129,2021,2,pdf_replace_review,1.0,0.756,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688139_2023_2,688139,2023,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688155_2021_4,688155,2021,4,pdf_replace_review,0.9,0.0,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688179_2021_2,688179,2021,2,pdf_replace_review,1.0,0.859,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688179_2022_4,688179,2022,4,pdf_replace_review,0.9,0.0,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688200_2021_2,688200,2021,2,pdf_replace_review,1.0,0.747,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688208_2021_2,688208,2021,2,pdf_replace_review,1.0,0.756,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688219_2024_4,688219,2024,4,pdf_replace_review,0.9,0.909,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688256_2021_2,688256,2021,2,pdf_replace_review,1.0,0.796,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688256_2022_4,688256,2022,4,pdf_replace_review,0.9,0.0,numbering,0.75,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688295_2023_4,688295,2023,4,pdf_replace_review,0.9,0.0,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688297_2023_4,688297,2023,4,pdf_replace_review,0.9,0.582,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688298_2021_2,688298,2021,2,pdf_replace_review,1.0,0.854,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688310_2021_4,688310,2021,4,pdf_replace_review,0.9,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688313_2021_2,688313,2021,2,pdf_replace_review,1.0,0.701,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688336_2021_2,688336,2021,2,pdf_replace_review,1.0,0.609,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688356_2024_2,688356,2024,2,pdf_replace_review,1.0,0.701,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688401_2023_4,688401,2023,4,pdf_replace_review,0.9,0.871,numbering,0.75,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688418_2021_2,688418,2021,2,pdf_replace_review,1.0,0.707,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688489_2023_4,688489,2023,4,pdf_replace_review,0.9,0.914,numbering,0.929,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,14,False
+688513_2021_2,688513,2021,2,pdf_replace_review,1.0,0.859,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688513_2021_4,688513,2021,4,pdf_replace_review,0.9,0.543,numbering,0.643,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,14,False
+688513_2022_2,688513,2022,2,pdf_replace_review,1.0,0.582,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688528_2021_2,688528,2021,2,unrepairable,0.8,,,,no_pdf:not_found,数据缺失,难修复,巨潮侧无此报告；尝试备用源或标记永久缺失,9,False
+688556_2021_2,688556,2021,2,pdf_replace_review,1.0,0.582,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688557_2021_2,688557,2021,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688568_2021_2,688568,2021,2,pdf_replace_review,1.0,0.796,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688585_2021_2,688585,2021,2,pdf_replace_review,1.0,0.756,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688588_2024_4,688588,2024,4,pdf_replace_review,0.9,0.554,numbering,0.692,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688595_2021_2,688595,2021,2,pdf_replace_review,1.0,0.594,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,18,False
+688600_2023_2,688600,2023,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688607_2023_4,688607,2023,4,pdf_replace_review,0.9,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688656_2022_2,688656,2022,2,pdf_replace_review,1.0,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688677_2022_4,688677,2022,4,pdf_replace_review,0.9,0.909,numbering,0.818,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688677_2023_2,688677,2023,2,pdf_replace_review,1.0,0.871,numbering,0.833,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
+688679_2022_4,688679,2022,4,pdf_replace_review,0.9,0.0,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688777_2021_2,688777,2021,2,pdf_replace_review,1.0,0.701,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688786_2023_2,688786,2023,2,pdf_replace_review,1.0,0.582,numbering,0.909,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,11,False
+688798_2022_2,688798,2022,2,pdf_replace_review,1.0,0.0,numbering,0.769,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,13,False
+688981_2021_4,688981,2021,4,pdf_low_conf,0.8,0.767,numbering,0.562,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,16,False
+688981_2023_2,688981,2023,2,pdf_low_conf,0.8,0.533,numbering,0.533,legal_noncompliance,版式异常,部分可修复,专项模板：H股版式/银行版式/编号不连续,15,False
+688981_2023_4,688981,2023,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+688981_2024_4,688981,2024,4,md,0.7,,,,md_legal_noncompliance,版式异常,部分可修复,MD 通道法定符合率低：用 PDF 通道复核或专项模板,11,True
+689009_2021_2,689009,2021,2,pdf_replace_review,1.0,0.908,numbering,1.0,pdf_quality_partial,算法边界,可修复,人工复核后升级为 pdf_replace,12,False
