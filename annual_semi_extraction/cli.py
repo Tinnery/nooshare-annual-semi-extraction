@@ -308,8 +308,11 @@ def rustfs_combo(
     """
     import tempfile
     from collections import Counter, defaultdict
+    from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
 
     client = get_client()
+    matcher = get_pattern_matcher()
+    n_library_matched = 0  # 命中标准库、跳过的文件数
 
     # 1. 列出所有 MD 文件
     typer.echo(f"列出 RustFS 对象（前缀 {prefix}）...")
@@ -369,6 +372,11 @@ def rustfs_combo(
                 # 如果过滤后为空，跳过
                 if not pattern:
                     n_fail += 1
+                    continue
+
+                # 标准库匹配：命中则跳过，不纳入组合库统计
+                if matcher.match(list(pattern)):
+                    n_library_matched += 1
                     continue
 
                 combo_counter[pattern] += 1

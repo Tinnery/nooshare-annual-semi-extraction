@@ -1,9 +1,16 @@
-"""h1_pdf_core.py — PDF 一级标题提取核心（移植自阶段0已验证的 pdf_md_compare_v3.py）
+"""h1_pdf_core.py — PDF 一级标题提取核心 v2（修复过度分割问题）
 
 供阶段 1a/1b/2/3 复用。在 v3 基础上增加:
 - 年份版本化法定章节集（新旧年报/新旧半年报四套 + 并集）
 - 目录页自动识别与解析（三源交叉验证的第三源）
 - 纯度/年代/编号连续性等元信息
+
+v2 修复:
+- 编号策略增加数量上限（MAX_HEADINGS=20），超出触发法规匹配过滤
+- collect_lines 长度过滤从 80 收紧到 60
+- 编号匹配长度上限从 45 收紧到 35
+- is_meaningful_title 增加正文段落前缀排除
+- 策略2/3 增加数量合理性检查
 """
 import re
 import difflib
@@ -49,8 +56,13 @@ ERA_SETS = {
 }
 CANON_UNION = sorted({c for s in ERA_SETS.values() for c in s})
 
+# 合理的一级标题数量范围
+MIN_HEADINGS = 5
+MAX_HEADINGS = 20  # 超过这个数说明混入了正文
+
 
 def is_meaningful_title(text, max_len=40):
+    """判断是否为有意义的一级标题（排除正文段落、纯数字等）"""
     if not text or len(text) < 2 or len(text) > max_len:
         return False
     cjk = sum(1 for ch in text if '\u4e00' <= ch <= '\u9fff')
@@ -58,7 +70,73 @@ def is_meaningful_title(text, max_len=40):
         return False
     if re.fullmatch(r'[\d\s\.\-—·]+', text):
         return False
+    # 排除常见正文开头模式
+    body_prefixes = ['保证', '真实、准确', '承诺', '本公司', '根据', '按照',
+                     '由于', '报告期内', '截至', '注：', '备注']
+    for prefix in body_prefixes:
+        if text.startswith(prefix):
+            return False
     return True
+
+
+def _canon_match(canon, pn):
+    """法规章节名与抽取标题的模糊匹配"""
+    cn = norm_heading(canon)
+    if not cn or not pn:
+        return False
+    if cn == pn or pn.startswith(cn) or cn.startswith(pn):
+        return True
+    if abs(len(cn) - len(pn)) <= 2:
+        return difflib.SequenceMatcher(None, cn, pn).ratio() >= 0.85
+    return False
+
+
+def _matches_any_canon(pn):
+    """检查标题是否匹配任一法规章节"""
+    if not pn:
+        return False
+    return any(_canon_match(c, pn) for c in CANON_UNION)
+
+
+def _filter_numbered_by_canon(num_rows):
+    """对编号策略的结果做法规匹配过滤，剔除正文段落。
+    
+    策略: 
+    1. 先按字体大小排序，优先保留大字号的
+    2. 优先保留匹配法规章节的
+    3. 最终数量限制在 MAX_HEADINGS 以内
+    """
+    if len(num_rows) <= MAX_HEADINGS:
+        return num_rows
+    
+    # 数量超标，需要严格过滤
+    # 第一步: 只保留匹配法规章节的
+    canon_matched = []
+    for row in num_rows:
+        pn = norm_heading(row[3])
+        if _matches_any_canon(pn):
+            canon_matched.append(row)
+    
+    if MIN_HEADINGS <= len(canon_matched) <= MAX_HEADINGS:
+        return canon_matched
+    
+    # 如果法规匹配后还是太多，按字体大小排序取 top
+    if len(canon_matched) > MAX_HEADINGS:
+        canon_matched.sort(key=lambda r: -r[0])
+        return canon_matched[:MAX_HEADINGS]
+    
+    # 如果法规匹配后太少，补充不匹配但字体大的
+    if len(canon_matched) < MIN_HEADINGS:
+        remaining = [r for r in num_rows if r not in canon_matched]
+        remaining.sort(key=lambda r: -r[0])
+        for r in remaining:
+            if len(r[3]) <= 35:  # 一级标题通常不超过 35 字
+                canon_matched.append(r)
+            if len(canon_matched) >= MAX_HEADINGS:
+                break
+        return canon_matched
+    
+    return canon_matched
 
 
 def collect_lines(pdf_path):
@@ -83,7 +161,7 @@ def collect_lines(pdf_path):
                 if DOTS_PAT.search(text):
                     dot_per_page[pno + 1] += 1
                 clean = DOTS_PAT.sub('', text).strip()
-                if not clean or len(clean) > 80:
+                if not clean or len(clean) > 60:
                     continue
                 span = line['spans'][0]
                 size = round(span['size'], 1)
@@ -138,7 +216,7 @@ def extract_pdf(pdf_path):
         if SEC_FULL_PAT.match(text):
             clean = DOTS_PAT.sub('', text).strip()
             clean = re.sub(r'\s+', ' ', clean)
-            if len(clean) < 45:
+            if len(clean) < 35:
                 num_rows.append((size, font, flags, clean, page))
 
     best = {}
@@ -150,12 +228,19 @@ def extract_pdf(pdf_path):
             best[key] = row
     dedup_rows = sorted(best.values(), key=lambda r: r[4])
 
-    if len(dedup_rows) >= 5:
-        meta['strategy'] = 'numbering'
-        meta['n_unique_numbered'] = len(dedup_rows)
-        headings = [r[3] for r in dedup_rows]
-        _enrich(meta, headings, joined, toc_pages)
-        return headings, meta
+    if len(dedup_rows) >= MIN_HEADINGS:
+        # 数量过多时触发法规匹配过滤
+        if len(dedup_rows) > MAX_HEADINGS:
+            dedup_rows = _filter_numbered_by_canon(dedup_rows)
+            meta['filtered'] = True
+            meta['n_before_filter'] = len(best)
+        
+        if MIN_HEADINGS <= len(dedup_rows) <= MAX_HEADINGS:
+            meta['strategy'] = 'numbering'
+            meta['n_unique_numbered'] = len(dedup_rows)
+            headings = [r[3] for r in dedup_rows]
+            _enrich(meta, headings, joined, toc_pages)
+            return headings, meta
 
     # 策略2: 书签
     try:
@@ -165,7 +250,7 @@ def extract_pdf(pdf_path):
     except Exception:
         lv1 = []
     bm = [b for b in lv1 if is_meaningful_title(b, 30)]
-    if 5 <= len(bm) <= 40:
+    if MIN_HEADINGS <= len(bm) <= MAX_HEADINGS:
         meta['strategy'] = 'bookmark'
         headings = bm
         _enrich(meta, headings, joined, toc_pages)
@@ -182,6 +267,15 @@ def extract_pdf(pdf_path):
             continue
         seen.add(text)
         strict.append(text)
+    
+    # 字体回退也做数量检查
+    if len(strict) > MAX_HEADINGS:
+        filtered = [h for h in strict if _matches_any_canon(norm_heading(h))]
+        if MIN_HEADINGS <= len(filtered) <= MAX_HEADINGS:
+            strict = filtered
+        else:
+            strict = strict[:MAX_HEADINGS]
+    
     meta['strategy'] = 'font_fallback'
     return strict, {**meta, 'n_fallback': len(strict)}
 
@@ -226,7 +320,7 @@ def _enrich(meta, headings, joined, toc_pages):
             continue
         t = DOTS_PAT.sub('', text).strip()
         t = re.sub(r'\s+', ' ', t)
-        if SEC_FULL_PAT.match(t) and len(t) < 45:
+        if SEC_FULL_PAT.match(t) and len(t) < 35:
             key = re.sub(r'\s+', '', t)
             if key not in seen:
                 seen.add(key)

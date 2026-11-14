@@ -6,8 +6,8 @@
 import pytest
 from pathlib import Path
 
-from annual_semi_extraction.spec_loader import SpecLoader
-from annual_semi_extraction.e1_judge import E1Judge, MissingState, ChapterCompliance
+from annual_semi_extraction.spec.loader import SpecLoader
+from annual_semi_extraction.e1.judge import E1Judge, MissingState, ChapterCompliance
 
 
 SPEC_DIR = Path(__file__).parents[1] / "annual_semi_extraction" / "spec"

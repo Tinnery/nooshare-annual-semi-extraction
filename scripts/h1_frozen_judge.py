@@ -1,3 +1,6 @@
+"""DEPRECATED: This script has been migrated to the package.
+Use: python -m annual_semi_extraction.cli h1-extract
+"""
 #!/usr/bin/env python3
 """
 h1_frozen_judge.py — 冻结组合库判定程序（纯函数，无副作用）

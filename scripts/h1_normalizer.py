@@ -1,3 +1,6 @@
+"""DEPRECATED: This script has been migrated to the package.
+Use: python -m annual_semi_extraction.cli h1-extract
+"""
 """
 P1 规范化：对 h1_full.jsonl 做后处理修复
 输出：data/h1_full_normalized.jsonl

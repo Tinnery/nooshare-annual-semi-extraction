@@ -1,3 +1,6 @@
+"""DEPRECATED: This script has been migrated to the package.
+Use: python -m annual_semi_extraction.cli h1-extract
+"""
 """一级标题观测值的形态分类与确定性切分（不清洗、不覆盖 verbatim）。
 
 目的不是"提高一级标题识别率"（10 已论证本 repo 不需要该能力），而是：

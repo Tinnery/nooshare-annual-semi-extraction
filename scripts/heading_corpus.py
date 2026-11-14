@@ -1,3 +1,6 @@
+"""DEPRECATED: This script has been migrated to the package.
+Use: python -m annual_semi_extraction.cli h1-extract
+"""
 """Layer-0 一级标题候选语料构建（无判据、可回放）。
 
 设计原则（对应 08-codebook 的测量学要求）：

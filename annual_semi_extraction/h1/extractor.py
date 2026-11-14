@@ -33,6 +33,7 @@ from .corpus import cn_to_int, slot_key_from_path
 from .numbering import expected_sections
 from .morphology import LEGAL_NAMES, RE_LEGAL, _strip_noise
 from .frozen_judge import get_judge
+from .pattern_matcher import get_pattern_matcher
 
 # 本地扩展变体表：覆盖实报中出现但上游 LEGAL_NAMES / report_patterns.json 未收录的章节名变体。
 _LOCAL_VARIANTS = {
@@ -124,6 +125,23 @@ def parse_numbered_line(body: str) -> dict | None:
 def _heading_like(body: str) -> bool:
     head = RE_TRAIL.sub("", body).strip()
     return len(head) <= 60
+
+
+def _raw_names_similar(raw1: str, raw2: str) -> bool:
+    """判断两个 raw_name 是否相似（用于位置对齐时的安全检查）。
+    
+    相似条件：
+    - 一个是另一个的前缀（处理贪心污染）
+    - 或 normalize 后相等
+    """
+    if not raw1 or not raw2:
+        return False
+    # 前缀匹配（处理贪心吞入正文）
+    if raw1.startswith(raw2) or raw2.startswith(raw1):
+        return True
+    # normalize 后相等
+    from .pattern_matcher import _normalize_heading
+    return _normalize_heading(raw1) == _normalize_heading(raw2)
 
 
 def _make_heading(item: dict, verbatim: str) -> dict:
@@ -319,6 +337,25 @@ def extract(path: Path) -> dict | None:
             method = "md_h1"
             headings = [_make_heading(u, u["verbatim_line"]) for u in h1_unnumbered]
 
+    # ── 标准库匹配：命中则用库的 canonical_name 替换，避免贪心污染 ──
+    library_match = None
+    if headings:
+        raw_pattern = [h["raw_name"] for h in headings]
+        matcher = get_pattern_matcher()
+        library_match = matcher.match(raw_pattern)
+        if library_match:
+            # 用库的 canonical_name 替换现有 headings 的 canonical_name
+            # 使用位置对齐（第 i 个标题对应第 i 个标题），而不是 ordinal 对齐
+            lib_headings = library_match["headings"]
+            for i, h in enumerate(headings):
+                if i < len(lib_headings):
+                    lib_h = lib_headings[i]
+                    # 只有当 raw_name 接近时才替换 canonical_name
+                    # 避免把 "公司简介" 错误地替换成 "重要提示、目录和释义"
+                    if _raw_names_similar(h["raw_name"], lib_h["raw_name"]):
+                        if lib_h.get("canonical_name"):
+                            h["canonical_name"] = lib_h["canonical_name"]
+
     cov = (_coverage(headings, year, period) if headings else {
         "reg_version": reg_version_key(year, period),
         "expected_sections": expected, "n_present": 0,
@@ -340,6 +377,8 @@ def extract(path: Path) -> dict | None:
         "expected_sections": cov["expected_sections"],
         "n_candidate_sets": 1 if primary_set else 0,
         "dual_agreement": dual,
+        "library_match": library_match is not None,
+        "library_count": library_match["count"] if library_match else None,
         "headings": headings,
     }
 

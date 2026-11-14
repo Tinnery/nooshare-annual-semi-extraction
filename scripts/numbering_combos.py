@@ -1,3 +1,6 @@
+"""DEPRECATED: This script has been migrated to the package.
+Use: python -m annual_semi_extraction.cli h1-extract
+"""
 """全量提取「编号组合」：1. 2. 3. 4. 作为一组。
 
 与之前三个分析单位的根本差别：

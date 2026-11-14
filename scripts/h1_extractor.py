@@ -1,3 +1,6 @@
+"""DEPRECATED: This script has been migrated to the package.
+Use: python -m annual_semi_extraction.cli h1-extract
+"""
 """全量 H1（一级章节标题）抽取器 —— 监管锚定的确定性方法（v2：扫全行 + 前缀双向匹配）。
 
 关键修正（相对 v1）：
