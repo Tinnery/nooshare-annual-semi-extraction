@@ -29,7 +29,28 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-UPSTREAM = Path(r"C:\dev\nooshare-annual-semi")
+
+
+def _resolve_upstream() -> Path:
+    """定位上游 annual-semi 仓库（含 reference/report_patterns.json）。
+
+    历史实现把 Windows 绝对路径写死，导致部署到 Linux 后该外部有限集
+    静默残缺（59 条 -> 17 条），进而影响标题规范化与锚定。
+    优先级：环境变量 > 同级目录 > Windows 开发机默认路径。
+    """
+    import os
+    env = os.environ.get("ANNUAL_SEMI_UPSTREAM")
+    if env:
+        return Path(env)
+    # ROOT 是包目录 <repo>/annual_semi_extraction，上游仓库与 <repo> 同级
+    repo_root = ROOT.parent
+    sibling = repo_root.parent / "nooshare-annual-semi"
+    if (sibling / "reference" / "report_patterns.json").exists():
+        return sibling
+    return Path(r"C:\dev\nooshare-annual-semi")
+
+
+UPSTREAM = _resolve_upstream()
 
 RE_MARKER = re.compile(r"第\s*([一二三四五六七八九十百零〇0-9]+)\s*([章节部分篇])")
 RE_DOTLEADER = re.compile(r"[\.…·]{2,}")
@@ -61,7 +82,10 @@ def legal_name_set() -> list[str]:
         for variants in rp_data.get("canonical", {}).values():
             for v in variants:
                 names.add(v.strip())
-    return sorted((n for n in names if n), key=len, reverse=True)
+    # 必须加字典序 tie-break：sorted 对同长度元素保留 set 迭代顺序，
+    # 而 set 顺序随 PYTHONHASHSEED 变化，会让 legal_name_of 的前缀双向
+    # 匹配在不同进程返回不同 canonical_name，破坏输出幂等性。
+    return sorted((n for n in names if n), key=lambda n: (-len(n), n))
 
 
 LEGAL_NAMES = legal_name_set()

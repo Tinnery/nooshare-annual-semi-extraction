@@ -38,6 +38,9 @@ from .pattern_matcher import get_pattern_matcher
 # 版本标记：下游（rustfs-combo）据此 fail-fast，防止部署旧版导致
 # library_match 缺失、命中标准库的 pattern 被误计入统计。
 HAS_LIBRARY_MATCH = True
+# 标题级锚定开关：设为 0 可回到纯贪心行为，用于零回归 A/B 对比与紧急回退。
+HAS_TITLE_ANCHOR = True
+_TITLE_ANCHOR_ENABLED = os.environ.get("H1_TITLE_ANCHOR", "1") != "0"
 
 # 本地扩展变体表：覆盖实报中出现但上游 LEGAL_NAMES / report_patterns.json 未收录的章节名变体。
 _LOCAL_VARIANTS = {
@@ -57,7 +60,7 @@ _LOCAL_VARIANTS = {
 }
 _LOCAL_VARIANT_LIST = sorted(
     (v for vs in _LOCAL_VARIANTS.values() for v in vs),
-    key=len, reverse=True
+    key=lambda v: (-len(v), v)  # 同长度字典序，保证确定性
 )
 
 RE_H = re.compile(r"^(#{1,6})\s+(.*)$")
@@ -149,17 +152,32 @@ def _raw_names_similar(raw1: str, raw2: str) -> bool:
 
 
 def _make_heading(item: dict, verbatim: str) -> dict:
-    legal = legal_name_of(item["name"])
-    cat = (_map_heading_to_category(item["name"]) if _map_heading_to_category else None) or ""
+    # ── 标题级锚定：标准库已有该标题，抽出时立即中止贪心 ──────────
+    # 贪心把「释义在本报告书中，除非文义另有所指…」「公司业务概要……」
+    # 这类正文/点线粘进标题。若标准库里已有干净标题，就在此截断并回写
+    # raw_name，使下游 coverage / pattern / library_match 全部基于干净标题。
+    # 未命中标准库或库不可用 → anchored=None，保持原有贪心兜底不变。
+    name = item["name"]
+    matcher = get_pattern_matcher()
+    anchored = matcher.anchor_title(name) if _TITLE_ANCHOR_ENABLED else None
+    if anchored is not None:
+        name = anchored
+    # 标准库标题优先：本身命中标准库时直接用它，不走 legal_name_of 的
+    # 「前缀双向扩展」（否则「释义」会被扩展成「释义和重大风险提示」）。
+    is_standard = matcher.is_standard_title(name)
+    legal = name if is_standard else legal_name_of(name)
+    cat = (_map_heading_to_category(name) if _map_heading_to_category else None) or ""
     if not cat:
         for variant_cat, variants in _LOCAL_VARIANTS.items():
-            if any(item["name"].startswith(v) or v.startswith(item["name"]) for v in variants):
+            if any(name.startswith(v) or v.startswith(name) for v in variants):
                 cat = variant_cat
                 break
     return {
         "ordinal": item["ordinal"],
         "marker": item.get("marker", ""),
-        "raw_name": item["name"],
+        "raw_name": name,
+        # 标准库标题即规范名；统一处理「锚定后变干净」与「原本就干净」，
+        # 避免同一标题出现两种 canonical_name。
         "canonical_name": legal,
         "canonical_cat": cat,
         "line": item["line"],

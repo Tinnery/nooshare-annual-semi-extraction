@@ -392,11 +392,21 @@ def rustfs_combo(
                    "请同步代码后再运行，否则命中标准库的 pattern 会被误计入统计。",
                    err=True)
         raise typer.Exit(code=2)
+    if not getattr(_ext_mod, "HAS_TITLE_ANCHOR", False):
+        typer.echo("错误：extractor.py 版本过旧，缺少标题级锚定。"
+                   "请同步代码后再运行，否则贪心污染标题会被原样计入组合库。",
+                   err=True)
+        raise typer.Exit(code=2)
     from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
     matcher = get_pattern_matcher()
     if not matcher.is_available or matcher.size == 0:
         typer.echo("错误：标准库不可用或为空，组合库会失去过滤意义。", err=True)
         raise typer.Exit(code=2)
+    if matcher.title_count == 0:
+        typer.echo("错误：标准库标题词表为空，标题级锚定不会生效。", err=True)
+        raise typer.Exit(code=2)
+    typer.echo(f"标准库: {matcher.size} 条 pattern, {matcher.title_count} 个标题词条; "
+               f"标题锚定 {'开启' if _ext_mod._TITLE_ANCHOR_ENABLED else '关闭'}")
 
     client = get_client()
 

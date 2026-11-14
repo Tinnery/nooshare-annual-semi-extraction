@@ -58,10 +58,12 @@ def _pattern_hash(normalized: tuple[str, ...]) -> str:
 
 
 class PatternMatcher:
-    """从 PG 加载标准库 pattern，支持精确匹配和模糊前缀匹配。"""
+    """从 PG 加载标准库 pattern，支持精确匹配、模糊前缀匹配与标题级锚定。"""
 
     def __init__(self):
         self._patterns: dict[str, dict] = {}  # hash -> {pattern, count, headings}
+        self._titles: list[str] = []         # 所有标准标题，按长度降序（最长优先）
+        self._title_set: set[str] = set()    # O(1) 判定「本身已是标准标题」
         self._loaded = False
         self._load_error: Optional[str] = None
 
@@ -88,10 +90,104 @@ class PatternMatcher:
                 }
             cur.close()
             conn.close()
+
+            # 构建「标准标题」集合，两个权威来源，均非手敲关键词：
+            #   1. PG 标准库：pattern 数组 + headings 的 raw_name / canonical_name
+            #   2. 法规有限集：legal_chapters.json + 上游 report_patterns.json
+            #      （morphology.legal_name_set，仓库铁律指定的外部有限集）
+            titles: set[str] = set()
+            for data in self._patterns.values():
+                for t in data["pattern"] or []:
+                    if t and t.strip():
+                        titles.add(t.strip())
+                for h in data.get("headings") or []:
+                    for k in ("raw_name", "canonical_name"):
+                        v = h.get(k) if isinstance(h, dict) else None
+                        if v and v.strip():
+                            titles.add(v.strip())
+            try:
+                from .morphology import LEGAL_NAMES
+                titles.update(t.strip() for t in LEGAL_NAMES if t and t.strip())
+            except Exception:
+                pass  # 法规集不可用时仍可用 PG 标题，降级而非失败
+            self._title_set = titles
+            # 长标题优先，避免「重要提示、目录和释义」被短标题「释义」误截；
+            # 同长度用字典序 tie-break，保证跨进程（PYTHONHASHSEED 不同）一致。
+            self._titles = sorted(titles, key=lambda t: (-len(t), t))
             self._loaded = True
         except Exception as e:
             self._load_error = str(e)
             self._loaded = True  # 标记为已尝试，避免重复失败
+
+    @property
+    def title_count(self) -> int:
+        """标准标题词条数（供 fail-fast / 诊断使用）。"""
+        self._load()
+        return len(self._title_set)
+
+    def is_standard_title(self, name: str) -> bool:
+        """该文本本身就是标准库里的标题（用于 canonical_name 兜底）。"""
+        self._load()
+        if self._load_error or not name:
+            return False
+        return name.strip() in self._title_set
+
+    def anchor_title(self, raw_name: str) -> Optional[str]:
+        """标题级锚定：标准库已有的标题，抽取时即中止贪心。
+
+        若 raw_name 本身是标准标题 → 返回 None（不动）。
+        若 raw_name 以某个标准标题开头、后面粘了正文/点线/噪声等
+        多余内容 → 返回该标准标题（取最长匹配），调用方据此回写 raw_name。
+        标准库不可用或无命中 → 返回 None（保持原有贪心结果，不破坏兜底）。
+
+        例：
+            「释义在本报告书中，除非文义另有所指…」 → 「释义」
+            「重要提示、目录和释义公司董事会…」     → 「重要提示、目录和释义」
+            「公司业务概要........................」  → 「公司业务概要」
+        """
+        self._load()
+        if self._load_error or not raw_name:
+            return None
+        s = raw_name.strip()
+        if not s or s in self._title_set:
+            return None
+
+        # 先剥离转换残留（TOC 点线 / 页码 / 勾选框）。必须先去噪再匹配，
+        # 否则「财务会计报告（未经审计）......」会被原样前缀匹配截成
+        # 「财务会计报告」，丢掉合法限定语。
+        try:
+            from .morphology import _strip_noise
+            clean, tags = _strip_noise(s)
+        except Exception:
+            clean, tags = s, []
+        clean = clean.strip()
+        target = clean if (tags and clean and clean != s) else s
+        if not target:
+            return None
+        if target in self._title_set:
+            return target
+
+        # 最长前缀匹配：标准标题后粘了正文 / 目录点线时截断到标准标题
+        for title in self._titles:
+            if len(title) < len(target) and target.startswith(title):
+                rest = target[len(title):].strip()
+                # 合法限定语（如「（未经审计）」「(续)」）不是贪心污染，
+                # 保留完整标题，只去掉点线噪声。
+                if re.fullmatch(r"[（(][^）)]{1,16}[）)]", rest):
+                    return target
+                return title
+
+        # 形态清洗兜底：命中 TOC 点线 / 页码等转换残留，去噪后是一个
+        # 短而干净的标题（可能是有限集未收录的合法变体，如
+        # 「董事、监事和高级管理人员情况」「公司债相关情况」），直接返回
+        # 去噪结果。不引入任何手敲关键词；verbatim 仍原样保留。
+        if tags and clean and clean != s:
+            if (len(clean) <= 24
+                    and not re.search(r"[，。；：？！,;:?!]", clean)
+                    and not re.search(r"\d{1,4}\s*$", clean)):
+                return clean
+        # 未命中任何标准标题且非形态噪声：不动，交给人工排查
+        return None
 
     def match(self, raw_pattern: list[str]) -> Optional[dict]:
         """尝试匹配 raw_pattern 到标准库。
