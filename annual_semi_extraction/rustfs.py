@@ -11,10 +11,11 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import os
 import ssl
 import datetime
 from email.utils import parsedate_to_datetime
-from http.client import HTTPSConnection
+from http.client import HTTPConnection, HTTPSConnection
 from pathlib import Path
 from typing import Optional
 from urllib.parse import urlparse
@@ -24,7 +25,9 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # RustFS 配置（与 scripts/fetch_all_md.py 保持一致）
-ENDPOINT_URL = "https://s3.rustfs.pro.neuralj.com"
+# 在 RustFS 本机运行时可设 RUSTFS_ENDPOINT=http://127.0.0.1:9000 直连明文端口，
+# 绕过 TLS 握手；默认仍走域名 HTTPS。
+ENDPOINT_URL = os.environ.get("RUSTFS_ENDPOINT", "https://s3.rustfs.pro.neuralj.com")
 ACCESS_KEY = "charlie"
 SECRET_KEY = "sheeta-rustfs"
 BUCKET = "annual-semi"
@@ -40,6 +43,14 @@ _SSL_CTX.check_hostname = False
 _SSL_CTX.verify_mode = ssl.CERT_NONE
 
 
+def _new_connection(timeout: int = 30):
+    """按 ENDPOINT_URL 的 scheme 创建连接：http 走明文端口，https 走 TLS。"""
+    parsed = urlparse(ENDPOINT_URL)
+    if parsed.scheme == "http":
+        return HTTPConnection(parsed.hostname, parsed.port or 80, timeout=timeout)
+    return HTTPSConnection(parsed.hostname, parsed.port or 443, context=_SSL_CTX, timeout=timeout)
+
+
 def _get_server_time_offset() -> datetime.timedelta:
     """获取本机 UTC 与 RustFS 服务器报告时间的偏差（只计算一次）。
 
@@ -50,8 +61,7 @@ def _get_server_time_offset() -> datetime.timedelta:
     if _server_time_offset is not None:
         return _server_time_offset
     try:
-        parsed = urlparse(ENDPOINT_URL)
-        conn = HTTPSConnection(parsed.hostname, parsed.port or 443, context=_SSL_CTX, timeout=5)
+        conn = _new_connection(timeout=5)
         conn.request("HEAD", "/")
         resp = conn.getresponse()
         date_str = resp.getheader("Date")
@@ -142,17 +152,18 @@ def _object_path(key: str) -> str:
 
 
 def _do_request(method: str, path: str, query_string: str = "") -> tuple[int, bytes]:
-    """执行签名后的 HTTPS 请求，返回 (status_code, body)。"""
-    parsed = urlparse(ENDPOINT_URL)
+    """执行签名后的 HTTP(S) 请求，返回 (status_code, body)。"""
     headers = _build_signed_headers(method, path, query_string)
     full_path = f"{path}?{query_string}" if query_string else path
-    conn = HTTPSConnection(parsed.hostname, parsed.port or 443, context=_SSL_CTX, timeout=30)
-    conn.request(method, full_path, headers=headers)
-    resp = conn.getresponse()
-    body = resp.read()
-    status = resp.status
-    conn.close()
-    return status, body
+    conn = _new_connection(timeout=30)
+    try:
+        conn.request(method, full_path, headers=headers)
+        resp = conn.getresponse()
+        body = resp.read()
+        status = resp.status
+        return status, body
+    finally:
+        conn.close()
 
 
 class RustFSClient:
@@ -162,6 +173,11 @@ class RustFSClient:
         client = RustFSClient()
         content = client.read_text("published/000001/000001_2024_4.md")
     """
+
+    @property
+    def endpoint(self) -> str:
+        """当前使用的 endpoint（便于日志确认是否走了本机明文端口）。"""
+        return ENDPOINT_URL
 
     def read_text(self, key: str) -> str:
         """读取指定 key 的文本内容。

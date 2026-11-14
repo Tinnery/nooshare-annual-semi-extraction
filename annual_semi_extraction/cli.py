@@ -7,6 +7,7 @@
 import json
 import logging
 import sys
+import tempfile
 from pathlib import Path
 from typing import Optional
 
@@ -265,6 +266,66 @@ def rustfs_list(
         raise typer.Exit(code=1)
 
 
+# ── rustfs-combo 多进程 worker ────────────────────────────────────────
+# 必须是模块顶层函数：Python 3.14 在 Linux 默认 forkserver、在 Windows 用
+# spawn，二者都靠 pickle 传递函数引用，嵌套函数无法序列化。
+# 每个进程持有独立的 RustFS 连接与 PG 连接，绝不继承父进程句柄。
+_COMBO_STATE: dict = {}
+
+
+def _combo_worker_init(endpoint: str | None, tmp_root: str) -> None:
+    """子进程初始化（每个进程只跑一次）。"""
+    import os
+    if endpoint:
+        os.environ["RUSTFS_ENDPOINT"] = endpoint
+        import annual_semi_extraction.rustfs as _rustfs
+        _rustfs.ENDPOINT_URL = endpoint
+        _rustfs._server_time_offset = None
+    from annual_semi_extraction.rustfs import get_client
+    from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
+    _COMBO_STATE["client"] = get_client()
+    _COMBO_STATE["matcher"] = get_pattern_matcher()
+    work_dir = Path(tmp_root) / f"w{os.getpid()}"
+    work_dir.mkdir(parents=True, exist_ok=True)
+    _COMBO_STATE["tmp_dir"] = work_dir
+
+
+def _combo_worker(key: str) -> tuple[str, dict | None]:
+    """下载 + 抽取 + 标准库匹配，只回传精简结果，不跨进程传递 MD 正文。"""
+    client = _COMBO_STATE["client"]
+    matcher = _COMBO_STATE["matcher"]
+    tmp_path = _COMBO_STATE["tmp_dir"] / key.rsplit("/", 1)[-1]
+    try:
+        content = client.read_text(key)
+        tmp_path.write_text(content, encoding="utf-8")
+        rec = extract(tmp_path)
+        if rec is None:
+            return "fail", None
+        headings = rec.get("headings", [])
+        if not headings:
+            return "fail", None
+        pattern = tuple(
+            h.get("raw_name", "") for h in headings if h.get("raw_name", "")
+        )
+        if not pattern:
+            return "fail", None
+        if matcher.match(list(pattern)):
+            return "library_match", None
+        return "ok", {
+            "pattern": pattern,
+            "slot_key": rec["slot_key"],
+            "headings": headings,
+            "is_complete_l1": rec.get("is_complete_l1", False),
+            "coverage_ratio": rec.get("coverage_ratio", 0.0),
+            "extraction_method": rec.get("extraction_method", "unknown"),
+        }
+    except Exception as e:
+        logger.debug(f"处理失败 {key}: {type(e).__name__}: {e}")
+        return "fail", None
+    finally:
+        tmp_path.unlink(missing_ok=True)
+
+
 @app.command()
 def rustfs_combo(
     output: Path = typer.Option(
@@ -287,35 +348,42 @@ def rustfs_combo(
         "--min-count",
         help="最少出现次数才纳入组合库（默认 2）",
     ),
+    parallel: int = typer.Option(
+        8,
+        "--parallel", "-j",
+        help="并行进程数（默认 8）",
+    ),
+    endpoint: Optional[str] = typer.Option(
+        None,
+        "--endpoint", "-e",
+        help="RustFS endpoint。在 RustFS 本机用 http://127.0.0.1:9000 直连明文端口，绕过 TLS 握手",
+    ),
 ):
-    """从 RustFS 全量抽取 H1 标题，生成去重组合库。
+    """从 RustFS 全量抽取 H1 标题，生成去重组合库（多进程并行）。
 
     流程：
-    1. 分页列出 RustFS 上所有 MD 文件（默认 published/ 前缀）
-    2. 逐个下载并抽取 H1 标题
-    3. 按标题模式（canonical_cat 序列）去重
+    1. 分页列出 RustFS 上所有 MD 文件
+    2. 多进程并行下载 + 抽取 H1（I/O 等待与 CPU 解析同时重叠）
+    3. 主进程按输入顺序确定性归约，保证输出幂等
     4. 输出每种组合的出现次数、代表样本、覆盖率统计
-
-    示例：
-        # 全量生成（约 37k 文件，预计 10-15 分钟）
-        nooshare-annual-semi-extraction rustfs-combo
-
-        # 调试模式：只处理前 100 个文件
-        nooshare-annual-semi-extraction rustfs-combo --limit 100
-
-        # 调整最小出现次数
-        nooshare-annual-semi-extraction rustfs-combo --min-count 5
     """
-    import tempfile
+    import os
+    import shutil
+    import time
     from collections import Counter, defaultdict
-    from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
+    from concurrent.futures import ProcessPoolExecutor
+
+    # endpoint 必须在 fork/forkserver 之前写进环境，子进程 import 时才会生效
+    if endpoint:
+        os.environ["RUSTFS_ENDPOINT"] = endpoint
+        import annual_semi_extraction.rustfs as _rustfs
+        _rustfs.ENDPOINT_URL = endpoint
+        _rustfs._server_time_offset = None
 
     client = get_client()
-    matcher = get_pattern_matcher()
-    n_library_matched = 0  # 命中标准库、跳过的文件数
 
-    # 1. 列出所有 MD 文件
-    typer.echo(f"列出 RustFS 对象（前缀 {prefix}）...")
+    # 1. 列出所有 MD 文件（主进程串行，约 24s 固定开销）
+    typer.echo(f"列出 RustFS 对象（前缀 {prefix}, endpoint {client.endpoint}）...")
     try:
         all_objects = client.list_objects(prefix=prefix)
     except Exception as e:
@@ -329,80 +397,59 @@ def rustfs_combo(
         md_objects = md_objects[:limit]
         typer.echo(f"限制处理前 {limit} 个")
 
-    # 2. 逐个抽取 H1
-    combo_counter: Counter = Counter()  # pattern_tuple -> count
-    combo_samples: dict = defaultdict(list)  # pattern_tuple -> [slot_key, ...]
-    combo_headings: dict = {}  # pattern_tuple -> headings list
-    combo_coverage: dict = {}  # pattern_tuple -> coverage info
+    # 2. 多进程并行处理
+    combo_counter: Counter = Counter()
+    combo_samples: dict = defaultdict(list)
+    combo_headings: dict = {}
+    combo_coverage: dict = {}
 
     n_ok = 0
     n_fail = 0
-    tmp_dir = Path(tempfile.mkdtemp())
+    n_library_matched = 0
+    tmp_root = Path(tempfile.mkdtemp(prefix="h1_combo_"))
+    keys = [obj["key"] for obj in md_objects]
 
+    typer.echo(f"开始并行抽取（{parallel} 进程）...")
+    t_start = time.perf_counter()
     try:
-        for i, obj in enumerate(md_objects, start=1):
-            key = obj["key"]
-            filename = key.rsplit("/", 1)[-1]
-
-            try:
-                # 下载并抽取
-                content = client.read_text(key)
-                tmp_path = tmp_dir / filename
-                tmp_path.write_text(content, encoding="utf-8")
-
-                rec = extract(tmp_path)
-                tmp_path.unlink(missing_ok=True)
-
-                if rec is None:
-                    n_fail += 1
-                    continue
-
-                # 构建模式键：raw_name 序列（原始标题文本）
-                headings = rec.get("headings", [])
-                if not headings:
-                    n_fail += 1
-                    continue
-
-                pattern = tuple(
-                    h.get("raw_name", "")
-                    for h in headings
-                    if h.get("raw_name", "")
-                )
-
-                # 如果过滤后为空，跳过
-                if not pattern:
-                    n_fail += 1
-                    continue
-
-                # 标准库匹配：命中则跳过，不纳入组合库统计
-                if matcher.match(list(pattern)):
+        with ProcessPoolExecutor(
+            max_workers=parallel,
+            initializer=_combo_worker_init,
+            initargs=(endpoint, str(tmp_root)),
+        ) as executor:
+            # executor.map 按输入顺序返回 → 归约确定性，不依赖完成顺序
+            for i, (status, result) in enumerate(
+                executor.map(_combo_worker, keys, chunksize=16), start=1
+            ):
+                if status == "ok" and result:
+                    n_ok += 1
+                    pattern = result["pattern"]
+                    combo_counter[pattern] += 1
+                    if len(combo_samples[pattern]) < 5:
+                        combo_samples[pattern].append(result["slot_key"])
+                    if pattern not in combo_headings:
+                        combo_headings[pattern] = result["headings"]
+                    if pattern not in combo_coverage:
+                        combo_coverage[pattern] = {
+                            "is_complete_l1": result["is_complete_l1"],
+                            "coverage_ratio": result["coverage_ratio"],
+                            "extraction_method": result["extraction_method"],
+                        }
+                elif status == "library_match":
                     n_library_matched += 1
-                    continue
+                else:
+                    n_fail += 1
 
-                combo_counter[pattern] += 1
-                if len(combo_samples[pattern]) < 5:  # 只保留前 5 个样本
-                    combo_samples[pattern].append(rec["slot_key"])
-                if pattern not in combo_headings:
-                    combo_headings[pattern] = headings
-                if pattern not in combo_coverage:
-                    combo_coverage[pattern] = {
-                        "is_complete_l1": rec.get("is_complete_l1", False),
-                        "coverage_ratio": rec.get("coverage_ratio", 0.0),
-                        "extraction_method": rec.get("extraction_method", "unknown"),
-                    }
-
-                n_ok += 1
-
-            except Exception as e:
-                n_fail += 1
-                logger.debug(f"处理失败 {key}: {type(e).__name__}: {e}")
-
-            if i % 1000 == 0:
-                typer.echo(f"  进度: {i}/{len(md_objects)}, 成功 {n_ok}, 失败 {n_fail}, "
-                          f"唯一组合 {len(combo_counter)}")
-
+                if i % 1000 == 0:
+                    elapsed = time.perf_counter() - t_start
+                    typer.echo(f"  进度: {i}/{len(keys)} ({i/elapsed:.1f} f/s), "
+                              f"成功 {n_ok}, 标准库命中 {n_library_matched}, "
+                              f"失败 {n_fail}, 唯一组合 {len(combo_counter)}")
     finally:
-        tmp_dir.rmdir()
+        shutil.rmtree(tmp_root, ignore_errors=True)
+
+    elapsed = time.perf_counter() - t_start
+    typer.echo(f"并行处理耗时 {elapsed:.1f}s ({len(keys)/elapsed:.1f} files/s)")
 
     # 3. 过滤并输出
     typer.echo(f"\n抽取完成: {n_ok} 成功, {n_fail} 失败, {len(combo_counter)} 唯一组合")
