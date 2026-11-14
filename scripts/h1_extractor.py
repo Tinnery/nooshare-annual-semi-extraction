@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import sys
 from collections import Counter, defaultdict
@@ -29,6 +30,17 @@ from heading_corpus import cn_to_int, slot_key_from_path  # noqa: E402
 from numbering_combos import expected_sections  # noqa: E402
 from heading_morphology import LEGAL_NAMES, RE_LEGAL, _strip_noise  # noqa: E402
 from annual_semi.identify._funcs.heading_verify import _map_heading_to_category  # noqa: E402
+
+# 冻结组合库判定（步骤2）：只新增 frozen_verdict 字段，不改动任何既有字段，
+# 以保证对旧命中集合的只读回放逐字节零回归。加载失败时降级为 disabled，不影响提取。
+try:
+    from h1_frozen_judge import get_judge  # noqa: E402
+    _JUDGE = get_judge()
+    _FROZEN_ENABLED = True
+except Exception as _e:  # pragma: no cover - 冻结库缺失时保持旧行为
+    _JUDGE = None
+    _FROZEN_ENABLED = False
+    _FROZEN_LOAD_ERROR = f"{type(_e).__name__}: {_e}"
 
 # 本地扩展变体表：覆盖实报中出现但上游 LEGAL_NAMES / report_patterns.json 未收录的章节名变体。
 # 这些变体来自 5k 冒烟残差诊断（000039 A+H、000502 三板等），按类别归并。
@@ -364,7 +376,7 @@ def extract(path: Path) -> dict | None:
         "coverage_ratio": 0.0,
     })
 
-    return {
+    rec = {
         "slot_key": slot, "stock_code": code, "report_year": year, "period": period,
         "source_sha256": sha, "n_bytes": len(raw),
         "extraction_method": method,
@@ -380,6 +392,20 @@ def extract(path: Path) -> dict | None:
         "headings": headings,
     }
 
+    # 冻结库判定：仅追加字段。H1_FROZEN_EMIT=0 时完全不输出该键，
+    # 用于步骤4 的「只读回放逐字节零回归」对比。
+    if os.environ.get("H1_FROZEN_EMIT", "1") != "0":
+        if _JUDGE is not None:
+            try:
+                rec["frozen_verdict"] = _JUDGE.judge(headings)
+            except Exception as e:
+                rec["frozen_verdict"] = {"verdict": "judge_error",
+                                         "error": f"{type(e).__name__}: {e}"}
+        else:
+            rec["frozen_verdict"] = {"verdict": "disabled",
+                                     "error": globals().get("_FROZEN_LOAD_ERROR", "")}
+    return rec
+
 
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -389,7 +415,11 @@ def main() -> None:
     ap.add_argument("--out", default="data/h1_full.jsonl")
     ap.add_argument("--failures", default="data/h1_failures.jsonl")
     ap.add_argument("--append", action="store_true", help="追加模式，不覆盖输出文件")
+    ap.add_argument("--no-frozen", action="store_true",
+                    help="关闭冻结库判定输出（等价于 H1_FROZEN_EMIT=0，用于零回归回放）")
     args = ap.parse_args()
+    if args.no_frozen:
+        os.environ["H1_FROZEN_EMIT"] = "0"
 
     files = sorted(Path(args.root).rglob("*.md"))
     if args.offset:
@@ -398,6 +428,7 @@ def main() -> None:
         files = files[: args.limit]
 
     method_counter: Counter = Counter()
+    verdict_counter: Counter = Counter()
     complete = 0
     residual = 0
     dual_vals: list[float] = []
@@ -421,6 +452,8 @@ def main() -> None:
             fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
             n_ok += 1
             method_counter[rec["extraction_method"]] += 1
+            if "frozen_verdict" in rec:
+                verdict_counter[rec["frozen_verdict"]["verdict"]] += 1
             if rec["is_complete_l1"]:
                 complete += 1
             else:
@@ -439,6 +472,8 @@ def main() -> None:
 
     print(f"\n完成 {n_ok}/{len(files)} 份")
     print(f"方法分布: {method_counter.most_common()}")
+    if verdict_counter:
+        print(f"冻结库判定分布: {verdict_counter.most_common()}")
     print(f"完整L1(应披节全在): {complete} ({complete/max(1,n_ok):.1%})")
     print(f"残差(不完整/无): {residual} ({residual/max(1,n_ok):.1%})")
     print(f"平均每文件一级标题数: {n_headings_total/max(1,n_ok):.1f}")

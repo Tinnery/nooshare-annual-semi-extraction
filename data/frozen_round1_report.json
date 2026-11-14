@@ -1,0 +1,631 @@
+{
+  "baseline_frozen_fingerprints": [
+    "{\"sections\":[1,2,3,4,5,6,7,10],\"extras\":[]}",
+    "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[\"证券公司信息披露\"]}",
+    "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+    "{\"sections\":[1,2,3,4,5,6,7,9,10],\"extras\":[]}"
+  ],
+  "hit_set_sha256": "5f3dc35af85180cc002af7c90bd8a11b3c2d3a57be7ec85e0c972deaec4bdeff",
+  "layers": [
+    {
+      "hit_rate": 0.6845,
+      "hits": 2745,
+      "method": "ch_zh",
+      "period": 2,
+      "residual": 1265,
+      "total": 4010,
+      "verdicts": {
+        "freeze_hit_signature": 2745,
+        "residual": 1265
+      },
+      "year": 2021
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 2,
+      "residual": 141,
+      "total": 141,
+      "verdicts": {
+        "residual": 141
+      },
+      "year": 2021
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 2,
+      "residual": 23,
+      "total": 23,
+      "verdicts": {
+        "residual": 23
+      },
+      "year": 2021
+    },
+    {
+      "hit_rate": 0.9591,
+      "hits": 3846,
+      "method": "ch_zh",
+      "period": 4,
+      "residual": 164,
+      "total": 4010,
+      "verdicts": {
+        "freeze_hit_exact": 5,
+        "freeze_hit_signature": 3841,
+        "known_failure": 1,
+        "residual": 163
+      },
+      "year": 2021
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 4,
+      "residual": 87,
+      "total": 87,
+      "verdicts": {
+        "residual": 87
+      },
+      "year": 2021
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 4,
+      "residual": 10,
+      "total": 10,
+      "verdicts": {
+        "residual": 10
+      },
+      "year": 2021
+    },
+    {
+      "hit_rate": 0.9749,
+      "hits": 4461,
+      "method": "ch_zh",
+      "period": 2,
+      "residual": 115,
+      "total": 4576,
+      "verdicts": {
+        "freeze_hit_exact": 1,
+        "freeze_hit_signature": 4460,
+        "residual": 115
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "cn_dun",
+      "period": 2,
+      "residual": 1,
+      "total": 1,
+      "verdicts": {
+        "residual": 1
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 2,
+      "residual": 135,
+      "total": 135,
+      "verdicts": {
+        "residual": 135
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 2,
+      "residual": 13,
+      "total": 13,
+      "verdicts": {
+        "residual": 13
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.9523,
+      "hits": 4293,
+      "method": "ch_zh",
+      "period": 4,
+      "residual": 215,
+      "total": 4508,
+      "verdicts": {
+        "freeze_hit_exact": 1,
+        "freeze_hit_signature": 4292,
+        "residual": 215
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 4,
+      "residual": 121,
+      "total": 121,
+      "verdicts": {
+        "residual": 121
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 4,
+      "residual": 3,
+      "total": 3,
+      "verdicts": {
+        "residual": 3
+      },
+      "year": 2022
+    },
+    {
+      "hit_rate": 0.9737,
+      "hits": 4808,
+      "method": "ch_zh",
+      "period": 2,
+      "residual": 130,
+      "total": 4938,
+      "verdicts": {
+        "freeze_hit_signature": 4808,
+        "residual": 130
+      },
+      "year": 2023
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 2,
+      "residual": 156,
+      "total": 156,
+      "verdicts": {
+        "residual": 156
+      },
+      "year": 2023
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 2,
+      "residual": 21,
+      "total": 21,
+      "verdicts": {
+        "residual": 21
+      },
+      "year": 2023
+    },
+    {
+      "hit_rate": 0.963,
+      "hits": 4767,
+      "method": "ch_zh",
+      "period": 4,
+      "residual": 183,
+      "total": 4950,
+      "verdicts": {
+        "freeze_hit_signature": 4767,
+        "residual": 183
+      },
+      "year": 2023
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 4,
+      "residual": 83,
+      "total": 83,
+      "verdicts": {
+        "residual": 83
+      },
+      "year": 2023
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 4,
+      "residual": 2,
+      "total": 2,
+      "verdicts": {
+        "residual": 2
+      },
+      "year": 2023
+    },
+    {
+      "hit_rate": 0.9806,
+      "hits": 5108,
+      "method": "ch_zh",
+      "period": 2,
+      "residual": 101,
+      "total": 5209,
+      "verdicts": {
+        "freeze_hit_exact": 1,
+        "freeze_hit_signature": 5107,
+        "residual": 101
+      },
+      "year": 2024
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 2,
+      "residual": 86,
+      "total": 86,
+      "verdicts": {
+        "residual": 86
+      },
+      "year": 2024
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 2,
+      "residual": 20,
+      "total": 20,
+      "verdicts": {
+        "residual": 20
+      },
+      "year": 2024
+    },
+    {
+      "hit_rate": 0.9684,
+      "hits": 5019,
+      "method": "ch_zh",
+      "period": 4,
+      "residual": 164,
+      "total": 5183,
+      "verdicts": {
+        "freeze_hit_signature": 5019,
+        "residual": 164
+      },
+      "year": 2024
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "md_h1",
+      "period": 4,
+      "residual": 61,
+      "total": 61,
+      "verdicts": {
+        "residual": 61
+      },
+      "year": 2024
+    },
+    {
+      "hit_rate": 0.0,
+      "hits": 0,
+      "method": "none",
+      "period": 4,
+      "residual": 3,
+      "total": 3,
+      "verdicts": {
+        "residual": 3
+      },
+      "year": 2024
+    }
+  ],
+  "matched_combo_distribution": [
+    [
+      "FC21",
+      20108
+    ],
+    [
+      "FC02",
+      11935
+    ],
+    [
+      "FC04",
+      1933
+    ],
+    [
+      "FC10",
+      293
+    ],
+    [
+      "FC08",
+      273
+    ],
+    [
+      "FC09",
+      137
+    ],
+    [
+      "FC14",
+      124
+    ],
+    [
+      "FC17",
+      79
+    ],
+    [
+      "FC20",
+      60
+    ],
+    [
+      "FC16",
+      56
+    ],
+    [
+      "FC24",
+      46
+    ],
+    [
+      "FC23",
+      3
+    ]
+  ],
+  "metadata": {
+    "decision_rule": "exact/signature 命中即通过；residual/known_failure 落残差",
+    "generated_at": "2026-11-14T04:35:15.211929+00:00",
+    "library_sha256": "f81f579a7ca41338e298f037fb9166831c27ff18752ddd648235ae1daea96e3d",
+    "library_version": "1.0.0",
+    "note": "replay set 只读，本步骤不修改任何既有记录",
+    "replay_set": "data/h1_full.jsonl",
+    "replay_set_sha256": "cd86ffb3dbf674c5a3e76cf0621b451a3d5d3ea162d23f0dca494f7c50a3e152",
+    "round": 1
+  },
+  "n_unique_residual_exact_combos": 758,
+  "n_unique_residual_fingerprints": 466,
+  "residual_set_sha256": "41f49804e21dbfcd66259374821c124d4c29e532e77f0bd9833cb2597749cca1",
+  "round2_candidates_top20": [
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 93.4368,
+      "fingerprint": "{\"sections\":[1],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 2.0495,
+      "marginal_new_coverage": 786,
+      "n_residual_reports": 786,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 93.9009,
+      "fingerprint": "{\"sections\":[1,4,5,6,7,8,9,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.4641,
+      "marginal_new_coverage": 178,
+      "n_residual_reports": 178,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 94.3625,
+      "fingerprint": "{\"sections\":[1,2,3,4],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.4615,
+      "marginal_new_coverage": 177,
+      "n_residual_reports": 177,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 94.7249,
+      "fingerprint": "{\"sections\":[1,4,6,7,8,9,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.3625,
+      "marginal_new_coverage": 139,
+      "n_residual_reports": 139,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 94.9726,
+      "fingerprint": "{\"sections\":[],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.2477,
+      "marginal_new_coverage": 95,
+      "n_residual_reports": 95,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 95.1864,
+      "fingerprint": "{\"sections\":[1,4,6,7,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.2138,
+      "marginal_new_coverage": 82,
+      "n_residual_reports": 82,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 95.3846,
+      "fingerprint": "{\"sections\":[1,2,3,4,5,6],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1982,
+      "marginal_new_coverage": 76,
+      "n_residual_reports": 76,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 95.5802,
+      "fingerprint": "{\"sections\":[1,4,5,6,7,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1956,
+      "marginal_new_coverage": 75,
+      "n_residual_reports": 75,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 95.7653,
+      "fingerprint": "{\"sections\":[1,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1851,
+      "marginal_new_coverage": 71,
+      "n_residual_reports": 71,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 95.9218,
+      "fingerprint": "{\"sections\":[1,2,4,5,6,7,8,9,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1565,
+      "marginal_new_coverage": 60,
+      "n_residual_reports": 60,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.06,
+      "fingerprint": "{\"sections\":[1,2,4,10],\"extras\":[\"会计数据、经营情况和管理层分析\",\"股份变动、融资和利润分配\",\"重大事件\"]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1382,
+      "marginal_new_coverage": 53,
+      "n_residual_reports": 53,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.1773,
+      "fingerprint": "{\"sections\":[1,2,3,4,5,6,7,8,9],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1173,
+      "marginal_new_coverage": 45,
+      "n_residual_reports": 45,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.2842,
+      "fingerprint": "{\"sections\":[1,2,3,4,5,6,7],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1069,
+      "marginal_new_coverage": 41,
+      "n_residual_reports": 41,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.3885,
+      "fingerprint": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[\"其他报送数据\"]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1043,
+      "marginal_new_coverage": 40,
+      "n_residual_reports": 40,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.4928,
+      "fingerprint": "{\"sections\":[1,2,4,10],\"extras\":[\"会计数据、经营情况和管理层分析\",\"股份变动、融资和利润分配\",\"董事、监事、高级管理人员及核心员工情况\",\"重大事件\"]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1043,
+      "marginal_new_coverage": 40,
+      "n_residual_reports": 40,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.5971,
+      "fingerprint": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[\"董事长致辞\"]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1043,
+      "marginal_new_coverage": 40,
+      "n_residual_reports": 40,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.6988,
+      "fingerprint": "{\"sections\":[1,3,4,6,7,8,9,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.1017,
+      "marginal_new_coverage": 39,
+      "n_residual_reports": 39,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.7953,
+      "fingerprint": "{\"sections\":[1,2,4,6,7,8,9,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.0965,
+      "marginal_new_coverage": 37,
+      "n_residual_reports": 37,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.8892,
+      "fingerprint": "{\"sections\":[1,2,3,4,5,6,7,8,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.0939,
+      "marginal_new_coverage": 36,
+      "n_residual_reports": 36,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    },
+    {
+      "confirmed_by": null,
+      "cumulative_coverage_pct": 96.9778,
+      "fingerprint": "{\"sections\":[1,3,4,6,7,10],\"extras\":[]}",
+      "legal_basis_required": true,
+      "marginal_coverage_pct": 0.0887,
+      "marginal_new_coverage": 34,
+      "n_residual_reports": 34,
+      "note": "候选仅由残差频次排序，频次不作正确性裁判（U-H1.3）；入冻结库前须补 legal_basis + near_miss + 确认主体",
+      "status": "candidate_pending_confirmation"
+    }
+  ],
+  "round2_cumulative_at": {
+    "top1": 93.44,
+    "top10": 95.92,
+    "top20": 96.98,
+    "top3": 94.36,
+    "top5": 94.97,
+    "top50": 98.27
+  },
+  "round2_total_candidates": 466,
+  "totals": {
+    "hit_rate": 0.9139,
+    "hits": 35047,
+    "n_reports": 38350,
+    "residual_rate": 0.0861,
+    "residuals": 3303
+  },
+  "verdict_distribution": {
+    "freeze_hit_exact": 8,
+    "freeze_hit_signature": 35039,
+    "known_failure": 1,
+    "residual": 3302
+  }
+}
