@@ -274,42 +274,47 @@ _COMBO_STATE: dict = {}
 
 
 def _combo_worker_init(endpoint: str | None, tmp_root: str) -> None:
-    """子进程初始化（每个进程只跑一次）。"""
+    """子进程初始化（每个进程只跑一次）。
+
+    只建 RustFS 连接。标准库判定由 extract() 内部完成并写进
+    rec["library_match"]，worker 直接复用，因此子进程不需要再连 PG，
+    也避免 forkserver 下 psycopg2 连接跨进程继承的隐患。
+    """
     import os
     if endpoint:
         os.environ["RUSTFS_ENDPOINT"] = endpoint
         import annual_semi_extraction.rustfs as _rustfs
         _rustfs.ENDPOINT_URL = endpoint
         _rustfs._server_time_offset = None
+    # combo 只用 headings/pattern，不需要 frozen_verdict；关掉可省约 1/3 CPU
+    os.environ["H1_FROZEN_EMIT"] = "0"
     from annual_semi_extraction.rustfs import get_client
-    from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
     _COMBO_STATE["client"] = get_client()
-    _COMBO_STATE["matcher"] = get_pattern_matcher()
     work_dir = Path(tmp_root) / f"w{os.getpid()}"
     work_dir.mkdir(parents=True, exist_ok=True)
     _COMBO_STATE["tmp_dir"] = work_dir
 
 
 def _combo_worker(key: str) -> tuple[str, dict | None]:
-    """下载 + 抽取 + 标准库匹配，只回传精简结果，不跨进程传递 MD 正文。"""
+    """下载 + 抽取，只回传精简结果，不跨进程传递 MD 正文。"""
     client = _COMBO_STATE["client"]
-    matcher = _COMBO_STATE["matcher"]
     tmp_path = _COMBO_STATE["tmp_dir"] / key.rsplit("/", 1)[-1]
     try:
         content = client.read_text(key)
         tmp_path.write_text(content, encoding="utf-8")
         rec = extract(tmp_path)
         if rec is None:
-            return "fail", None
+            return "no_slot", None
         headings = rec.get("headings", [])
         if not headings:
-            return "fail", None
+            return "no_headings", None
         pattern = tuple(
             h.get("raw_name", "") for h in headings if h.get("raw_name", "")
         )
         if not pattern:
-            return "fail", None
-        if matcher.match(list(pattern)):
+            return "empty_pattern", None
+        # 复用 extract() 内已完成的判定，判定口径与标准流程严格一致
+        if rec.get("library_match"):
             return "library_match", None
         return "ok", {
             "pattern": pattern,
@@ -320,8 +325,7 @@ def _combo_worker(key: str) -> tuple[str, dict | None]:
             "extraction_method": rec.get("extraction_method", "unknown"),
         }
     except Exception as e:
-        logger.debug(f"处理失败 {key}: {type(e).__name__}: {e}")
-        return "fail", None
+        return "exception", f"{key}: {type(e).__name__}: {e}"
     finally:
         tmp_path.unlink(missing_ok=True)
 
@@ -349,9 +353,9 @@ def rustfs_combo(
         help="最少出现次数才纳入组合库（默认 2）",
     ),
     parallel: int = typer.Option(
-        8,
+        16,
         "--parallel", "-j",
-        help="并行进程数（默认 8）",
+        help="并行进程数（默认 16；pro 主机 16 核实测 4/8/12/16 仍线性加速）",
     ),
     endpoint: Optional[str] = typer.Option(
         None,
@@ -380,6 +384,20 @@ def rustfs_combo(
         _rustfs.ENDPOINT_URL = endpoint
         _rustfs._server_time_offset = None
 
+    # fail-fast：worker 依赖 extract() 产出的 library_match。若部署的是旧版
+    # extractor.py（历史上发生过），宁可报错也不能静默产出未过滤的结果。
+    import annual_semi_extraction.h1.extractor as _ext_mod
+    if not getattr(_ext_mod, "HAS_LIBRARY_MATCH", False):
+        typer.echo("错误：extractor.py 版本过旧，缺少 library_match 标准流程。"
+                   "请同步代码后再运行，否则命中标准库的 pattern 会被误计入统计。",
+                   err=True)
+        raise typer.Exit(code=2)
+    from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
+    matcher = get_pattern_matcher()
+    if not matcher.is_available or matcher.size == 0:
+        typer.echo("错误：标准库不可用或为空，组合库会失去过滤意义。", err=True)
+        raise typer.Exit(code=2)
+
     client = get_client()
 
     # 1. 列出所有 MD 文件（主进程串行，约 24s 固定开销）
@@ -404,8 +422,9 @@ def rustfs_combo(
     combo_coverage: dict = {}
 
     n_ok = 0
-    n_fail = 0
     n_library_matched = 0
+    fail_reasons: Counter = Counter()
+    exception_samples: list[str] = []
     tmp_root = Path(tempfile.mkdtemp(prefix="h1_combo_"))
     keys = [obj["key"] for obj in md_objects]
 
@@ -438,18 +457,26 @@ def rustfs_combo(
                 elif status == "library_match":
                     n_library_matched += 1
                 else:
-                    n_fail += 1
+                    fail_reasons[status] += 1
+                    if status == "exception" and len(exception_samples) < 10:
+                        exception_samples.append(str(result))
 
-                if i % 1000 == 0:
+                if i % 10000 == 0:
                     elapsed = time.perf_counter() - t_start
                     typer.echo(f"  进度: {i}/{len(keys)} ({i/elapsed:.1f} f/s), "
                               f"成功 {n_ok}, 标准库命中 {n_library_matched}, "
-                              f"失败 {n_fail}, 唯一组合 {len(combo_counter)}")
+                              f"唯一组合 {len(combo_counter)}")
     finally:
         shutil.rmtree(tmp_root, ignore_errors=True)
 
     elapsed = time.perf_counter() - t_start
+    n_fail = sum(fail_reasons.values())
     typer.echo(f"并行处理耗时 {elapsed:.1f}s ({len(keys)/elapsed:.1f} files/s)")
+    typer.echo(f"失败分类: {dict(fail_reasons)}")
+    if exception_samples:
+        typer.echo("异常样本:", err=True)
+        for s in exception_samples:
+            typer.echo(f"  {s}", err=True)
 
     # 3. 过滤并输出
     typer.echo(f"\n抽取完成: {n_ok} 成功, {n_fail} 失败, {len(combo_counter)} 唯一组合")

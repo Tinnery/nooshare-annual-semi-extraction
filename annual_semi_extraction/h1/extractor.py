@@ -35,6 +35,10 @@ from .morphology import LEGAL_NAMES, RE_LEGAL, _strip_noise
 from .frozen_judge import get_judge
 from .pattern_matcher import get_pattern_matcher
 
+# 版本标记：下游（rustfs-combo）据此 fail-fast，防止部署旧版导致
+# library_match 缺失、命中标准库的 pattern 被误计入统计。
+HAS_LIBRARY_MATCH = True
+
 # 本地扩展变体表：覆盖实报中出现但上游 LEGAL_NAMES / report_patterns.json 未收录的章节名变体。
 _LOCAL_VARIANTS = {
     "esg": ["环保和社会责任", "环境保护和社会责任", "环境、社会与公司治理", "环境、社会和管治"],
