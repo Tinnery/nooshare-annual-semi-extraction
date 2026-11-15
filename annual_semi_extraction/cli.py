@@ -296,7 +296,14 @@ def _combo_worker_init(endpoint: str | None, tmp_root: str) -> None:
 
 
 def _combo_worker(key: str) -> tuple[str, dict | None]:
-    """下载 + 抽取，只回传精简结果，不跨进程传递 MD 正文。"""
+    """下载 + 抽取，回传精简结果与序号判定，不跨进程传递 MD 正文。
+
+    status 语义（四象限 + 失败）：
+      ok               C 类：未命中标准库 且 序号 PASS  -> 唯一进入 combos 的来源
+      ordinal_reject   D 类：未命中标准库 且 序号违规  -> 不进 combos，落明细供排查
+      library_match    A/B 类：命中标准库（result 带 ordinal_valid 以区分）
+      no_slot / no_headings / empty_pattern / exception  E 类
+    """
     client = _COMBO_STATE["client"]
     tmp_path = _COMBO_STATE["tmp_dir"] / key.rsplit("/", 1)[-1]
     try:
@@ -313,17 +320,32 @@ def _combo_worker(key: str) -> tuple[str, dict | None]:
         )
         if not pattern:
             return "empty_pattern", None
+        ov = rec.get("ordinal_verdict")
+        if ov is None:
+            return "no_ordinal_verdict", None
+
+        base = {
+            "slot_key": rec["slot_key"],
+            "pattern": list(pattern),
+            "ordinal_valid": ov == "PASS",
+            "ordinal_verdict": ov,
+            "ordinal_n": rec.get("ordinal_n"),
+            "ordinal_missing": rec.get("ordinal_missing", []),
+            "ordinal_duplicates": rec.get("ordinal_duplicates", []),
+            "extraction_method": rec.get("extraction_method", "unknown"),
+            "library_count": rec.get("library_count"),
+        }
         # 复用 extract() 内已完成的判定，判定口径与标准流程严格一致
         if rec.get("library_match"):
-            return "library_match", None
-        return "ok", {
-            "pattern": pattern,
-            "slot_key": rec["slot_key"],
+            return "library_match", base
+        if not base["ordinal_valid"]:
+            return "ordinal_reject", base
+        base.update({
             "headings": headings,
             "is_complete_l1": rec.get("is_complete_l1", False),
             "coverage_ratio": rec.get("coverage_ratio", 0.0),
-            "extraction_method": rec.get("extraction_method", "unknown"),
-        }
+        })
+        return "ok", base
     except Exception as e:
         return "exception", f"{key}: {type(e).__name__}: {e}"
     finally:
@@ -348,9 +370,9 @@ def rustfs_combo(
         help="限制处理文件数（0=不限制，调试用）",
     ),
     min_count: int = typer.Option(
-        2,
+        1,
         "--min-count",
-        help="最少出现次数才纳入组合库（默认 2）",
+        help="最少出现次数才纳入组合库（默认 1，保留单次组合，不丢候选）",
     ),
     parallel: int = typer.Option(
         16,
@@ -362,14 +384,24 @@ def rustfs_combo(
         "--endpoint", "-e",
         help="RustFS endpoint。在 RustFS 本机用 http://127.0.0.1:9000 直连明文端口，绕过 TLS 握手",
     ),
+    docs_output: Optional[Path] = typer.Option(
+        None,
+        "--docs-output",
+        help="逐文档判定明细 JSONL（默认与 output 同目录， stem + _docs.jsonl）。"
+             "含四象限归属，C 类可直接筛出作下轮入库候选",
+    ),
 ):
-    """从 RustFS 全量抽取 H1 标题，生成去重组合库（多进程并行）。
+    """从 RustFS 全量抽取 H1 标题，生成「干净」的去重组合库（多进程并行）。
+
+    只有同时满足「未命中 PG 标准库」且「序号规则 PASS（不跳号、不重复）」
+    的文档才计入 combos，因此输出天生就是可入库的候选库。
+    序号违规或命中标准库的文档不混入，但逐文档判定写入 docs JSONL 留证。
 
     流程：
     1. 分页列出 RustFS 上所有 MD 文件
     2. 多进程并行下载 + 抽取 H1（I/O 等待与 CPU 解析同时重叠）
     3. 主进程按输入顺序确定性归约，保证输出幂等
-    4. 输出每种组合的出现次数、代表样本、覆盖率统计
+    4. 输出 combos（含 ordinal_valid 字段）与逐文档明细
     """
     import os
     import shutil
@@ -395,6 +427,11 @@ def rustfs_combo(
     if not getattr(_ext_mod, "HAS_TITLE_ANCHOR", False):
         typer.echo("错误：extractor.py 版本过旧，缺少标题级锚定。"
                    "请同步代码后再运行，否则贪心污染标题会被原样计入组合库。",
+                   err=True)
+        raise typer.Exit(code=2)
+    if not getattr(_ext_mod, "HAS_ORDINAL_VERDICT", False):
+        typer.echo("错误：extractor.py 版本过旧，缺少序号规则校验。"
+                   "请同步代码后再运行，否则无法保证 combos 只含序号合规候选。",
                    err=True)
         raise typer.Exit(code=2)
     from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
@@ -433,10 +470,16 @@ def rustfs_combo(
 
     n_ok = 0
     n_library_matched = 0
+    n_ordinal_reject = 0
     fail_reasons: Counter = Counter()
+    quad: Counter = Counter()  # A/B/C/D/E，与 evaluate_library_coverage 对齐
     exception_samples: list[str] = []
     tmp_root = Path(tempfile.mkdtemp(prefix="h1_combo_"))
     keys = [obj["key"] for obj in md_objects]
+
+    docs_path = docs_output or output.with_name(output.stem + "_docs.jsonl")
+    docs_path.parent.mkdir(parents=True, exist_ok=True)
+    docs_f = docs_path.open("w", encoding="utf-8")
 
     typer.echo(f"开始并行抽取（{parallel} 进程）...")
     t_start = time.perf_counter()
@@ -446,26 +489,56 @@ def rustfs_combo(
             initializer=_combo_worker_init,
             initargs=(endpoint, str(tmp_root)),
         ) as executor:
-            # executor.map 按输入顺序返回 → 归约确定性，不依赖完成顺序
+            # executor.map 按输入顺序返回 → 归约与明细都确定性，保证幂等
             for i, (status, result) in enumerate(
                 executor.map(_combo_worker, keys, chunksize=16), start=1
             ):
-                if status == "ok" and result:
+                r = result if isinstance(result, dict) else {}
+                if status == "ok":
+                    q = "C"
+                elif status == "library_match":
+                    q = "A" if r.get("ordinal_valid") else "B"
+                elif status == "ordinal_reject":
+                    q = "D"
+                else:
+                    q = "E"
+                quad[q] += 1
+
+                doc = {
+                    "slot_key": r.get("slot_key") or Path(keys[i - 1]).stem,
+                    "quad": q,
+                    "status": status,
+                    "ordinal_valid": r.get("ordinal_valid"),
+                    "ordinal_verdict": r.get("ordinal_verdict"),
+                    "ordinal_missing": r.get("ordinal_missing", []),
+                    "ordinal_duplicates": r.get("ordinal_duplicates", []),
+                }
+                if q == "A" or q == "B":
+                    doc["library_count"] = r.get("library_count")
+                if q in ("C", "D"):
+                    doc["pattern"] = r.get("pattern", [])
+                if status == "exception":
+                    doc["reason"] = str(result)
+                docs_f.write(json.dumps(doc, ensure_ascii=False) + "\n")
+
+                if status == "ok" and r:
                     n_ok += 1
-                    pattern = result["pattern"]
+                    pattern = tuple(r["pattern"])
                     combo_counter[pattern] += 1
                     if len(combo_samples[pattern]) < 5:
-                        combo_samples[pattern].append(result["slot_key"])
+                        combo_samples[pattern].append(r["slot_key"])
                     if pattern not in combo_headings:
-                        combo_headings[pattern] = result["headings"]
+                        combo_headings[pattern] = r["headings"]
                     if pattern not in combo_coverage:
                         combo_coverage[pattern] = {
-                            "is_complete_l1": result["is_complete_l1"],
-                            "coverage_ratio": result["coverage_ratio"],
-                            "extraction_method": result["extraction_method"],
+                            "is_complete_l1": r["is_complete_l1"],
+                            "coverage_ratio": r["coverage_ratio"],
+                            "extraction_method": r["extraction_method"],
                         }
                 elif status == "library_match":
                     n_library_matched += 1
+                elif status == "ordinal_reject":
+                    n_ordinal_reject += 1
                 else:
                     fail_reasons[status] += 1
                     if status == "exception" and len(exception_samples) < 10:
@@ -474,22 +547,28 @@ def rustfs_combo(
                 if i % 10000 == 0:
                     elapsed = time.perf_counter() - t_start
                     typer.echo(f"  进度: {i}/{len(keys)} ({i/elapsed:.1f} f/s), "
-                              f"成功 {n_ok}, 标准库命中 {n_library_matched}, "
-                              f"唯一组合 {len(combo_counter)}")
+                              f"候选 {n_ok}, 标准库命中 {n_library_matched}, "
+                              f"序号违规 {n_ordinal_reject}, 唯一组合 {len(combo_counter)}")
     finally:
+        docs_f.close()
         shutil.rmtree(tmp_root, ignore_errors=True)
 
     elapsed = time.perf_counter() - t_start
     n_fail = sum(fail_reasons.values())
     typer.echo(f"并行处理耗时 {elapsed:.1f}s ({len(keys)/elapsed:.1f} files/s)")
+    typer.echo(f"四象限: A={quad['A']} B={quad['B']} C={quad['C']} "
+               f"D={quad['D']} E={quad['E']}")
     typer.echo(f"失败分类: {dict(fail_reasons)}")
+    typer.echo(f"逐文档明细 -> {docs_path}")
     if exception_samples:
         typer.echo("异常样本:", err=True)
         for s in exception_samples:
             typer.echo(f"  {s}", err=True)
 
-    # 3. 过滤并输出
-    typer.echo(f"\n抽取完成: {n_ok} 成功, {n_fail} 失败, {len(combo_counter)} 唯一组合")
+    # 3. 过滤并输出（combos 只含 C 类：未命中标准库 且 序号 PASS）
+    typer.echo(f"\n抽取完成: 候选 {n_ok}, 标准库命中 {n_library_matched}, "
+               f"序号违规 {n_ordinal_reject}, 失败 {n_fail}, "
+               f"{len(combo_counter)} 唯一组合")
 
     # 按出现次数排序，过滤最小次数
     filtered_combos = [
@@ -504,17 +583,22 @@ def rustfs_combo(
     output_data = {
         "metadata": {
             "total_files": len(md_objects),
+            "quad": {k: quad[k] for k in "ABCDE"},
             "processed_ok": n_ok,
+            "library_hit": n_library_matched,
+            "ordinal_rejected": n_ordinal_reject,
             "processed_fail": n_fail,
             "unique_combos_total": len(combo_counter),
             "unique_combos_filtered": len(filtered_combos),
             "min_count_threshold": min_count,
+            "ordinal_valid_only": True,
         },
         "combos": [
             {
                 "pattern": list(pattern),
                 "n_headings": len(pattern),
                 "count": count,
+                "ordinal_valid": True,
                 "samples": combo_samples[pattern],
                 "headings": combo_headings[pattern],
                 "coverage": combo_coverage[pattern],
