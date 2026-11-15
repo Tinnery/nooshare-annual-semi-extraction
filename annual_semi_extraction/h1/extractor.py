@@ -40,6 +40,8 @@ from .pattern_matcher import get_pattern_matcher
 HAS_LIBRARY_MATCH = True
 # 标题级锚定开关：设为 0 可回到纯贪心行为，用于零回归 A/B 对比与紧急回退。
 HAS_TITLE_ANCHOR = True
+# 编号序列规则校验（不跳号、不重复），结果写入 rec 的 ordinal_* 字段。
+HAS_ORDINAL_VERDICT = True
 _TITLE_ANCHOR_ENABLED = os.environ.get("H1_TITLE_ANCHOR", "1") != "0"
 
 # 本地扩展变体表：覆盖实报中出现但上游 LEGAL_NAMES / report_patterns.json 未收录的章节名变体。
@@ -149,6 +151,46 @@ def _raw_names_similar(raw1: str, raw2: str) -> bool:
     # normalize 后相等
     from .pattern_matcher import _normalize_heading
     return _normalize_heading(raw1) == _normalize_heading(raw2)
+
+
+def ordinal_verdict(headings: list[dict]) -> dict:
+    """编号序列形态校验：不跳号、不重复。
+
+    纯数字规则，不含任何业务豁免（法规条件章节也一视同仁）：
+    - 取 ordinal > 0 的编号标题，按升序应恰好构成 1,2,3,…,N 连续序列；
+      「首项必须为 1」已由「不跳号」蕴含（从 2 开始即缺 1）。
+    - 重复：同一 ordinal 出现多次。
+    - 缺任何序号一律判 GAP，不区分缺的是哪一个。
+    ordinal = 0 的无编号一级标题（如「重要提示」「备查文件目录」）不参与序列。
+
+    返回 PASS / GAP / DUPLICATE / NO_NUMBERED，并附缺失与重复的序号。
+    """
+    ords = [h["ordinal"] for h in headings if (h.get("ordinal") or 0) > 0]
+    n = len(ords)
+    if n == 0:
+        return {"ordinal_valid": False, "ordinal_verdict": "NO_NUMBERED",
+                "ordinal_n": 0, "ordinal_missing": [], "ordinal_duplicates": []}
+
+    counts: Counter = Counter(ords)
+    dupes = sorted(o for o, c in counts.items() if c > 1)
+    uniq = set(ords)
+    # 连续 = 1..max 全部出现；max 用实际最大序号（不是 n），
+    # 这样 [1..10,13] 会正确报缺 [11,12]
+    missing = sorted(set(range(1, max(ords) + 1)) - uniq)
+
+    if dupes:
+        verdict = "DUPLICATE"
+    elif missing:
+        verdict = "GAP"
+    else:
+        verdict = "PASS"
+    return {
+        "ordinal_valid": verdict == "PASS",
+        "ordinal_verdict": verdict,
+        "ordinal_n": n,
+        "ordinal_missing": missing,
+        "ordinal_duplicates": dupes,
+    }
 
 
 def _make_heading(item: dict, verbatim: str) -> dict:
@@ -386,11 +428,17 @@ def extract(path: Path) -> dict | None:
         "coverage_ratio": 0.0,
     })
 
+    ov = ordinal_verdict(headings)
     rec = {
         "slot_key": slot, "stock_code": code, "report_year": year, "period": period,
         "source_sha256": sha, "n_bytes": len(raw),
         "extraction_method": method,
         "n_headings": len(headings),
+        "ordinal_valid": ov["ordinal_valid"],
+        "ordinal_verdict": ov["ordinal_verdict"],
+        "ordinal_n": ov["ordinal_n"],
+        "ordinal_missing": ov["ordinal_missing"],
+        "ordinal_duplicates": ov["ordinal_duplicates"],
         "is_complete_l1": cov["is_complete_l1"],
         "coverage_ratio": cov["coverage_ratio"],
         "missing_always_sections": cov["missing_always_sections"],
