@@ -20,6 +20,7 @@ import os
 import re
 import sys
 from collections import Counter, defaultdict
+from functools import lru_cache
 from pathlib import Path
 
 # 上游依赖
@@ -43,6 +44,10 @@ HAS_TITLE_ANCHOR = True
 # 编号序列规则校验（不跳号、不重复），结果写入 rec 的 ordinal_* 字段。
 HAS_ORDINAL_VERDICT = True
 _TITLE_ANCHOR_ENABLED = os.environ.get("H1_TITLE_ANCHOR", "1") != "0"
+# 库词表参与候选代表打分：命中标准库/法规标题的候选优先，修掉正文表格行
+# 抢走目录页序号导致的跨层级误识别。设 0 可回到旧的 len(name) 决胜。
+HAS_LIBRARY_RANK = True
+_LIBRARY_RANK_ENABLED = os.environ.get("H1_LIBRARY_RANK", "1") != "0"
 
 # 本地扩展变体表：覆盖实报中出现但上游 LEGAL_NAMES / report_patterns.json 未收录的章节名变体。
 _LOCAL_VARIANTS = {
@@ -231,8 +236,31 @@ def _make_heading(item: dict, verbatim: str) -> dict:
     }
 
 
+@lru_cache(maxsize=16384)
+def _in_title_vocab(name: str) -> int:
+    """候选标题是否落在标准库/法规有限集里。
+
+    两种情况算命中：本身是标准标题，或去噪/截断后能锚定到标准标题
+    （如「重要提示、目录和释义公司董事会…」）。
+    """
+    m = get_pattern_matcher()
+    if m.is_standard_title(name):
+        return 1
+    return 1 if m.anchor_title(name) else 0
+
+
 def _rep_rank(it: dict) -> tuple:
-    return (1 if it["md_level"] == 1 else 0, 1 if it["heading_like"] else 0, len(it["name"]))
+    if _LIBRARY_RANK_ENABLED:
+        # 命中标准库标题的候选绝对优先；同优先级内不再用 len(name) 决胜，
+        # 由候选在原文中的先后顺序决定（先出现的目录页标题胜出）。
+        # 这样「一、有限售条件股份」这类正文表格行不会抢走 ord=1/2。
+        # 候选集一个都不删，因此不会产生序号空洞。
+        return (_in_title_vocab(it["name"]),
+                1 if it["md_level"] == 1 else 0,
+                1 if it["heading_like"] else 0)
+    return (1 if it["md_level"] == 1 else 0,
+            1 if it["heading_like"] else 0,
+            len(it["name"]))
 
 
 def _conditional_ords(year: int, period: int) -> set[int]:
@@ -260,7 +288,12 @@ def _detect_l1(items: list[dict], expected: int, conditional: set[int]) -> list[
     rate = sum(1 for o in ords if legal_name_of(best[o]["name"])) / n
     if rate < 0.3:
         return None
-    if not all(best[o]["md_level"] == 1 or best[o]["heading_like"] for o in ords):
+    # 库词表命中本身就是「像标题」的强证据：新 rank 可能选到带点线噪声、
+    # heading_like=0 但可锚定到标准标题的候选（如「公司基本情况------」），
+    # 若不放宽会把整份报告判成无 headings。仅在 rank 开启时放宽，保证 A/B 干净。
+    rank_on = _LIBRARY_RANK_ENABLED
+    if not all(best[o]["md_level"] == 1 or best[o]["heading_like"]
+               or (rank_on and _in_title_vocab(best[o]["name"])) for o in ords):
         return None
     return [best[o] for o in ords]
 
