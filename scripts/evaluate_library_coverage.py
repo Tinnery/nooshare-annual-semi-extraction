@@ -28,6 +28,14 @@ from pathlib import Path
 os.environ.setdefault("H1_FROZEN_EMIT", "0")
 
 
+def year_of(key: str) -> int | None:
+    """从 published/{code}/{code}_{year}_{period}.md 解析报告年份。"""
+    parts = Path(key).stem.split("_")
+    if len(parts) >= 2 and len(parts[1]) == 4 and parts[1].isdigit():
+        return int(parts[1])
+    return None
+
+
 def _init(endpoint: str, tmp_root: str) -> None:
     os.environ["RUSTFS_ENDPOINT"] = endpoint
     os.environ["H1_FROZEN_EMIT"] = "0"
@@ -89,6 +97,8 @@ def main() -> int:
     ap.add_argument("--parallel", type=int, default=16)
     ap.add_argument("--endpoint", default="http://127.0.0.1:9000")
     ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--min-year", type=int, default=0,
+                    help="只评估报告年份 >= 该值的 MD（0=不限）")
     ap.add_argument("--out", default="data/library_coverage_eval.json")
     args = ap.parse_args()
 
@@ -100,7 +110,8 @@ def main() -> int:
 
     import annual_semi_extraction.h1.extractor as _ext
     from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
-    for flag in ("HAS_LIBRARY_MATCH", "HAS_TITLE_ANCHOR", "HAS_ORDINAL_VERDICT"):
+    for flag in ("HAS_LIBRARY_MATCH", "HAS_TITLE_ANCHOR",
+                 "HAS_ORDINAL_VERDICT", "HAS_LIBRARY_RANK"):
         if not getattr(_ext, flag, False):
             print(f"错误：extractor.py 缺少 {flag}，请同步代码")
             return 2
@@ -108,8 +119,21 @@ def main() -> int:
     print(f"标准库: {matcher.size} 条 pattern, {matcher.title_count} 个标题词条")
 
     from annual_semi_extraction.rustfs import get_client
-    keys = [o["key"] for o in get_client().list_objects(prefix="published/")
-            if o["key"].endswith(".md")]
+    all_keys = [o["key"] for o in get_client().list_objects(prefix="published/")
+                if o["key"].endswith(".md")]
+    year_dist = Counter(year_of(k) for k in all_keys)
+    print("\n=== 语料年份分布 ===")
+    for y in sorted(x for x in year_dist if x is not None):
+        print(f"  {y}: {year_dist[y]:>7}")
+    if None in year_dist:
+        print(f"  年份无法解析: {year_dist[None]:>7}")
+
+    if args.min_year:
+        keys = [k for k in all_keys if (year_of(k) or 0) >= args.min_year]
+        print(f"\n年份 >= {args.min_year}: {len(keys)} / {len(all_keys)} "
+              f"({len(keys)/max(len(all_keys),1)*100:.2f}%)")
+    else:
+        keys = all_keys
     if args.limit:
         keys = keys[: args.limit]
     print(f"待评估 MD: {len(keys)}")
@@ -192,6 +216,10 @@ def main() -> int:
 
     out = {
         "total_md": total, "evaluable": evaluable,
+        "min_year": args.min_year,
+        "year_distribution": {("unknown" if k is None else str(k)): v
+                              for k, v in sorted(year_dist.items(),
+                                                 key=lambda x: x[0] or 0)},
         "quad": dict(quad), "strategy": dict(strategy),
         "unique_slots_A": len(unique_slots["A"]),
         "unique_slots_all": len(set().union(*unique_slots.values())),
