@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies (locked)
+      run: uv sync --locked
+
+    - name: Run tests
+      # CI 无 PG 环境：模板库未配置，全部测试走注入 mock / 降级路径
+      run: uv run pytest
+
+  # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
+  # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
+  infra-probe:
+    runs-on: ubuntu-latest
+    environment: ci-probe
+    continue-on-error: true
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install stunnel, psql, boto3
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq stunnel4 postgresql-client netcat-openbsd
+        python3 -m pip install --quiet boto3
+
+    # 隧道与所有探针必须在同一 step：GitHub Actions 会回收上一步派生的后台进程，
+    # 独立的 build step 会导致 stunnel 在探针 step 启动时已被杀（PG_LOCAL_REFUSED）。
+    - name: Tunnel + probes + leak falsification (single lifecycle)
+      env:
+        STUNNEL_HOST: ${{ secrets.STUNNEL_HOST }}
+        STUNNEL_PSK: ${{ secrets.STUNNEL_PSK }}
+        # PG 连接参数（host/port/db/user）都不是敏感值，由脚本固定为专用只读凭据：
+        #   端点 127.0.0.1:15432、库 nooshare_dev、只读 role ci_probe。
+        # 仅密码保留 secret 通道（当前 pg_hba 为 trust，保留以保持注入结构完整）。
+        PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+        RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY }}
+        RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
+        CI_CANARY: ${{ secrets.CI_CANARY }}
+      run: bash scripts/ci/run_probes.sh

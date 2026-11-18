@@ -1,0 +1,97 @@
+{
+  "registry": "nooshare-annual-semi-extraction/legal-chapters",
+  "registry_version": 1,
+  "authority": "中国证监会信息披露内容与格式准则",
+  "scope": "第二章（年度报告正文 / 半年度报告正文）的节清单",
+  "note": "required=always 表示所有公司必披；required=conditional 表示满足条件时必披",
+  "chapters": {
+    "no2_2016_31": {
+      "standard": "第2号",
+      "version": "2016修订",
+      "document_no": "证监会公告〔2016〕31号",
+      "applies_to": "年度报告",
+      "sections": [
+        {"marker": "第一节", "name": "重要提示", "required": "always"},
+        {"marker": "第二节", "name": "公司简介和主要财务指标", "required": "always"},
+        {"marker": "第三节", "name": "公司业务概要", "required": "always"},
+        {"marker": "第四节", "name": "经营情况讨论与分析", "required": "always"},
+        {"marker": "第五节", "name": "重要事项", "required": "always"},
+        {"marker": "第六节", "name": "股份变动及股东情况", "required": "always"},
+        {"marker": "第七节", "name": "优先股相关情况", "required": "conditional", "condition": "公司发行优先股"},
+        {"marker": "第八节", "name": "董事、监事、高级管理人员和员工情况", "required": "always"},
+        {"marker": "第九节", "name": "公司治理", "required": "always"},
+        {"marker": "第十节", "name": "公司债券相关情况", "required": "conditional", "condition": "公司发行债券"},
+        {"marker": "第十一节", "name": "财务报告", "required": "always"},
+        {"marker": "第十二节", "name": "备查文件目录", "required": "always"}
+      ]
+    },
+    "no2_2021_15": {
+      "standard": "第2号",
+      "version": "2021修订",
+      "document_no": "证监会公告〔2021〕15号",
+      "applies_to": "年度报告",
+      "sections": [
+        {"marker": "第一节", "name": "重要提示、目录和释义", "required": "always"},
+        {"marker": "第二节", "name": "公司简介和主要财务指标", "required": "always"},
+        {"marker": "第三节", "name": "管理层讨论与分析", "required": "always"},
+        {"marker": "第四节", "name": "公司治理", "required": "always"},
+        {"marker": "第五节", "name": "环境和社会责任", "required": "always"},
+        {"marker": "第六节", "name": "重要事项", "required": "always"},
+        {"marker": "第七节", "name": "股份变动及股东情况", "required": "always"},
+        {"marker": "第八节", "name": "优先股相关情况", "required": "conditional", "condition": "公司发行优先股"},
+        {"marker": "第九节", "name": "债券相关情况", "required": "conditional", "condition": "公司发行债券"},
+        {"marker": "第十节", "name": "财务报告", "required": "always"}
+      ]
+    },
+    "no2_2025_3": {
+      "standard": "第2号",
+      "version": "2025",
+      "document_no": "证监会公告〔2025〕3号",
+      "applies_to": "年度报告",
+      "sections": [
+        {"marker": "第一节", "name": "重要提示、目录和释义", "required": "always"},
+        {"marker": "第二节", "name": "公司简介和主要财务指标", "required": "always"},
+        {"marker": "第三节", "name": "管理层讨论与分析", "required": "always"},
+        {"marker": "第四节", "name": "公司治理、环境和社会", "required": "always"},
+        {"marker": "第五节", "name": "重要事项", "required": "always"},
+        {"marker": "第六节", "name": "股份变动及股东情况", "required": "always"},
+        {"marker": "第七节", "name": "债券相关情况", "required": "conditional", "condition": "公司发行债券"},
+        {"marker": "第八节", "name": "财务报告", "required": "always"}
+      ]
+    },
+    "no3_2021_16": {
+      "standard": "第3号",
+      "version": "2021修订",
+      "document_no": "证监会公告〔2021〕16号",
+      "applies_to": "半年度报告",
+      "sections": [
+        {"marker": "第一节", "name": "重要提示、目录和释义", "required": "always"},
+        {"marker": "第二节", "name": "公司简介和主要财务指标", "required": "always"},
+        {"marker": "第三节", "name": "管理层讨论与分析", "required": "always"},
+        {"marker": "第四节", "name": "公司治理", "required": "always"},
+        {"marker": "第五节", "name": "环境和社会责任", "required": "always"},
+        {"marker": "第六节", "name": "重要事项", "required": "always"},
+        {"marker": "第七节", "name": "股份变动及股东情况", "required": "always"},
+        {"marker": "第八节", "name": "优先股相关情况", "required": "conditional", "condition": "公司发行优先股"},
+        {"marker": "第九节", "name": "债券相关情况", "required": "conditional", "condition": "公司发行债券"},
+        {"marker": "第十节", "name": "财务报告", "required": "always"}
+      ]
+    },
+    "no3_2025_4": {
+      "standard": "第3号",
+      "version": "2025",
+      "document_no": "证监会公告〔2025〕4号",
+      "applies_to": "半年度报告",
+      "sections": [
+        {"marker": "第一节", "name": "重要提示、目录和释义", "required": "always"},
+        {"marker": "第二节", "name": "公司简介和主要财务指标", "required": "always"},
+        {"marker": "第三节", "name": "管理层讨论与分析", "required": "always"},
+        {"marker": "第四节", "name": "公司治理、环境和社会", "required": "always"},
+        {"marker": "第五节", "name": "重要事项", "required": "always"},
+        {"marker": "第六节", "name": "股份变动及股东情况", "required": "always"},
+        {"marker": "第七节", "name": "债券相关情况", "required": "conditional", "condition": "公司发行债券"},
+        {"marker": "第八节", "name": "财务报告", "required": "always"}
+      ]
+    }
+  }
+}

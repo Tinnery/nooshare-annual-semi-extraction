@@ -1,0 +1,27 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "nooshare-annual-semi-extraction"
+version = "0.2.0"
+description = "Structural content extraction and regulatory compliance validation (E1) from listed-company annual/semi-annual reports."
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12.0",            # CLI
+    "psycopg2-binary>=2.9",     # 模板库读取（annual_semi.h1_pattern_library）
+]
+
+[project.scripts]
+nooshare-annual-semi-extraction = "annual_semi_extraction.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["annual_semi_extraction"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

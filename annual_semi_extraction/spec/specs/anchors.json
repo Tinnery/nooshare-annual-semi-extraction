@@ -1,0 +1,99 @@
+{
+  "registry": "nooshare-annual-semi-extraction/anchor-registry",
+  "registry_version": 2,
+  "identity_scheme": "E{n}@anchors:<sha256(anchors.json)>:{n}",
+  "meta_rules": [
+    {
+      "id": "M1",
+      "rule": "锚必须带身份与版本；禁止跨文档以裸标签 E1-E6 复用不同语义"
+    },
+    {
+      "id": "M2",
+      "rule": "可反驳性：每个 frame 必须能一键回到原文 verbatim span；做不到即判 fail，不进统计分母"
+    },
+    {
+      "id": "M3",
+      "rule": "判定程序版本化：E 的判定函数进 git，其 commit 纳入 hash 锚；换判定程序必须重跑全部 E"
+    }
+  ],
+  "anchors": [
+    {
+      "id": "E1",
+      "qualified_id": "E1@anchors:v2:1",
+      "label": "章节完备性",
+      "v1_meaning": "章节完备性 = 准则当年版本；缺节打监管违规 flag，可被交易所问询函印证",
+      "external_identity": "《准则第2号》（年报）/《准则第3号》（半年报）各版文号 + 施行日 + 原文 sha256；版本表见 regulatory_versions.json；法定章节清单见 legal_chapters.json",
+      "decision_procedure": "reg_version(period, report_year) -> legal_chapters.json 中对应版本的 sections 清单（适用规则 by_period_end）；对每份报告算 missing / extra / order；缺失按 NOT_APPLICABLE / NOT_DISCLOSED / EXTRACTION_FAILURE 三态分别计数",
+      "pass_condition": "NOT_DISCLOSED 打监管违规 flag；EXTRACTION_FAILURE 判工程 fail；NOT_APPLICABLE 不计入缺失。三者不得混计",
+      "failure_taxonomy": ["法规版本选错", "年报/半年报准则串用", "NOT_APPLICABLE 误报为缺失", "EXTRACTION_FAILURE 伪装成未披露", "标题误升格"],
+      "bound_requirements": ["R'1"],
+      "phase": 1,
+      "blocked_until": null
+    },
+    {
+      "id": "E2",
+      "qualified_id": "E2@anchors:v2:2",
+      "label": "表格与量化 DB 逐项对账",
+      "v1_meaning": "表格抽取正确率 = 与东方财富/同花顺量化 DB 逐项对账，误差 <=0.5% 或绝对差 <=1 元",
+      "external_identity": "巨潮/深交所 XBRL 实例文档（as-filed，主裁判）+ 量化 DB 快照 ID / 快照日期 / 字段口径版本（交叉验证）",
+      "decision_procedure": "表格 -> DataFrame -> canonical (concept, period, scope, unit, value)；先跑三表勾稽自校验，再与 XBRL 主对账、量化 DB 交叉；分歧落 evidence 表",
+      "pass_condition": "误差 <=0.5% 或 <=1 元；对账失败不静默丢弃；无原文 verbatim span 的数值 frame 判 fail",
+      "failure_taxonomy": ["期间错（本期/上期）", "口径错（合并/母公司）", "单位错（万元/元）", "主体错（串报告）", "跨页断行", "LLM 补全数值"],
+      "bound_requirements": ["R'4"],
+      "phase": 1,
+      "blocked_until": null
+    },
+    {
+      "id": "E3",
+      "qualified_id": "E3@anchors:v2:3",
+      "label": "情感/语气信号有效性",
+      "v1_meaning": "forward-looking 语气 -> 下期 ROE/营收增长率方向预测 >=60% 准确率",
+      "external_identity": "下期实际 ROE / 营收增长率（交付表或量化 DB，point-in-time 可得）",
+      "decision_procedure": "时序外检验：t 期特征预测 t+1，禁全样本拟合；行业 x 年份固定效应；特征不得使用 t 时刻未知信息",
+      "pass_condition": "方向准确率 >=60% 且显著优于基线",
+      "failure_taxonomy": ["前视偏差", "全样本拟合", "用当前申万分类回填历史 cohort", "词典用全期语料构造"],
+      "bound_requirements": ["R'3", "R'5", "R'8"],
+      "phase": 2,
+      "blocked_until": null
+    },
+    {
+      "id": "E4",
+      "qualified_id": "E4@anchors:v2:4",
+      "label": "可复现性",
+      "v1_meaning": "同 sha 输入 + 同词典版本 + 同分词器 -> 同特征矩阵 hash（byte-identical 重跑）",
+      "external_identity": "四/五元 hash 锚 + 判定程序 commit + 归一化函数版本",
+      "decision_procedure": "同输入同版本重跑逐字节比矩阵；且跑双路径收敛（MD 路径与结构路径规范化到同一 canonical 元组）",
+      "pass_condition": "diff = 0 且 canonical 元组收敛；仅 diff = 0 不算通过（稳定地错误的管线同样 diff=0）",
+      "failure_taxonomy": ["未锚定模型权重/temperature/prompt", "未锚定归一化函数版本", "判定程序变更未重跑", "LLM 进入主链路"],
+      "bound_requirements": ["R'2", "R'5", "R'6"],
+      "phase": 1,
+      "blocked_until": null
+    },
+    {
+      "id": "E5",
+      "qualified_id": "E5@anchors:v2:5",
+      "label": "缺失机制",
+      "v1_meaning": "1,688 unobtainable 的非随机性量化：Heckman lambda 显著性 / 非随机性描述报告",
+      "external_identity": "不可获取报告清单 + 三态缺失计数",
+      "decision_procedure": "Heckman 两步或等价校正；描述统计按三态分层",
+      "pass_condition": "lambda 显著性可报告；NOT_APPLICABLE 不得计入样本选择偏差",
+      "failure_taxonomy": ["三态混计", "把抽取失败伪装成公司未披露", "把法定不适用计入选择偏差"],
+      "bound_requirements": ["R'7"],
+      "phase": 2,
+      "blocked_until": null
+    },
+    {
+      "id": "E6",
+      "qualified_id": "E6@anchors:v2:6",
+      "label": "监管印证",
+      "v1_meaning": "模型判高风险/前瞻模糊样本次年被问询函覆盖比例显著高于基线（卡方 p<0.05）",
+      "external_identity": "交易所问询函原文 + 披露日期 + 股票代码",
+      "decision_procedure": "高风险样本 vs 基线次年问询覆盖率，卡方检验；基线构造方式随报告落盘",
+      "pass_condition": "p<0.05 且时间不倒挂（问询函披露日必须晚于特征计算时点）",
+      "failure_taxonomy": ["时间倒挂", "挑基线调 p 值", "基线构造未落盘"],
+      "bound_requirements": ["R'9"],
+      "phase": 2,
+      "blocked_until": null
+    }
+  ]
+}

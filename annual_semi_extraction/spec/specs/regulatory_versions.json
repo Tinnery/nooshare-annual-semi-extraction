@@ -1,0 +1,81 @@
+{
+  "registry": "nooshare-annual-semi-extraction/regulatory-versions",
+  "registry_version": 2,
+  "authority": "中国证监会信息披露内容与格式准则",
+  "applicability_rule": "by_period_end",
+  "applicability_rule_note": "reg_version 按报告期末确定适用法规版本。例如：2024年年报（期末2024-12-31）适用〔2021〕15号；2025年年报（期末2025-12-31）适用〔2025〕3号。",
+  "verification_note": "文号与施行日核自证监会法规库（neris.csrc.gov.cn / csrc.gov.cn）。",
+  "versions": [
+    {
+      "standard": "第2号",
+      "full_name": "公开发行证券的公司信息披露内容与格式准则第2号——年度报告的内容与格式（2016年修订）",
+      "applies_to_period": 4,
+      "document_no": "证监会公告〔2016〕31号",
+      "published": "2016-12-09",
+      "effective_from": "2016-12-09",
+      "superseded_by": "证监会公告〔2021〕15号",
+      "structure_change": null,
+      "original_sha256": "508b432a7101f7645cd8850b62de534648e60782428477038c0acbe14a7ebd8e",
+      "status": "SUPERSEDED",
+      "source": "https://www.csrc.gov.cn/csrc/c101864/c1024595/1024595/files/...",
+      "chapter_set_key": "no2_2016_31"
+    },
+    {
+      "standard": "第2号",
+      "full_name": "公开发行证券的公司信息披露内容与格式准则第2号——年度报告的内容与格式（2021年修订）",
+      "applies_to_period": 4,
+      "document_no": "证监会公告〔2021〕15号",
+      "published": "2021-06-28",
+      "effective_from": "2021-06-28",
+      "superseded_by": "证监会公告〔2025〕3号",
+      "structure_change": null,
+      "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+      "status": "SUPERSEDED",
+      "source": "https://www.csrc.gov.cn/csrc/c101864/c6df1268b5b294448bdec7e010d880a01/...",
+      "chapter_set_key": "no2_2021_15"
+    },
+    {
+      "standard": "第2号",
+      "full_name": "公开发行证券的公司信息披露内容与格式准则第2号——年度报告的内容与格式",
+      "applies_to_period": 4,
+      "document_no": "证监会公告〔2025〕3号",
+      "published": "2025-03-21",
+      "effective_from": "2025-07-01",
+      "superseded_by": null,
+      "structure_change": "调整篇章布局为公司业务/行业情况在前、讨论分析在后；删除董事会与股东会会议情况披露；把优先股相关情况并入股份变动及股东情况章节，不再单独成章；按新公司法调整监事会/股东大会表述",
+      "original_sha256": "2bab1b056520c11624910f9c3fda5daab5a0ae51093e68084e48984a54cfdf42",
+      "status": "IN_FORCE",
+      "source": "https://www.csrc.gov.cn/csrc/c101954/c7547588/7547588/files/...",
+      "chapter_set_key": "no2_2025_3"
+    },
+    {
+      "standard": "第3号",
+      "full_name": "公开发行证券的公司信息披露内容与格式准则第3号——半年度报告的内容与格式（2021年修订）",
+      "applies_to_period": 2,
+      "document_no": "证监会公告〔2021〕16号",
+      "published": "2021-06-28",
+      "effective_from": "2021-06-28",
+      "superseded_by": "证监会公告〔2025〕4号",
+      "structure_change": null,
+      "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+      "status": "SUPERSEDED",
+      "source": "https://www.csrc.gov.cn/csrc/c101864/cc6e558b1406e477190ad3a52984ac7a5/...",
+      "chapter_set_key": "no3_2021_16"
+    },
+    {
+      "standard": "第3号",
+      "full_name": "公开发行证券的公司信息披露内容与格式准则第3号——半年度报告的内容与格式",
+      "applies_to_period": 2,
+      "document_no": "证监会公告〔2025〕4号",
+      "published": "2025-03-21",
+      "effective_from": "2025-07-01",
+      "superseded_by": null,
+      "structure_change": "自 2025-07-01 施行；〔2021〕16号同时废止。具体章节变动待原文采集后登记",
+      "original_sha256": "2ae206c45e320a48ff0b5f377ca7361dbac6c2946b1f23d40a8ef3af9945b346",
+      "status": "IN_FORCE",
+      "source": "https://www.csrc.gov.cn/csrc/c101954/c7547590/7547590/files/...",
+      "chapter_set_key": "no3_2025_4"
+    }
+  ],
+  "known_gap": "2018 年之前及 2018 年度报告期适用的更早版本（若有）未登记；01 R'0 论域为 2018+，2018 年报暂按〔2016〕31号处理，须在原文采集后复核。"
+}
