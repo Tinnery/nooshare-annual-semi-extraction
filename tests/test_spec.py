@@ -81,9 +81,10 @@ def test_no_internal_dependencies():
     assert "typer" in deps
     # psycopg2-binary 是模板库读取的合法公开依赖
     assert "psycopg2-binary" in deps
+    # boto3 是 CI 语料下载的合法公开依赖（RustFS S3 客户端）
+    assert "boto3" in deps
     # 不应包含内部路径依赖或未使用的重型库
     assert "nooshare-specs" not in deps
-    assert "boto3" not in deps
     assert "pandas" not in deps
     assert "jieba" not in deps
 
