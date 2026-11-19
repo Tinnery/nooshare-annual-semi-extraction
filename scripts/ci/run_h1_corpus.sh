@@ -88,41 +88,63 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
   echo "PG_LOAD start"
   PG_LOCAL="${PG_LOCAL_PORT:-15432}"
 
-  # 诊断探针：与 infra-probe 完全一致的 psql 调用（带密码），对比下载前后隧道状态
+  # 根因（已实测）：S3 下载（boto3 并发连接）占满 SNI router 对同一 PSK identity
+  # 的连接配额，导致同一 stunnel 进程内 PG 段无法再建新连接
+  # —— 下载前 psql PASS、下载后 FAIL，但 TCP 端口仍 ALIVE。
+  # 修复：PG 写入前重建隧道，关闭旧连接释放 router 配额，再建干净隧道。
+  echo "PG_TUNNEL_REBUILD start"
+  if [ -f "$WORK_DIR/ci-stunnel.pid" ]; then
+    kill "$(cat "$WORK_DIR/ci-stunnel.pid")" 2>/dev/null || true
+  fi
+  # 等待旧隧道端口释放（最多 10s）
+  for i in $(seq 1 20); do
+    nc -z 127.0.0.1 "$PG_LOCAL" 2>/dev/null || break
+    sleep 0.5
+  done
   if nc -z 127.0.0.1 "$PG_LOCAL" 2>/dev/null; then
-    echo "PG_DIAG_TCP=ALIVE port=$PG_LOCAL"
-  else
-    echo "PG_DIAG_TCP=DEAD port=$PG_LOCAL"
-  fi
-  if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" \
-      -U ci_probe -d nooshare_dev -tAc "SELECT 1" >/dev/null 2>&1; then
-    echo "PG_DIAG_PSQL_AFTER_DOWNLOAD=PASS"
-  else
-    echo "PG_DIAG_PSQL_AFTER_DOWNLOAD=FAIL"
-  fi
-
-  set +e
-  pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
-      --input h1-extraction.jsonl \
-      --host 127.0.0.1 \
-      --port "${PG_LOCAL_PORT:-15432}" \
-      --db nooshare_dev \
-      --user ci_probe 2>&1)
-  pg_rc=$?
-  set -e
-  
-  if [ $pg_rc -eq 0 ] && echo "$pg_output" | grep -q "PG_LOAD=PASS"; then
-    echo "PG_LOAD=PASS"
-    pg_status="PASS"
-    pg_loaded=$(echo "$pg_output" | grep -oP 'loaded=\K[0-9]+' || echo 0)
-    pg_skipped=$(echo "$pg_output" | grep -oP 'skipped=\K[0-9]+' || echo 0)
-  else
-    echo "PG_LOAD=FAIL (exit_code=$pg_rc)"
-    echo "PG_LOAD_OUTPUT_START"
-    echo "$pg_output"
-    echo "PG_LOAD_OUTPUT_END"
+    echo "PG_TUNNEL_REBUILD=FAIL code=PORT_STILL_OPEN"
     pg_status="FAIL"
     overall=1
+  elif ! bash scripts/ci/build_stunnel.sh; then
+    echo "PG_TUNNEL_REBUILD=FAIL code=BUILD_FAIL"
+    pg_status="FAIL"
+    overall=1
+  else
+    echo "PG_TUNNEL_REBUILD=PASS"
+    # 重建后验证 PG 段恢复
+    if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" \
+        -U ci_probe -d nooshare_dev -tAc "SELECT 1" >/dev/null 2>&1; then
+      echo "PG_DIAG_PSQL_AFTER_REBUILD=PASS"
+    else
+      echo "PG_DIAG_PSQL_AFTER_REBUILD=FAIL"
+      overall=1
+    fi
+
+    if [ "$overall" -eq 0 ]; then
+      set +e
+      pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
+          --input h1-extraction.jsonl \
+          --host 127.0.0.1 \
+          --port "$PG_LOCAL" \
+          --db nooshare_dev \
+          --user ci_probe 2>&1)
+      pg_rc=$?
+      set -e
+
+      if [ $pg_rc -eq 0 ] && echo "$pg_output" | grep -q "PG_LOAD=PASS"; then
+        echo "PG_LOAD=PASS"
+        pg_status="PASS"
+        pg_loaded=$(echo "$pg_output" | grep -oP 'loaded=\K[0-9]+' || echo 0)
+        pg_skipped=$(echo "$pg_output" | grep -oP 'skipped=\K[0-9]+' || echo 0)
+      else
+        echo "PG_LOAD=FAIL (exit_code=$pg_rc)"
+        echo "PG_LOAD_OUTPUT_START"
+        echo "$pg_output"
+        echo "PG_LOAD_OUTPUT_END"
+        pg_status="FAIL"
+        overall=1
+      fi
+    fi
   fi
 fi
 
