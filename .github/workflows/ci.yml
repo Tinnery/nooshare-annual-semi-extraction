@@ -167,6 +167,7 @@ jobs:
         H1_PROCESSED_BEFORE: ${{ github.event_name == 'workflow_dispatch' && inputs.processed_before || '0' }}
         H1_PROCESS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && inputs.process_limit) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '20') || '0' }}
         CORPUS_START_AFTER: ${{ github.event_name == 'workflow_dispatch' && inputs.start_after || '' }}
+        H1_VERIFY_PG_CORPUS: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'full' || github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full]')) && '1' || '0' }}
       run: bash scripts/ci/run_h1_corpus.sh
 
     - name: Upload sample H1 artifacts
