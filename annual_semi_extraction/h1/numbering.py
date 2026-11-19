@@ -22,14 +22,28 @@ else:
 
 
 def expected_sections(year: int, period: int) -> int | None:
-    """by_period_end 裁决：2021-2024 适用〔2021〕15号/16号，2025+ 适用〔2025〕3号/4号。
-    
-    C1 修复：2016 年以前无适用法规版本，返回 None。
+    """按 regulatory_versions.json 的生效日和报告期末返回法定节数。
+
+    未登记该期间适用版本时返回 None；调用方应标记为版本未解析，
+    不得将其解释为“不适用”或默认套用其他年份模板。
     """
-    if year < 2016:
-        return None  # 无适用法规版本
-    if year <= 2024:
-        key = "no2_2021_15" if period == 4 else "no3_2021_16"
+    if period == 4:
+        period_end = f"{year:04d}-12-31"
+    elif period == 2:
+        period_end = f"{year:04d}-06-30"
     else:
-        key = "no2_2025_3" if period == 4 else "no3_2025_4"
-    return SECTION_COUNTS.get(key, 10)
+        raise ValueError(f"period 必须是 2 或 4，实际: {period}")
+
+    versions_path = _SPEC_DIR / "regulatory_versions.json"
+    registry = json.loads(versions_path.read_text(encoding="utf-8"))
+    candidates = [
+        version
+        for version in registry["versions"]
+        if int(version["applies_to_period"]) == period
+        and version["effective_from"] <= period_end
+        and version.get("chapter_set_key") in SECTION_COUNTS
+    ]
+    if not candidates:
+        return None
+    selected = max(candidates, key=lambda version: version["effective_from"])
+    return SECTION_COUNTS[selected["chapter_set_key"]]
