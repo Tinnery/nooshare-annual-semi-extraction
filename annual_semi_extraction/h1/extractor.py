@@ -84,7 +84,18 @@ _LC = json.loads((_SPEC_DIR / "legal_chapters.json").read_text(encoding="utf-8")
 TEMPLATE = {k: v["sections"] for k, v in _LC["chapters"].items()}
 
 
-def reg_version_key(year: int, period: int) -> str:
+def reg_version_key(year: int, period: int) -> str | None:
+    """返回适用的法规版本 key。
+    
+    法规版本生效日期：
+    - 2016 修订：〔2016〕31号（年报）/ 未单独列出半年报，假设同期适用
+    - 2021 修订：〔2021〕15号（年报）/ 〔2021〕16号（半年报）
+    - 2025 修订：〔2025〕3号（年报）/ 〔2025〕4号（半年报）
+    
+    2016 年以前的报告无适用法规版本，返回 None。
+    """
+    if year < 2016:
+        return None  # 无适用法规版本
     if year <= 2024:
         return "no2_2021_15" if period == 4 else "no3_2021_16"
     return "no2_2025_3" if period == 4 else "no3_2025_4"
@@ -259,6 +270,8 @@ def _rep_rank(it: dict) -> tuple:
 
 def _conditional_ords(year: int, period: int) -> set[int]:
     key = reg_version_key(year, period)
+    if key is None:
+        return set()  # 无适用法规，无条件章节
     return {i for i, sec in enumerate(TEMPLATE[key], start=1) if sec["required"] != "always"}
 
 
@@ -266,6 +279,13 @@ ORD_CAP = 15
 
 
 def _detect_l1(items: list[dict], conditional: set[int]) -> list[dict] | None:
+    """检测一级标题集合。
+    
+    C1 修复：解耦原始标题提取与法规规范映射。
+    - 不再要求标题必须匹配法规词表（移除 rate < 0.3 阈值）
+    - 只要存在足够数量的编号标题（>=4），且形态像标题，就保留
+    - 法规匹配在后续 _coverage 阶段单独处理，不丢弃原始证据
+    """
     if not items:
         return None
     best: dict[int, dict] = {}
@@ -279,9 +299,10 @@ def _detect_l1(items: list[dict], conditional: set[int]) -> list[dict] | None:
     n = len(ords)
     if n < 4:
         return None
-    rate = sum(1 for o in ords if legal_name_of(best[o]["name"])) / n
-    if rate < 0.3:
-        return None
+    # C1: 移除法规匹配率阈值，不再因法规词表不匹配而丢弃原始标题
+    # rate = sum(1 for o in ords if legal_name_of(best[o]["name"])) / n
+    # if rate < 0.3:
+    #     return None
     # 库词表命中本身就是「像标题」的强证据：新 rank 可能选到带点线噪声、
     # heading_like=0 但可锚定到标准标题的候选（如「公司基本情况------」），
     # 若不放宽会把整份报告判成无 headings。仅在 rank 开启时放宽，保证 A/B 干净。
@@ -320,7 +341,25 @@ def _recover_from_toc(toc_lines: list[tuple[int, int, str]]) -> list[dict]:
 
 
 def _coverage(headings: list[dict], year: int, period: int) -> dict:
+    """计算法规覆盖率。
+    
+    C1 修复：无适用法规版本时，不伪装成 coverage_ratio=0。
+    返回 spec_applicable=False，coverage 相关字段为 null。
+    """
     key = reg_version_key(year, period)
+    if key is None:
+        # 无适用法规版本（2016 年以前）
+        return {
+            "reg_version": None,
+            "spec_applicable": False,
+            "expected_sections": None,
+            "n_present": len(headings),
+            "missing_always_sections": None,
+            "missing_conditional_sections": None,
+            "is_complete_l1": None,
+            "coverage_ratio": None,
+        }
+    
     sections = TEMPLATE[key]
     present_cats = {h["canonical_cat"] for h in headings if h.get("canonical_cat")}
     missing_always, missing_conditional = [], []
@@ -332,7 +371,9 @@ def _coverage(headings: list[dict], year: int, period: int) -> dict:
     always_total = sum(1 for sec in sections if sec["required"] == "always")
     cov = (always_total - len(missing_always)) / always_total if always_total else 1.0
     return {
-        "reg_version": key, "expected_sections": len(sections),
+        "reg_version": key,
+        "spec_applicable": True,
+        "expected_sections": len(sections),
         "n_present": len(present_cats),
         "missing_always_sections": missing_always,
         "missing_conditional_sections": missing_conditional,
@@ -421,7 +462,9 @@ def extract(path: Path) -> dict | None:
                 dual = round(len(a & bb) / len(a | bb), 4)
     else:
         toc_recovered = _recover_from_toc(toc_lines)
-        if len(toc_recovered) >= max(2, expected - 2):
+        # C1: expected 可能为 None（无适用法规），此时用默认阈值 4
+        toc_threshold = max(2, (expected or 6) - 2)
+        if len(toc_recovered) >= toc_threshold:
             method = "toc_recovery"
             headings = [_make_heading(r, r["verbatim_line"]) for r in toc_recovered]
         elif h1_unnumbered:
@@ -449,10 +492,13 @@ def extract(path: Path) -> dict | None:
 
     cov = (_coverage(headings, year, period) if headings else {
         "reg_version": reg_version_key(year, period),
-        "expected_sections": expected, "n_present": 0,
-        "missing_always_sections": list(range(1, expected + 1)),
-        "missing_conditional_sections": [], "is_complete_l1": False,
-        "coverage_ratio": 0.0,
+        "spec_applicable": reg_version_key(year, period) is not None,
+        "expected_sections": expected if reg_version_key(year, period) is not None else None,
+        "n_present": 0,
+        "missing_always_sections": list(range(1, expected + 1)) if reg_version_key(year, period) is not None else None,
+        "missing_conditional_sections": [] if reg_version_key(year, period) is not None else None,
+        "is_complete_l1": False if reg_version_key(year, period) is not None else None,
+        "coverage_ratio": 0.0 if reg_version_key(year, period) is not None else None,
     })
 
     ov = ordinal_verdict(headings)
@@ -471,6 +517,7 @@ def extract(path: Path) -> dict | None:
         "missing_always_sections": cov["missing_always_sections"],
         "missing_conditional_sections": cov["missing_conditional_sections"],
         "reg_version": cov["reg_version"],
+        "spec_applicable": cov["spec_applicable"],
         "expected_sections": cov["expected_sections"],
         "n_candidate_sets": 1 if primary_set else 0,
         "dual_agreement": dual,

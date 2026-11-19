@@ -21,8 +21,13 @@ else:
     SECTION_COUNTS = {}
 
 
-def expected_sections(year: int, period: int) -> int:
-    """by_period_end 裁决：2021-2024 适用〔2021〕15号/16号，2025+ 适用〔2025〕3号/4号。"""
+def expected_sections(year: int, period: int) -> int | None:
+    """by_period_end 裁决：2021-2024 适用〔2021〕15号/16号，2025+ 适用〔2025〕3号/4号。
+    
+    C1 修复：2016 年以前无适用法规版本，返回 None。
+    """
+    if year < 2016:
+        return None  # 无适用法规版本
     if year <= 2024:
         key = "no2_2021_15" if period == 4 else "no3_2021_16"
     else:

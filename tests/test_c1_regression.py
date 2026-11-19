@@ -1,0 +1,248 @@
+"""C1 修复回归测试：验证历史报告（2003-2012）的 H1 抽取。
+
+问题 A 修复：H1 抽取与法规匹配解耦
+- 不再因法规词表不匹配而丢弃原始标题
+- 2016 年以前的报告标记为无适用法规（spec_applicable=False）
+- coverage_ratio 不再伪装成 0.0
+"""
+import json
+import tempfile
+from pathlib import Path
+
+import pytest
+
+from annual_semi_extraction.h1.extractor import (
+    extract,
+    reg_version_key,
+    _detect_l1,
+    _coverage,
+)
+from annual_semi_extraction.h1.numbering import expected_sections
+
+
+class TestRegVersionKey:
+    """法规版本映射测试。"""
+    
+    def test_pre_2016_returns_none(self):
+        """2016 年以前无适用法规。"""
+        assert reg_version_key(2003, 2) is None
+        assert reg_version_key(2010, 2) is None
+        assert reg_version_key(2015, 2) is None
+    
+    def test_2016_2024_uses_2021_template(self):
+        """2016-2024 使用 2021 修订模板。"""
+        assert reg_version_key(2016, 2) == "no3_2021_16"
+        assert reg_version_key(2021, 2) == "no3_2021_16"
+        assert reg_version_key(2024, 2) == "no3_2021_16"
+    
+    def test_2025_plus_uses_2025_template(self):
+        """2025 年起使用 2025 修订模板。"""
+        assert reg_version_key(2025, 2) == "no3_2025_4"
+        assert reg_version_key(2026, 2) == "no3_2025_4"
+
+
+class TestExpectedSections:
+    """预期章节数测试。"""
+    
+    def test_pre_2016_returns_none(self):
+        """2016 年以前无适用法规，返回 None。"""
+        assert expected_sections(2003, 2) is None
+        assert expected_sections(2010, 2) is None
+    
+    def test_2016_2024_returns_10(self):
+        """2016-2024 预期 10 节。"""
+        assert expected_sections(2016, 2) == 10
+        assert expected_sections(2021, 2) == 10
+    
+    def test_2025_plus_returns_8(self):
+        """2025 年起预期 8 节。"""
+        assert expected_sections(2025, 2) == 8
+
+
+class TestDetectL1Decoupled:
+    """问题 A 修复：_detect_l1 不再因法规不匹配而丢弃标题。"""
+    
+    def test_detect_l1_keeps_non_legal_headings(self):
+        """即使标题不匹配法规词表，也应保留。"""
+        # 模拟 2006 年报告的标题（与 2021 模板不匹配）
+        items = [
+            {"ordinal": 1, "name": "重要提示", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 1, "start": 0, "end": 10, "verbatim": "第一节 重要提示"},
+            {"ordinal": 2, "name": "公司基本情况", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 2, "start": 11, "end": 25, "verbatim": "第二节 公司基本情况"},
+            {"ordinal": 3, "name": "主要财务数据和指标", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 3, "start": 26, "end": 45, "verbatim": "第三节 主要财务数据和指标"},
+            {"ordinal": 4, "name": "银行业务数据摘要", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 4, "start": 46, "end": 65, "verbatim": "第四节 银行业务数据摘要"},
+        ]
+        conditional = set()
+        result = _detect_l1(items, conditional)
+        
+        # C1 修复后应保留所有标题，不再因法规不匹配而丢弃
+        assert result is not None
+        assert len(result) == 4
+    
+    def test_detect_l1_still_requires_minimum_count(self):
+        """少于 4 个标题仍返回 None。"""
+        items = [
+            {"ordinal": 1, "name": "重要提示", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 1, "start": 0, "end": 10, "verbatim": "第一节 重要提示"},
+            {"ordinal": 2, "name": "公司简介", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 2, "start": 11, "end": 20, "verbatim": "第二节 公司简介"},
+        ]
+        conditional = set()
+        result = _detect_l1(items, conditional)
+        assert result is None
+
+
+class TestCoverageSpecApplicable:
+    """问题 B/C 修复：无适用法规时不伪装成 coverage_ratio=0。"""
+    
+    def test_coverage_pre_2016_returns_not_applicable(self):
+        """2016 年以前返回 spec_applicable=False。"""
+        headings = [
+            {"canonical_cat": "notice", "raw_name": "重要提示"},
+            {"canonical_cat": "company_profile", "raw_name": "公司基本情况"},
+        ]
+        result = _coverage(headings, year=2006, period=2)
+        
+        assert result["spec_applicable"] is False
+        assert result["reg_version"] is None
+        assert result["coverage_ratio"] is None
+        assert result["is_complete_l1"] is None
+        assert result["missing_always_sections"] is None
+    
+    def test_coverage_2021_returns_applicable(self):
+        """2021 年返回 spec_applicable=True。"""
+        headings = [
+            {"canonical_cat": "notice", "raw_name": "重要提示、目录和释义"},
+            {"canonical_cat": "company_profile", "raw_name": "公司简介和主要财务指标"},
+        ]
+        result = _coverage(headings, year=2021, period=2)
+        
+        assert result["spec_applicable"] is True
+        assert result["reg_version"] == "no3_2021_16"
+        assert isinstance(result["coverage_ratio"], float)
+
+
+class TestExtractHistoricalReports:
+    """端到端测试：历史报告抽取。"""
+    
+    @pytest.fixture
+    def sample_2006_md(self):
+        """模拟 2006 年半年报 MD 内容。"""
+        return """# 重要提示
+
+公司董事会及董事保证本公告内容不存在任何虚假记载...
+
+# 第二节 公司基本情况
+
+公司名称：平安银行股份有限公司
+
+# 第三节 主要财务数据和指标
+
+本报告期主要财务数据...
+
+# 第四节 银行业务数据摘要
+
+银行业务数据...
+
+# 第五节 股本变动及股东情况
+
+股本变动情况...
+
+# 第六节 董事、监事、高级管理人员情况
+
+董事、监事情况...
+
+# 第七节 公司治理结构
+
+公司治理情况...
+
+# 第八节 股东大会简介
+
+股东大会情况...
+
+# 第九节 财务报告
+
+财务报告内容...
+
+# 第十节 备查文件目录
+
+备查文件...
+"""
+    
+    def test_extract_2006_report_extracts_headings(self, sample_2006_md, tmp_path):
+        """2006 年报告应抽取标题，不再返回 extraction_method=none。"""
+        # 创建符合 slot_key 格式的文件路径
+        report_dir = tmp_path / "000001"
+        report_dir.mkdir()
+        md_path = report_dir / "000001_2006_2.md"
+        md_path.write_text(sample_2006_md, encoding="utf-8")
+        
+        result = extract(md_path)
+        
+        assert result is not None
+        # C1 修复：应抽取到标题，不再因法规不匹配而丢弃
+        assert result["extraction_method"] != "none"
+        assert result["n_headings"] >= 4
+        
+        # 无适用法规
+        assert result["spec_applicable"] is False
+        assert result["reg_version"] is None
+        assert result["coverage_ratio"] is None
+        
+    @pytest.fixture
+    def sample_2021_md(self):
+        """模拟 2021 年半年报 MD 内容（符合 2021 模板）。"""
+        return """# 第一节 重要提示、目录和释义
+
+重要提示内容...
+
+# 第二节 公司简介和主要财务指标
+
+公司简介...
+
+# 第三节 管理层讨论与分析
+
+管理层讨论...
+
+# 第四节 公司治理
+
+公司治理...
+
+# 第五节 环境和社会责任
+
+环境和社会责任...
+
+# 第六节 重要事项
+
+重要事项...
+
+# 第七节 股份变动及股东情况
+
+股份变动...
+
+# 第八节 优先股相关情况
+
+优先股情况...
+
+# 第九节 债券相关情况
+
+债券情况...
+
+# 第十节 财务报告
+
+财务报告...
+"""
+    
+    def test_extract_2021_report_has_applicable_spec(self, sample_2021_md, tmp_path):
+        """2021 年报告应有适用法规。"""
+        report_dir = tmp_path / "000001"
+        report_dir.mkdir()
+        md_path = report_dir / "000001_2021_2.md"
+        md_path.write_text(sample_2021_md, encoding="utf-8")
+        
+        result = extract(md_path)
+        
+        assert result is not None
+        assert result["extraction_method"] != "none"
+        
+        # 有适用法规
+        assert result["spec_applicable"] is True
+        assert result["reg_version"] == "no3_2021_16"
+        assert isinstance(result["coverage_ratio"], float)
