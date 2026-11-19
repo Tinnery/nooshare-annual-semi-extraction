@@ -73,7 +73,34 @@ if [ "$overall" -eq 0 ]; then
   fi
 fi
 
-# 4) 生成最终批次摘要
+# 4) PG 写入（如果抽取成功且有 PG_PASSWORD）
+pg_loaded=0
+pg_skipped=0
+pg_status="SKIPPED"
+if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl ]; then
+  echo "PG_LOAD start"
+  pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
+      --input h1-extraction.jsonl \
+      --host 127.0.0.1 \
+      --port "${PG_LOCAL_PORT:-15432}" \
+      --db nooshare_dev \
+      --user ci_probe 2>&1) || true
+  pg_rc=$?
+  
+  if [ $pg_rc -eq 0 ] && echo "$pg_output" | grep -q "PG_LOAD=PASS"; then
+    echo "PG_LOAD=PASS"
+    pg_status="PASS"
+    pg_loaded=$(echo "$pg_output" | grep -oP 'loaded=\K[0-9]+' || echo 0)
+    pg_skipped=$(echo "$pg_output" | grep -oP 'skipped=\K[0-9]+' || echo 0)
+  else
+    echo "PG_LOAD=FAIL"
+    echo "$pg_output" | grep -E "PG_LOAD=FAIL|code=" || true
+    pg_status="FAIL"
+    overall=1
+  fi
+fi
+
+# 5) 生成最终批次摘要
 cat > h1-corpus-summary.json <<EOF
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
@@ -82,6 +109,9 @@ cat > h1-corpus-summary.json <<EOF
   "h1_extraction_failures": "h1-extraction-failures.jsonl",
   "n_extracted": ${n_extracted:-0},
   "n_failures": ${n_failures:-0},
+  "pg_status": "${pg_status}",
+  "pg_loaded": ${pg_loaded:-0},
+  "pg_skipped": ${pg_skipped:-0},
   "overall_status": $([ "$overall" -eq 0 ] && echo '"PASS"' || echo '"FAIL"')
 }
 EOF

@@ -90,14 +90,15 @@ jobs:
         sudo apt-get update -qq
         sudo apt-get install -y -qq stunnel4 netcat-openbsd
 
-    # 隧道 + 下载 + 抽取必须在同一 step（stunnel 进程组绑定）
-    - name: Tunnel + corpus download + H1 extraction
+    # 隧道 + 下载 + 抽取 + PG 写入必须在同一 step（stunnel 进程组绑定）
+    - name: Tunnel + corpus download + H1 extraction + PG load
       env:
         STUNNEL_HOST: ${{ secrets.STUNNEL_HOST }}
         STUNNEL_PSK: ${{ secrets.STUNNEL_PSK }}
         RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY }}
         RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
         RUSTFS_BUCKET: annual-semi
+        PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
         # 调试用：限制下载文件数（0 = 不限制）
         H1_CORPUS_LIMIT: '10'
       run: bash scripts/ci/run_h1_corpus.sh

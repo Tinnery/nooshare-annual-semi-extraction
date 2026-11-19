@@ -58,3 +58,35 @@ annual_semi_extraction/
 
 - `nooshare-annual-semi`：年报/半年报 MD 语料（已封版）
 - `nooshare-specs`：法规规格文件包（E1-E6 判定框架）
+
+## CI 工作流
+
+### h1-corpus job
+
+独立的 H1 语料批量生产流程，从 RustFS annual-semi 桶下载已发布的 MD 文件，执行 H1 标题抽取，并将结果写入 PG 数据库。
+
+**职责边界**：
+- 只消费已发布的语料（`published/` 前缀）
+- 不执行上游 MD 完整性检查
+- 产出写入 `annual_semi.h1_corpus_results` 表
+
+**与 infra-probe 的区别**：
+- `infra-probe`：验证基础设施连通性（canary 往返）
+- `h1-corpus`：生产研究数据（批量读取 + 抽取 + PG 写入）
+
+**PG 表结构**（`annual_semi.h1_corpus_results`）：
+- `slot_key` (PK): 语料槽位键（如 `000001_2003_2`）
+- `stock_code`, `report_year`, `period`: 股票/年份/报告期
+- `source_sha256`, `n_bytes`: 源文件校验
+- `extraction_method`, `n_headings`: 抽取方法/标题数
+- `ordinal_valid`, `ordinal_verdict`: 序号校验
+- `is_complete_l1`, `coverage_ratio`: 结构完整性
+- `headings_json` (JSONB): 标题详情
+- `missing_always_sections`, `missing_conditional_sections`: 缺失章节
+- `loaded_at`: 加载时间戳
+
+**Artifact 内容**（保留 MD 用于校验）：
+- `corpus-data/`: 下载的 MD 文件 + input-manifest.jsonl
+- `h1-extraction.jsonl`: H1 抽取结果
+- `h1-extraction-failures.jsonl`: 覆盖率检查失败记录
+- `h1-corpus-summary.json`: 批次摘要（含 PG 写入统计）
