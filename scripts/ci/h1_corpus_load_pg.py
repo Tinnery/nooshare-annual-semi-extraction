@@ -197,12 +197,26 @@ def main():
         default=os.environ.get("PG_PASSWORD", ""),
         help="PG password (or set PG_PASSWORD env var; unused under trust auth)",
     )
+    parser.add_argument(
+        "--emit-sql",
+        metavar="PATH",
+        help="只生成 UPSERT SQL 到指定文件并返回，不连接 PG（供 shell 直接调 psql -f）",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
     if not input_path.exists():
         print(f"PG_LOAD=FAIL code=INPUT_MISSING path={input_path}", file=sys.stderr)
         sys.exit(1)
+
+    # --emit-sql 模式：只生成 SQL，不连 PG。避免 uv run python 子进程的 libpq 环境影响 psql。
+    if args.emit_sql:
+        with input_path.open("r", encoding="utf-8") as f:
+            records = [json.loads(line) for line in f if line.strip()]
+        valid = [r for r in records if r.get("slot_key")]
+        Path(args.emit_sql).write_text(build_sql(valid), encoding="utf-8")
+        print(f"SQL_EMIT=PASS path={args.emit_sql} rows={len(valid)}")
+        return
 
     result = load_pg(
         input_path=input_path,

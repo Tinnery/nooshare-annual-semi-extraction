@@ -121,26 +121,22 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
     fi
 
     if [ "$overall" -eq 0 ]; then
-      set +e
-      pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
-          --input h1-extraction.jsonl \
-          --host 127.0.0.1 \
-          --port "$PG_LOCAL" \
-          --db nooshare_dev \
-          --user ci_writer 2>&1)
-      pg_rc=$?
-      set -e
-
-      if [ $pg_rc -eq 0 ] && echo "$pg_output" | grep -q "PG_LOAD=PASS"; then
-        echo "PG_LOAD=PASS"
+      # 分两步：(1) python 只生成 SQL（不连 PG）；(2) shell 原生 psql -f 执行。
+      # 避免 uv run python 子进程的 libpq 环境影响 psql，从而复用已验证可用的 shell psql 路径。
+      SQL_FILE="$WORK_DIR/h1_corpus_load.sql"
+      if ! uv run python scripts/ci/h1_corpus_load_pg.py \
+          --input h1-extraction.jsonl --emit-sql "$SQL_FILE"; then
+        echo "SQL_EMIT=FAIL"
+        pg_status="FAIL"
+        overall=1
+      elif PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+          -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
+        pg_loaded="$n_extracted"
         pg_status="PASS"
-        pg_loaded=$(echo "$pg_output" | grep -oP 'loaded=\K[0-9]+' || echo 0)
-        pg_skipped=$(echo "$pg_output" | grep -oP 'skipped=\K[0-9]+' || echo 0)
+        echo "PG_LOAD=PASS rows_written=$pg_loaded"
       else
-        echo "PG_LOAD=FAIL (exit_code=$pg_rc)"
-        echo "PG_LOAD_OUTPUT_START"
-        echo "$pg_output"
-        echo "PG_LOAD_OUTPUT_END"
+        echo "PG_LOAD=FAIL (psql -f)"
+        head -5 "$WORK_DIR/pg_load_err.txt" 2>/dev/null || true
         pg_status="FAIL"
         overall=1
       fi
