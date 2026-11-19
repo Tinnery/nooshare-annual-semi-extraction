@@ -187,6 +187,21 @@ def load_pg(
     return {"loaded": len(valid), "skipped": skipped, "total": total}
 
 
+def emit_key_map(records: list[dict], output_path: Path) -> None:
+    """生成批次 key 映射文件（row_no, slot_key, source_sha256）。
+    
+    用于失败时上传，精确定位到具体记录。由同一组 valid records 生成，
+    保证与 SQL/CSV 一一对应。row_no 从 1 开始（批次内记录序号）。
+    """
+    with output_path.open("w", encoding="utf-8") as f:
+        for i, rec in enumerate(records, start=1):
+            f.write(json.dumps({
+                "row_no": i,
+                "slot_key": rec.get("slot_key"),
+                "source_sha256": rec.get("source_sha256"),
+            }, ensure_ascii=False) + "\n")
+
+
 def emit_csv_mode(records: list[dict], csv_path: Path, sql_path: Path) -> None:
     """生成 CSV 数据文件 + SQL 脚本（COPY staging 模式）。
     
@@ -294,8 +309,12 @@ def main():
         with input_path.open("r", encoding="utf-8") as f:
             records = [json.loads(line) for line in f if line.strip()]
         valid = [r for r in records if r.get("slot_key")]
-        Path(args.emit_sql).write_text(build_sql(valid), encoding="utf-8")
-        print(f"SQL_EMIT=PASS path={args.emit_sql} rows={len(valid)}")
+        sql_path = Path(args.emit_sql)
+        sql_path.write_text(build_sql(valid), encoding="utf-8")
+        # 同步生成 key map（供失败时上传定位）
+        key_map_path = sql_path.with_suffix(".key-map.jsonl")
+        emit_key_map(valid, key_map_path)
+        print(f"SQL_EMIT=PASS path={sql_path} key_map={key_map_path} rows={len(valid)}")
         return
 
     # --emit-csv 模式：生成 CSV + SQL（COPY staging 模式），性能优化。
@@ -306,7 +325,10 @@ def main():
             records = [json.loads(line) for line in f if line.strip()]
         valid = [r for r in records if r.get("slot_key")]
         emit_csv_mode(valid, csv_path, sql_path)
-        print(f"CSV_EMIT=PASS sql={sql_path} csv={csv_path} rows={len(valid)}")
+        # 同步生成 key map（供失败时上传定位）
+        key_map_path = sql_path.with_suffix(".key-map.jsonl")
+        emit_key_map(valid, key_map_path)
+        print(f"CSV_EMIT=PASS sql={sql_path} csv={csv_path} key_map={key_map_path} rows={len(valid)}")
         return
 
     result = load_pg(

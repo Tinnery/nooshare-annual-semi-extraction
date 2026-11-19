@@ -207,9 +207,11 @@ PY
   pg_batch_ok=0
   pg_batch_attempts=0
   PG_BATCH_MAX_ATTEMPTS="${H1_PG_BATCH_MAX_ATTEMPTS:-3}"
+  PG_APPNAME="h1-corpus/run-${GITHUB_RUN_ID:-0}/batch-${batch_no}"
   for pg_attempt in $(seq 1 "$PG_BATCH_MAX_ATTEMPTS"); do
     pg_batch_attempts=$pg_attempt
-    if PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+    if PGPASSWORD="${PG_PASSWORD:-}" PGAPPNAME="$PG_APPNAME" \
+        psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
         -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" \
         >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
       echo "PG_BATCH_LOAD=PASS index=$batch_no rows=$batch_extracted attempt=$pg_attempt"
