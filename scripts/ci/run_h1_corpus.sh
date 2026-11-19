@@ -127,7 +127,7 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
           --host 127.0.0.1 \
           --port "$PG_LOCAL" \
           --db nooshare_dev \
-          --user ci_probe 2>&1)
+          --user ci_writer 2>&1)
       pg_rc=$?
       set -e
 

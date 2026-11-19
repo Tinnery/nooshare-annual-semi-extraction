@@ -1,69 +1,109 @@
 #!/usr/bin/env python3
 """
-H1 提取结果加载器：读取 h1-extraction.jsonl，写入 PG 数据库。
+H1 提取结果加载器：读取 h1-extraction.jsonl，经 psql 写入 PG 数据库。
 
-表结构：annual_semi.h1_corpus_results
-- slot_key (PK): 语料槽位键（如 000001_2003_2）
-- stock_code: 股票代码
-- report_year: 报告年份
-- period: 报告期（1=年报, 2=半年报）
-- source_sha256: 源文件 SHA256
-- n_bytes: 源文件大小
-- extraction_method: 抽取方法（ch_zh / ch_en / ...）
-- n_headings: 识别到的标题数
-- ordinal_valid: 序号校验是否通过
-- ordinal_verdict: 序号校验结论（PASS / FAIL_...）
-- is_complete_l1: 是否为完整 L1 结构
-- coverage_ratio: 标准模板覆盖率
-- headings_json: 标题详情（JSONB）
-- missing_always_sections: 缺失的必选章节（数组）
-- missing_conditional_sections: 缺失的条件章节（数组）
-- reg_version: 参考的法规版本
-- loaded_at: 加载时间戳
+为什么用 psql 而非 psycopg2：
+    CI 经 stunnel + PSK 隧道连 PG。实测 psycopg2-binary 内置 libpq 在该隧道上
+    报 "server closed the connection unexpectedly"，而系统 psql 可正常连接
+    （PG_DIAG_PSQL_AFTER_REBUILD=PASS）。故改用 psql 子进程，绕开客户端库兼容性问题。
+
+表结构由 scripts/ci/sql/h1_corpus_results.sql 预建（DEV 库一次性 DDL）。
+本脚本只负责写数据（INSERT ... ON CONFLICT DO UPDATE），不建表。
 
 用法：
     python scripts/ci/h1_corpus_load_pg.py \
         --input h1-extraction.jsonl \
         --host 127.0.0.1 --port 15432 \
-        --db nooshare_dev --user ci_probe
+        --db nooshare_dev --user ci_writer
 """
 import argparse
 import json
 import os
+import subprocess
 import sys
-from datetime import datetime, timezone
+import tempfile
 from pathlib import Path
-
-import psycopg2
-from psycopg2.extras import Json
+from typing import Any
 
 
-DDL = """
-CREATE SCHEMA IF NOT EXISTS annual_semi;
+def quote_literal(value: Any) -> str:
+    """把 Python 值转为 PG SQL 字面量。字符串内单引号翻倍转义。"""
+    if value is None:
+        return "NULL"
+    if isinstance(value, bool):
+        return "TRUE" if value else "FALSE"
+    if isinstance(value, (int, float)):
+        return str(value)
+    # 字符串 / 已序列化的 JSON：转义单引号
+    return "'" + str(value).replace("'", "''") + "'"
 
-CREATE TABLE IF NOT EXISTS annual_semi.h1_corpus_results (
-    slot_key TEXT PRIMARY KEY,
-    stock_code TEXT NOT NULL,
-    report_year INTEGER NOT NULL,
-    period INTEGER NOT NULL,
-    source_sha256 TEXT NOT NULL,
-    n_bytes BIGINT NOT NULL,
-    extraction_method TEXT,
-    n_headings INTEGER,
-    ordinal_valid BOOLEAN,
-    ordinal_verdict TEXT,
-    is_complete_l1 BOOLEAN,
-    coverage_ratio DOUBLE PRECISION,
-    headings_json JSONB,
-    missing_always_sections INTEGER[],
-    missing_conditional_sections INTEGER[],
-    reg_version TEXT,
-    loaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
 
-CREATE INDEX IF NOT EXISTS idx_h1_corpus_stock_year
-    ON annual_semi.h1_corpus_results (stock_code, report_year, period);
-"""
+def json_literal(value: Any) -> str:
+    """把对象序列化为 JSON 文本字面量（用于 ::jsonb 列）。"""
+    if value is None:
+        return "NULL::jsonb"
+    text = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
+    return quote_literal(text) + "::jsonb"
+
+
+def int_array_literal(values: Any) -> str:
+    """把整数列表转为 PG integer[] 字面量。"""
+    if not values:
+        return "ARRAY[]::integer[]"
+    items = ",".join(str(int(v)) for v in values)
+    return quote_literal("{" + items + "}") + "::integer[]"
+
+
+def build_sql(records: list[dict]) -> str:
+    """生成整批 UPSERT SQL（单事务，逐行 INSERT ... ON CONFLICT）。"""
+    lines = ["BEGIN;"]
+    for rec in records:
+        slot_key = rec.get("slot_key")
+        if not slot_key:
+            continue
+        cols = (
+            "slot_key, stock_code, report_year, period, "
+            "source_sha256, n_bytes, extraction_method, n_headings, "
+            "ordinal_valid, ordinal_verdict, is_complete_l1, coverage_ratio, "
+            "headings_json, missing_always_sections, missing_conditional_sections, "
+            "reg_version, loaded_at"
+        )
+        vals = ",".join(
+            [
+                quote_literal(slot_key),
+                quote_literal(rec.get("stock_code")),
+                quote_literal(rec.get("report_year")),
+                quote_literal(rec.get("period")),
+                quote_literal(rec.get("source_sha256")),
+                quote_literal(rec.get("n_bytes")),
+                quote_literal(rec.get("extraction_method")),
+                quote_literal(rec.get("n_headings")),
+                quote_literal(rec.get("ordinal_valid")),
+                quote_literal(rec.get("ordinal_verdict")),
+                quote_literal(rec.get("is_complete_l1")),
+                quote_literal(rec.get("coverage_ratio")),
+                json_literal(rec.get("headings", [])),
+                int_array_literal(rec.get("missing_always_sections")),
+                int_array_literal(rec.get("missing_conditional_sections")),
+                quote_literal(rec.get("reg_version")),
+                "NOW()",
+            ]
+        )
+        lines.append(
+            f"INSERT INTO annual_semi.h1_corpus_results ({cols}) VALUES ({vals}) "
+            f"ON CONFLICT (slot_key) DO UPDATE SET "
+            f"stock_code=EXCLUDED.stock_code, report_year=EXCLUDED.report_year, "
+            f"period=EXCLUDED.period, source_sha256=EXCLUDED.source_sha256, "
+            f"n_bytes=EXCLUDED.n_bytes, extraction_method=EXCLUDED.extraction_method, "
+            f"n_headings=EXCLUDED.n_headings, ordinal_valid=EXCLUDED.ordinal_valid, "
+            f"ordinal_verdict=EXCLUDED.ordinal_verdict, is_complete_l1=EXCLUDED.is_complete_l1, "
+            f"coverage_ratio=EXCLUDED.coverage_ratio, headings_json=EXCLUDED.headings_json, "
+            f"missing_always_sections=EXCLUDED.missing_always_sections, "
+            f"missing_conditional_sections=EXCLUDED.missing_conditional_sections, "
+            f"reg_version=EXCLUDED.reg_version, loaded_at=EXCLUDED.loaded_at;"
+        )
+    lines.append("COMMIT;")
+    return "\n".join(lines)
 
 
 def load_pg(
@@ -74,7 +114,7 @@ def load_pg(
     user: str,
     password: str,
 ) -> dict:
-    """读取 JSONL 并写入 PG，返回统计摘要。"""
+    """读取 JSONL，生成 SQL，经 psql 子进程写入 PG。"""
     records = []
     with input_path.open("r", encoding="utf-8") as f:
         for line in f:
@@ -82,151 +122,97 @@ def load_pg(
             if line:
                 records.append(json.loads(line))
 
+    total = len(records)
     if not records:
-        return {"loaded": 0, "skipped": 0, "total": 0, "error": "empty input"}
+        return {"loaded": 0, "skipped": 0, "total": 0}
 
-    conn = psycopg2.connect(
-        host=host,
-        port=port,
-        dbname=db,
-        user=user,
-        password=password,
-        connect_timeout=10,
-        # stunnel 已在外层做 TLS 封装；本地 15432 到 PG 之间是明文。
-        # psycopg2-binary 内置 libpq 默认 sslmode=prefer 会先发 SSLRequest，
-        # 内层再协商 SSL 会被对端关闭（server closed the connection unexpectedly）。
-        sslmode="disable",
-    )
+    valid = [r for r in records if r.get("slot_key")]
+    skipped = total - len(valid)
+
+    sql = build_sql(valid)
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".sql", encoding="utf-8", delete=False
+    ) as tmp:
+        tmp.write(sql)
+        tmp_path = tmp.name
+
+    env = os.environ.copy()
+    if password:
+        env["PGPASSWORD"] = password
+
+    cmd = [
+        "psql",
+        "-h", host,
+        "-p", str(port),
+        "-U", user,
+        "-d", db,
+        "-v", "ON_ERROR_STOP=1",
+        "-f", tmp_path,
+    ]
     try:
-        with conn.cursor() as cur:
-            # 建表
-            cur.execute(DDL)
-            conn.commit()
-
-            loaded = 0
-            skipped = 0
-            now = datetime.now(timezone.utc)
-
-            for rec in records:
-                slot_key = rec.get("slot_key")
-                if not slot_key:
-                    skipped += 1
-                    continue
-
-                headings_json = Json(rec.get("headings", []))
-                missing_always = rec.get("missing_always_sections") or []
-                missing_conditional = rec.get("missing_conditional_sections") or []
-
-                cur.execute(
-                    """
-                    INSERT INTO annual_semi.h1_corpus_results (
-                        slot_key, stock_code, report_year, period,
-                        source_sha256, n_bytes, extraction_method,
-                        n_headings, ordinal_valid, ordinal_verdict,
-                        is_complete_l1, coverage_ratio, headings_json,
-                        missing_always_sections, missing_conditional_sections,
-                        reg_version, loaded_at
-                    ) VALUES (
-                        %s, %s, %s, %s,
-                        %s, %s, %s,
-                        %s, %s, %s,
-                        %s, %s, %s,
-                        %s, %s,
-                        %s, %s
-                    )
-                    ON CONFLICT (slot_key) DO UPDATE SET
-                        stock_code = EXCLUDED.stock_code,
-                        report_year = EXCLUDED.report_year,
-                        period = EXCLUDED.period,
-                        source_sha256 = EXCLUDED.source_sha256,
-                        n_bytes = EXCLUDED.n_bytes,
-                        extraction_method = EXCLUDED.extraction_method,
-                        n_headings = EXCLUDED.n_headings,
-                        ordinal_valid = EXCLUDED.ordinal_valid,
-                        ordinal_verdict = EXCLUDED.ordinal_verdict,
-                        is_complete_l1 = EXCLUDED.is_complete_l1,
-                        coverage_ratio = EXCLUDED.coverage_ratio,
-                        headings_json = EXCLUDED.headings_json,
-                        missing_always_sections = EXCLUDED.missing_always_sections,
-                        missing_conditional_sections = EXCLUDED.missing_conditional_sections,
-                        reg_version = EXCLUDED.reg_version,
-                        loaded_at = EXCLUDED.loaded_at
-                    """,
-                    (
-                        slot_key,
-                        rec.get("stock_code"),
-                        rec.get("report_year"),
-                        rec.get("period"),
-                        rec.get("source_sha256"),
-                        rec.get("n_bytes"),
-                        rec.get("extraction_method"),
-                        rec.get("n_headings"),
-                        rec.get("ordinal_valid"),
-                        rec.get("ordinal_verdict"),
-                        rec.get("is_complete_l1"),
-                        rec.get("coverage_ratio"),
-                        headings_json,
-                        missing_always,
-                        missing_conditional,
-                        rec.get("reg_version"),
-                        now,
-                    ),
-                )
-                loaded += 1
-
-            conn.commit()
-            return {
-                "loaded": loaded,
-                "skipped": skipped,
-                "total": len(records),
-            }
+        proc = subprocess.run(
+            cmd, env=env, capture_output=True, text=True, timeout=120
+        )
+    except FileNotFoundError:
+        print("PG_LOAD=FAIL code=PSQL_NOT_FOUND", file=sys.stderr)
+        sys.exit(1)
     finally:
-        conn.close()
+        try:
+            Path(tmp_path).unlink()
+        except OSError:
+            pass
+
+    if proc.returncode != 0:
+        # 只映射为固定错误码，不回显原始错误（可能含连接信息）
+        err = proc.stderr.lower()
+        code = "PG_LOAD_ERROR"
+        if "authentication" in err:
+            code = "PG_AUTH_FAIL"
+        elif "permission denied" in err:
+            code = "PG_PERM_DENIED"
+        elif "connection refused" in err or "could not connect" in err:
+            code = "PG_TCP_REFUSED"
+        elif "relation" in err and "does not exist" in err:
+            code = "PG_TABLE_MISSING"
+        elif "syntax error" in err:
+            code = "PG_SQL_SYNTAX"
+        print(f"PG_LOAD=FAIL code={code}", file=sys.stderr)
+        sys.exit(1)
+
+    return {"loaded": len(valid), "skipped": skipped, "total": total}
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Load H1 extraction results to PG")
+    parser = argparse.ArgumentParser(description="Load H1 extraction results to PG via psql")
     parser.add_argument("--input", required=True, help="Path to h1-extraction.jsonl")
     parser.add_argument("--host", default="127.0.0.1", help="PG host")
     parser.add_argument("--port", type=int, default=15432, help="PG port")
     parser.add_argument("--db", default="nooshare_dev", help="PG database")
-    parser.add_argument("--user", default="ci_probe", help="PG user")
+    parser.add_argument("--user", default="ci_writer", help="PG user")
     parser.add_argument(
         "--password",
         default=os.environ.get("PG_PASSWORD", ""),
-        help="PG password (or set PG_PASSWORD env var)",
+        help="PG password (or set PG_PASSWORD env var; unused under trust auth)",
     )
     args = parser.parse_args()
-
-    if not args.password:
-        print("PG_LOAD=FAIL code=PG_SECRET_MISSING", file=sys.stderr)
-        sys.exit(1)
 
     input_path = Path(args.input)
     if not input_path.exists():
         print(f"PG_LOAD=FAIL code=INPUT_MISSING path={input_path}", file=sys.stderr)
         sys.exit(1)
 
-    try:
-        result = load_pg(
-            input_path=input_path,
-            host=args.host,
-            port=args.port,
-            db=args.db,
-            user=args.user,
-            password=args.password,
-        )
-        print(f"PG_LOAD=PASS loaded={result['loaded']} skipped={result['skipped']} total={result['total']}")
-    except Exception as e:
-        # 调试模式：输出完整异常信息
-        import traceback
-        print(f"PG_LOAD=FAIL code=PG_LOAD_ERROR", file=sys.stderr)
-        print(f"ERROR_TYPE={type(e).__name__}", file=sys.stderr)
-        print(f"ERROR_MSG={str(e)}", file=sys.stderr)
-        print("TRACEBACK_START", file=sys.stderr)
-        traceback.print_exc(file=sys.stderr)
-        print("TRACEBACK_END", file=sys.stderr)
-        sys.exit(1)
+    result = load_pg(
+        input_path=input_path,
+        host=args.host,
+        port=args.port,
+        db=args.db,
+        user=args.user,
+        password=args.password,
+    )
+    print(
+        f"PG_LOAD=PASS loaded={result['loaded']} "
+        f"skipped={result['skipped']} total={result['total']}"
+    )
 
 
 if __name__ == "__main__":
