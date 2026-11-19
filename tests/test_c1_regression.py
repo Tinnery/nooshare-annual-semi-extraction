@@ -16,6 +16,7 @@ from annual_semi_extraction.h1.extractor import (
     reg_version_key,
     _detect_l1,
     _coverage,
+    extract_batch,
 )
 from annual_semi_extraction.h1.numbering import expected_sections
 
@@ -116,7 +117,11 @@ class TestCoverageSpecApplicable:
         
         assert result["spec_applicable"] is True
         assert result["reg_version"] == "no3_2021_16"
-        assert isinstance(result["coverage_ratio"], float)
+        # 当前外部 category mapper 未配置；不能把空映射误判为 0% 覆盖率。
+        assert result["coverage_available"] is False
+        assert result["coverage_status"] == "CATEGORY_MAPPING_UNAVAILABLE"
+        assert result["coverage_ratio"] is None
+        assert result["is_complete_l1"] is None
 
 
 class TestExtractHistoricalReports:
@@ -246,3 +251,64 @@ class TestExtractHistoricalReports:
         assert result["spec_applicable"] is True
         assert result["reg_version"] == "no3_2021_16"
         assert isinstance(result["coverage_ratio"], float)
+
+
+
+class TestExtractBatchApplicability:
+    """批处理必须区分法规不适用与抽取失败。"""
+
+    @staticmethod
+    def _write_numbered_report(root: Path, year: int) -> Path:
+        report_dir = root / "000001"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        path = report_dir / f"000001_{year}_2.md"
+        path.write_text(
+            "第一节 历史概况\\n正文\\n"
+            "第二节 公司基本情况\\n正文\\n"
+            "第三节 经营情况\\n正文\\n"
+            "第四节 财务报告\\n正文\\n",
+            encoding="utf-8",
+        )
+        return path
+
+    def test_pre_2016_none_fields_do_not_crash_batch_or_count_as_failure(self, tmp_path):
+        """2016 年前的 coverage None 不应在批处理汇总时被遍历。"""
+        root = tmp_path / "published"
+        self._write_numbered_report(root, 2006)
+        output = tmp_path / "h1.jsonl"
+        failures = tmp_path / "failures.jsonl"
+
+        stats = extract_batch(root, output, failures)
+
+        assert stats["n_files"] == 1
+        assert stats["n_ok"] == 1
+        assert stats["n_spec_not_applicable"] == 1
+        assert stats["n_spec_applicable"] == 0
+        assert stats["complete"] == 0
+        assert stats["residual"] == 0
+        assert stats["n_extraction_errors"] == 0
+        record = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
+        assert record["missing_always_sections"] is None
+        assert record["coverage_ratio"] is None
+        assert failures.read_text(encoding="utf-8") == ""
+
+    def test_applicable_but_unmapped_coverage_is_not_a_zero_percent_failure(self, tmp_path):
+        """规则适用但类别映射器缺失时，H1 原始抽取保留，覆盖率标记不可评估。"""
+        root = tmp_path / "published"
+        self._write_numbered_report(root, 2021)
+        output = tmp_path / "h1.jsonl"
+        failures = tmp_path / "failures.jsonl"
+
+        stats = extract_batch(root, output, failures)
+
+        assert stats["n_ok"] == 1
+        assert stats["n_spec_applicable"] == 1
+        assert stats["n_coverage_unavailable"] == 1
+        assert stats["n_coverage_evaluated"] == 0
+        assert stats["complete"] == 0
+        assert stats["residual"] == 0
+        record = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
+        assert record["spec_applicable"] is True
+        assert record["coverage_available"] is False
+        assert record["coverage_ratio"] is None
+        assert failures.read_text(encoding="utf-8") == ""
