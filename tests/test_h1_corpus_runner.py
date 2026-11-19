@@ -151,7 +151,7 @@ if any("h1_corpus_load_pg.py" in arg for arg in args) and "--emit-sql" in args:
 
 if any("summarize_h1_corpus.py" in arg for arg in args):
     expected = args[args.index("--expected") + 1]
-    assert expected == "20", expected
+    assert expected == "19", expected
     calls = runner_temp / "summary-expected"
     calls.write_text(expected, encoding="utf-8")
     output = Path(option("--output"))
