@@ -50,9 +50,12 @@ if ! uv run python scripts/ci/h1_corpus_download.py; then
 fi
 
 # 3) H1 抽取（如果下载成功）
+if [ "${CORPUS_INVENTORY_ONLY:-0}" = "1" ] && [ "$overall" -eq 0 ]; then
+  echo "H1_EXTRACT=SKIPPED_INVENTORY_ONLY"
+fi
 n_extracted=0
 n_failures=0
-if [ "$overall" -eq 0 ]; then
+if [ "$overall" -eq 0 ] && [ "${CORPUS_INVENTORY_ONLY:-0}" != "1" ]; then
   echo "H1_EXTRACT start"
   
   # 使用 uv run 调用 h1-extract CLI
