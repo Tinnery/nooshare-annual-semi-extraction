@@ -129,11 +129,7 @@ jobs:
     - name: Validate H1 runners and helper scripts
       run: |
         bash -n scripts/ci/run_h1_corpus.sh scripts/ci/run_h1_corpus_full.sh
-        uv run python -m py_compile \\
-          scripts/ci/h1_corpus_download.py \\
-          scripts/ci/h1_corpus_load_pg.py \\
-          scripts/ci/summarize_h1_corpus.py \\
-          annual_semi_extraction/h1/extractor.py
+        uv run python -m py_compile scripts/ci/h1_corpus_download.py scripts/ci/h1_corpus_load_pg.py scripts/ci/summarize_h1_corpus.py annual_semi_extraction/h1/extractor.py
 
     - name: Install stunnel, psql
       run: |
