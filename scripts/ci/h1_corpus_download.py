@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+"""H1 语料批量下载：从 RustFS annual-semi 桶枚举并下载 published/ 下的 MD 文件。
+
+职责边界（窄）：
+- 只读操作：list_objects_v2 + get_object
+- 不执行 H1 抽取（那是 h1-extract CLI 的职责）
+- 不连接 PG / 不写入数据库
+- 不执行上游 MD 完整性检查（只消费已发布的语料）
+
+输出：
+1. 本地目录结构：{output_dir}/published/<code>/<code>_<year>_<period>.md
+2. input-manifest.jsonl：每行一份文件的元数据（本地路径、S3 key、SHA256、大小、slot_key）
+3. batch-summary.json：批次统计（文件数、总字节数、成功/失败数、失败清单）
+
+安全：
+- 异常只映射为错误码，绝不打印异常对象（可能含 endpoint/签名/密钥线索）
+- 凭据从环境变量读取（CI secrets 注入），不落盘
+"""
+import os
+import sys
+import json
+import hashlib
+from pathlib import Path
+from typing import Optional
+
+try:
+    import boto3
+    from botocore.config import Config
+    from botocore.exceptions import ClientError
+except ImportError:
+    print("CORPUS_DOWNLOAD=FAIL code=S3_NO_BOTO3")
+    sys.exit(1)
+
+
+def audit(line: str) -> None:
+    """输出审计行到 stdout 和审计日志文件。"""
+    print(line)
+    try:
+        work_dir = os.environ.get("RUNNER_TEMP", "/tmp")
+        with open(os.path.join(work_dir, "ci_audit.log"), "a", encoding="utf-8") as f:
+            f.write(line + "\n")
+    except Exception:
+        pass
+
+
+def classify_exception(exc: Exception) -> str:
+    """把异常映射为固定错误码，绝不回显异常文本（可能含 endpoint/签名/密钥线索）。"""
+    from botocore.exceptions import EndpointConnectionError, NoCredentialsError, ConnectTimeoutError, ReadTimeoutError
+    tname = type(exc).__name__
+    if isinstance(exc, EndpointConnectionError) or "EndpointConnection" in tname:
+        return "S3_ENDPOINT_UNREACHABLE"
+    if isinstance(exc, (ConnectTimeoutError, ReadTimeoutError)) or "Timeout" in tname:
+        return "S3_TIMEOUT"
+    if "ConnectionClosed" in tname or "ProtocolError" in tname or "RemoteDisconnected" in tname:
+        return "S3_CONN_DROP"
+    if isinstance(exc, NoCredentialsError):
+        return "S3_NO_CRED"
+    if isinstance(exc, ClientError):
+        code = exc.response.get("Error", {}).get("Code", "")
+        if code == "InvalidAccessKeyId":
+            return "S3_BAD_KEY_ID"
+        if code == "SignatureDoesNotMatch":
+            return "S3_BAD_SIGNATURE"
+        if code in ("AccessDenied", "InvalidSecurity"):
+            return "S3_ACCESS_DENIED"
+        if code == "NoSuchBucket":
+            return "S3_BUCKET_MISSING"
+        if code == "NoSuchKey":
+            return "S3_KEY_MISSING"
+        return "S3_CLIENT_" + str(code)[:24]
+    return "S3_EXC_TYPE_" + tname[:28]
+
+
+def extract_slot_key(s3_key: str) -> Optional[str]:
+    """从 S3 key 提取 slot_key：published/<code>/<code>_<year>_<period>.md -> <code>_<year>_<period>。"""
+    # 期望格式：published/000001/000001_2024_4.md
+    parts = s3_key.split("/")
+    if len(parts) != 3 or parts[0] != "published":
+        return None
+    filename = parts[2]
+    if not filename.endswith(".md"):
+        return None
+    return filename[:-3]  # 去掉 .md
+
+
+def main():
+    # 环境变量
+    access = os.environ.get("RUSTFS_ACCESS_KEY")
+    secret = os.environ.get("RUSTFS_SECRET_KEY")
+    bucket = os.environ.get("RUSTFS_BUCKET", "annual-semi")
+    endpoint = os.environ.get("S3_LOCAL_ENDPOINT", "http://127.0.0.1:15500")
+    output_dir = os.environ.get("CORPUS_OUTPUT_DIR", "corpus-data")
+    prefix = os.environ.get("CORPUS_PREFIX", "published/")
+    limit = int(os.environ.get("CORPUS_LIMIT", "0"))  # 0 = 不限制
+
+    if not access or not secret:
+        audit("CORPUS_DOWNLOAD=FAIL code=S3_NO_CRED")
+        sys.exit(1)
+
+    audit(f"CORPUS_CONFIG bucket={bucket} prefix={prefix} output_dir={output_dir}")
+
+    # 创建输出目录
+    out_path = Path(output_dir)
+    out_path.mkdir(parents=True, exist_ok=True)
+
+    # 构建 S3 客户端（复用 probe_s3.py 的配置）
+    try:
+        s3 = boto3.client(
+            "s3",
+            endpoint_url=endpoint,
+            aws_access_key_id=access,
+            aws_secret_access_key=secret,
+            region_name="us-east-1",
+            config=Config(
+                s3={"addressing_style": "path"},
+                signature_version="s3v4",
+                request_checksum_calculation="when_required",
+                response_checksum_validation="when_required",
+            ),
+        )
+    except Exception as e:
+        audit(f"CORPUS_DOWNLOAD=FAIL code={classify_exception(e)}")
+        sys.exit(1)
+
+    # 1) 枚举 published/ 前缀下的所有 .md 文件
+    audit("CORPUS_ENUMERATE start")
+    keys_to_download: list[str] = []
+    try:
+        paginator = s3.get_paginator("list_objects_v2")
+        for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
+            for obj in page.get("Contents", []):
+                key = obj["Key"]
+                if key.endswith(".md"):
+                    keys_to_download.append(key)
+                    if limit > 0 and len(keys_to_download) >= limit:
+                        break
+            if limit > 0 and len(keys_to_download) >= limit:
+                break
+    except Exception as e:
+        audit(f"CORPUS_ENUMERATE=FAIL code={classify_exception(e)}")
+        sys.exit(1)
+
+    n_enumerated = len(keys_to_download)
+    audit(f"CORPUS_ENUMERATE done n={n_enumerated}")
+
+    if n_enumerated == 0:
+        audit("CORPUS_DOWNLOAD=FAIL code=NO_FILES_FOUND")
+        sys.exit(1)
+
+    # 2) 批量下载 + 计算 SHA256
+    manifest_path = out_path / "input-manifest.jsonl"
+    n_downloaded = 0
+    n_failed = 0
+    total_bytes = 0
+    failed_keys: list[str] = []
+
+    audit("CORPUS_DOWNLOAD start")
+    with manifest_path.open("w", encoding="utf-8") as f_manifest:
+        for i, key in enumerate(keys_to_download, start=1):
+            # 本地路径：保持 S3 目录结构
+            local_file = out_path / key
+            local_file.parent.mkdir(parents=True, exist_ok=True)
+
+            try:
+                # 下载
+                response = s3.get_object(Bucket=bucket, Key=key)
+                body = response["Body"].read()
+                local_file.write_bytes(body)
+
+                # 计算 SHA256
+                sha = hashlib.sha256(body).hexdigest()
+                size = len(body)
+                slot_key = extract_slot_key(key)
+
+                # 写入 manifest
+                f_manifest.write(json.dumps({
+                    "path": str(local_file),
+                    "s3_key": key,
+                    "sha256": sha,
+                    "size": size,
+                    "slot_key": slot_key,
+                }, ensure_ascii=False) + "\n")
+
+                n_downloaded += 1
+                total_bytes += size
+
+                if i % 1000 == 0:
+                    audit(f"CORPUS_DOWNLOAD progress {i}/{n_enumerated} ok={n_downloaded} fail={n_failed}")
+
+            except Exception as e:
+                n_failed += 1
+                failed_keys.append(key)
+                audit(f"CORPUS_DOWNLOAD_FAIL key={key} code={classify_exception(e)}")
+
+    audit(f"CORPUS_DOWNLOAD done ok={n_downloaded} fail={n_failed} bytes={total_bytes}")
+
+    # 3) 写入批次摘要
+    summary = {
+        "n_enumerated": n_enumerated,
+        "n_downloaded": n_downloaded,
+        "n_failed": n_failed,
+        "total_bytes": total_bytes,
+        "failed_keys": failed_keys[:100],  # 只保留前 100 个失败 key，避免摘要过大
+        "manifest_path": str(manifest_path),
+        "output_dir": str(out_path),
+    }
+    summary_path = out_path / "batch-summary.json"
+    summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    audit(f"CORPUS_SUMMARY written to {summary_path}")
+
+    # 4) 最终判定
+    if n_downloaded == 0:
+        audit("CORPUS_DOWNLOAD=FAIL code=ALL_FAILED")
+        sys.exit(1)
+    elif n_failed > 0:
+        audit(f"CORPUS_DOWNLOAD=PARTIAL ok={n_downloaded} fail={n_failed}")
+        sys.exit(0)  # 部分成功仍算通过，由下游决定是否接受
+    else:
+        audit("CORPUS_DOWNLOAD=PASS")
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main()
