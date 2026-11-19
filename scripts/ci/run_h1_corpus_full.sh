@@ -224,7 +224,7 @@ keys = (
     "batch_no", "last_key", "downloaded", "extracted", "residuals",
     "pg_loaded", "bytes", "expected_total", "processed_before"
 )
-values = [int(sys.argv[i]) if i != 2 else sys.argv[i] for i in range(2, len(sys.argv))]
+values = [sys.argv[i] if i == 3 else int(sys.argv[i]) for i in range(2, len(sys.argv))]
 d = dict(zip(keys, values))
 json.dump(d, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 PY
