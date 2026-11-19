@@ -568,8 +568,7 @@ def extract_batch(
     n_ok = 0
 
     mode = "a" if append else "w"
-    with out.open(mode, encoding="utf-8") as fout, \\
-         failures.open(mode, encoding="utf-8") as ffail:
+    with (\n        out.open(mode, encoding="utf-8") as fout,\n        failures.open(mode, encoding="utf-8") as ffail,\n    ):
         for i, path in enumerate(files, start=1):
             try:
                 rec = extract(path)
@@ -578,7 +577,7 @@ def extract_batch(
                     "path": str(path),
                     "reason": "EXTRACTION_ERROR",
                     "error": f"{type(exc).__name__}: {exc}",
-                }, ensure_ascii=False) + "\\n")
+                }, ensure_ascii=False) + "\n")
                 residual += 1
                 n_extraction_errors += 1
                 continue
@@ -587,7 +586,7 @@ def extract_batch(
                 n_skipped += 1
                 continue
 
-            fout.write(json.dumps(rec, ensure_ascii=False) + "\\n")
+            fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
             n_ok += 1
             method_counter[rec["extraction_method"]] += 1
             n_headings_total += rec["n_headings"]
@@ -636,7 +635,7 @@ def extract_batch(
                     "coverage_status": rec.get("coverage_status"),
                     "missing_always": rec.get("missing_always_sections"),
                     "ordinal_verdict": ordinal_verdict,
-                }, ensure_ascii=False) + "\\n")
+                }, ensure_ascii=False) + "\n")
 
             if rec.get("dual_agreement") is not None:
                 dual_vals.append(rec["dual_agreement"])
