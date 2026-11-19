@@ -14,6 +14,11 @@
 # - run_h1_corpus.sh：生产研究数据（批量读取 + 抽取）
 set -uo pipefail
 
+# Full-corpus mode owns its own tunnel lifecycle, chunk cleanup, and checkpointing.
+if [ "${H1_CORPUS_FULL:-0}" = "1" ]; then
+  exec bash scripts/ci/run_h1_corpus_full.sh
+fi
+
 WORK_DIR="${RUNNER_TEMP:-/tmp}"
 AUDIT="$WORK_DIR/ci_audit.log"
 rm -f "$AUDIT"

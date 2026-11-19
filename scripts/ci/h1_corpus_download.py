@@ -99,6 +99,7 @@ def main():
     except ValueError:
         audit("CORPUS_DOWNLOAD=FAIL code=INVALID_LIMIT")
         sys.exit(1)
+    start_after = os.environ.get("CORPUS_START_AFTER", "").strip()
 
     if not access or not secret:
         audit("CORPUS_DOWNLOAD=FAIL code=S3_NO_CRED")
@@ -121,6 +122,9 @@ def main():
             config=Config(
                 s3={"addressing_style": "path"},
                 signature_version="s3v4",
+                connect_timeout=10,
+                read_timeout=90,
+                retries={"max_attempts": 3, "mode": "standard"},
                 request_checksum_calculation="when_required",
                 response_checksum_validation="when_required",
             ),
@@ -136,7 +140,10 @@ def main():
     n_ignored_malformed = 0
     try:
         paginator = s3.get_paginator("list_objects_v2")
-        for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
+        pagination_args = {"Bucket": bucket, "Prefix": prefix}
+        if start_after:
+            pagination_args["StartAfter"] = start_after
+        for page in paginator.paginate(**pagination_args):
             for obj in page.get("Contents", []):
                 key = obj["Key"]
                 if not key.endswith(".md"):
@@ -162,6 +169,22 @@ def main():
     audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed}")
 
     if n_enumerated == 0:
+        if start_after and os.environ.get("CORPUS_INVENTORY_ONLY", "0") != "1":
+            summary = {
+                "n_enumerated": 0,
+                "n_downloaded": 0,
+                "n_failed": 0,
+                "n_ignored_malformed": n_ignored_malformed,
+                "start_after": start_after,
+                "end_of_corpus": True,
+                "manifest_path": None,
+                "output_dir": str(out_path),
+            }
+            (out_path / "batch-summary.json").write_text(
+                json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            audit("CORPUS_ENUMERATE=END_OF_CORPUS")
+            sys.exit(0)
         audit("CORPUS_DOWNLOAD=FAIL code=NO_FILES_FOUND")
         sys.exit(1)
 
@@ -193,7 +216,7 @@ def main():
                     "etag": meta["etag"],
                     "last_modified": modified.isoformat() if modified else None,
                     "status": "INVENTORY_ONLY",
-                }, ensure_ascii=False) + "\\n")
+                }, ensure_ascii=False) + "\n")
 
         summary = {
             "mode": "inventory_only",
@@ -201,6 +224,9 @@ def main():
             "n_downloaded": 0,
             "n_failed": 0,
             "n_ignored_malformed": n_ignored_malformed,
+            "n_inventory_rows": n_enumerated,
+            "first_key": keys_to_download[0],
+            "last_key": keys_to_download[-1],
             "estimated_total_bytes": total_bytes,
             "stock_count": len(stocks),
             "annual_count": annual_count,
@@ -280,6 +306,11 @@ def main():
         "n_downloaded": n_downloaded,
         "n_failed": n_failed,
         "n_ignored_malformed": n_ignored_malformed,
+        "start_after": start_after or None,
+        "first_key": keys_to_download[0],
+        "last_key": keys_to_download[-1],
+        "next_start_after": keys_to_download[-1],
+        "has_more": bool(limit > 0 and n_enumerated >= limit),
         "total_bytes": total_bytes,
         "failed_keys": failed_keys[:100],  # 只保留前 100 个失败 key，避免摘要过大
         "manifest_path": str(manifest_path),

@@ -21,6 +21,31 @@ on:
         type: string
         default: "10"
         required: false
+      batch_size:
+        description: "Full-run chunk size"
+        type: string
+        default: "1000"
+        required: false
+      expected_total:
+        description: "Expected object count from the inventory snapshot"
+        type: string
+        default: "113526"
+        required: false
+      start_after:
+        description: "Resume after this last committed S3 key"
+        type: string
+        default: ""
+        required: false
+      processed_before:
+        description: "Number of objects already committed before the resume cursor"
+        type: string
+        default: "0"
+        required: false
+      process_limit:
+        description: "Maximum records for this invocation (0=unbounded)"
+        type: string
+        default: "0"
+        required: false
 
 permissions:
   contents: read
@@ -86,8 +111,17 @@ jobs:
   # - infra-probe 验证基础设施（canary 往返）
   # - h1-corpus 生产研究数据（批量读取 + 抽取）
   h1-corpus:
+    # Regular PRs validate code without starting a RustFS data job.
+    # Data jobs require an explicit mode marker; main/master pushes keep the
+    # bounded 10-record sample as a connectivity smoke check.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h1-sample]') || contains(github.event.pull_request.title, '[h1-inventory]') || contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]')
     runs-on: ubuntu-latest
+    timeout-minutes: 350
     environment: ci-probe
+    # Job-level flags are also consumed by the later artifact-upload conditions.
+    env:
+      CORPUS_INVENTORY_ONLY: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'inventory' || github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-inventory]')) && '1' || '0' }}
+      H1_CORPUS_FULL: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'full' || github.event_name == 'pull_request' && (contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]'))) && '1' || '0' }}
     # H1 是数据生产 job；抽取或入库失败必须使该 job 失败。
     # 串行依赖 infra-probe：两者用同一 PSK identity 连同一 SNI router，
     # 并行时 server 端 PG 连接槽被占用，导致 psycopg2 连接被关闭
@@ -105,6 +139,11 @@ jobs:
     - name: Install dependencies (locked)
       run: uv sync --locked
 
+    - name: Validate H1 runners and helper scripts
+      run: |
+        bash -n scripts/ci/run_h1_corpus.sh scripts/ci/run_h1_corpus_full.sh
+        uv run python -m py_compile scripts/ci/h1_corpus_download.py scripts/ci/h1_corpus_load_pg.py scripts/ci/summarize_h1_corpus.py annual_semi_extraction/h1/extractor.py scripts/ci/validate_h1_batch.py
+
     - name: Install stunnel, psql
       run: |
         sudo apt-get update -qq
@@ -120,20 +159,46 @@ jobs:
         RUSTFS_BUCKET: annual-semi
         PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
         # push/PR 默认小样本；手动 workflow_dispatch 可选 sample / inventory / full。
-        H1_CORPUS_LIMIT: ${{ github.event_name == 'workflow_dispatch' && (inputs.corpus_mode == 'inventory' || inputs.corpus_mode == 'full') && '0' || github.event_name == 'workflow_dispatch' && inputs.corpus_limit || '10' }}
-        CORPUS_INVENTORY_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'inventory' && '1' || '0' }}
+        H1_CORPUS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && (inputs.corpus_mode == 'inventory' || inputs.corpus_mode == 'full')) && '0' || (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, '[h1-inventory]') || contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]'))) && '0' || (github.event_name == 'workflow_dispatch' && inputs.corpus_limit) || '10' }}
+        CORPUS_INVENTORY_ONLY: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'inventory' || github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-inventory]')) && '1' || '0' }}
+        H1_CORPUS_FULL: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'full' || github.event_name == 'pull_request' && (contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]'))) && '1' || '0' }}
+        H1_CORPUS_BATCH_SIZE: ${{ (github.event_name == 'workflow_dispatch' && inputs.batch_size) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '10') || '1000' }}
+        H1_EXPECTED_CORPUS_COUNT: ${{ (github.event_name == 'workflow_dispatch' && inputs.expected_total) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '20') || '113526' }}
+        H1_PROCESSED_BEFORE: ${{ github.event_name == 'workflow_dispatch' && inputs.processed_before || '0' }}
+        H1_PROCESS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && inputs.process_limit) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '20') || '0' }}
+        CORPUS_START_AFTER: ${{ github.event_name == 'workflow_dispatch' && inputs.start_after || '' }}
       run: bash scripts/ci/run_h1_corpus.sh
 
-    - name: Upload H1 corpus artifacts
-      if: always()
+    - name: Upload sample H1 artifacts
+      if: always() && env.H1_CORPUS_FULL != '1' && env.CORPUS_INVENTORY_ONLY != '1'
       uses: actions/upload-artifact@v4
       with:
-        name: h1-corpus-output
+        name: h1-corpus-sample
         path: |
           corpus-data/input-manifest.jsonl
           corpus-data/batch-summary.json
-          corpus-data/corpus-inventory.jsonl
           h1-extraction.jsonl
           h1-extraction-failures.jsonl
+          h1-corpus-summary.json
+        retention-days: 3
+
+    - name: Upload inventory summary only
+      if: always() && env.CORPUS_INVENTORY_ONLY == '1'
+      uses: actions/upload-artifact@v4
+      with:
+        name: h1-corpus-inventory-summary
+        path: |
+          corpus-data/batch-summary.json
+          h1-corpus-summary.json
+        retention-days: 1
+
+    - name: Upload full-run checkpoint and summary
+      if: always() && env.H1_CORPUS_FULL == '1'
+      uses: actions/upload-artifact@v4
+      with:
+        name: h1-corpus-full-summary
+        path: |
+          h1-corpus-checkpoint.json
+          h1-quality-summary.json
           h1-corpus-summary.json
         retention-days: 7

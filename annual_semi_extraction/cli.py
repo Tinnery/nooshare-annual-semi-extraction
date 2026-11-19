@@ -82,6 +82,7 @@ def h1_extract(
     n_spec_unresolved = result["n_spec_unresolved"]
     n_coverage_evaluated = result["n_coverage_evaluated"]
     n_coverage_unavailable = result["n_coverage_unavailable"]
+    n_low_heading_sets = result["n_low_heading_sets"]
     logger.info(
         f"完成: {n_ok}/{n_files} 份, "
         f"法规适用: {n_spec_applicable}, 不适用: {n_spec_not_applicable}, "
@@ -89,7 +90,8 @@ def h1_extract(
         f"覆盖率可评估: {n_coverage_evaluated}, 映射不可用: {n_coverage_unavailable}, "
         f"完整 L1: {complete}/{n_coverage_evaluated} "
         f"({complete/max(1,n_coverage_evaluated):.1%}), "
-        f"残差: {residual}, 无标题: {result['n_without_headings']}, "
+        f"残差: {residual}, 低标题数: {n_low_heading_sets}, "
+        f"无标题: {result['n_without_headings']}, "
         f"抽取异常: {result['n_extraction_errors']}"
     )
     typer.echo(f"-> {output}")
