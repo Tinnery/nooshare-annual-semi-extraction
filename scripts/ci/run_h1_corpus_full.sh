@@ -334,16 +334,12 @@ pg_reconcile_invalid_sha=0
 
 if [ "${H1_VERIFY_PG_CORPUS:-0}" = "1" ]; then
   completed_total=$((PROCESSED_BEFORE + total_downloaded))
-  if [ "$overall" -ne 0 ] || [ "$EXPECTED_TOTAL" -le 0 ] \
-    || [ "$completed_total" -ne "$EXPECTED_TOTAL" ]; then
+  if [ "$overall" -ne 0 ] || [ "$EXPECTED_TOTAL" -le 0 ] || [ "$completed_total" -ne "$EXPECTED_TOTAL" ]; then
     pg_reconcile_status="SKIPPED_INCOMPLETE"
     echo "PG_RECONCILIATION=SKIPPED code=CORPUS_NOT_COMPLETE completed=$completed_total expected=$EXPECTED_TOTAL"
   else
     echo "PG_RECONCILIATION=start expected_rows=$EXPECTED_TOTAL"
-    pg_counts="$(PGPASSWORD="${PG_PASSWORD:-}" psql \
-      -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer -d nooshare_dev \
-      -A -t -F ',' -v ON_ERROR_STOP=1 \
-      -c "SELECT COUNT(*)::bigint, COUNT(DISTINCT slot_key)::bigint, COUNT(*) FILTER (WHERE source_sha256 IS NULL)::bigint, COUNT(*) FILTER (WHERE source_sha256 !~ '^[0-9a-f]{64}
+    query="SELECT COUNT(*)::bigint, COUNT(DISTINCT slot_key)::bigint, COUNT(*) FILTER (WHERE source_sha256 IS NULL)::bigint, COUNT(*) FILTER (WHERE source_sha256 !~ '^[0-9a-f]{64}
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
   "mode": "full_h1_chunked",
@@ -382,8 +378,8 @@ else
   echo "ORCHESTRATOR=FAIL code=H1_FULL_FAILED"
 fi
 exit "$overall"
-)::bigint FROM annual_semi.h1_corpus_results;" \
-      2>"$WORK_DIR/pg_reconciliation_err.txt")"
+)::bigint FROM annual_semi.h1_corpus_results;"
+    pg_counts="$(PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer -d nooshare_dev -A -t -F ',' -v ON_ERROR_STOP=1 -c "$query" 2>"$WORK_DIR/pg_reconciliation_err.txt")"
     pg_rc=$?
     if [ "$pg_rc" -ne 0 ]; then
       pg_reconcile_status="FAIL"
@@ -391,25 +387,18 @@ exit "$overall"
       head -5 "$WORK_DIR/pg_reconciliation_err.txt" 2>/dev/null || true
       overall=1
     else
-      IFS=',' read -r pg_reconcile_rows pg_reconcile_unique_slots \
-        pg_reconcile_missing_sha pg_reconcile_invalid_sha <<< "$pg_counts"
+      IFS=',' read -r pg_reconcile_rows pg_reconcile_unique_slots pg_reconcile_missing_sha pg_reconcile_invalid_sha <<< "$pg_counts"
       pg_reconcile_rows="${pg_reconcile_rows//[[:space:]]/}"
       pg_reconcile_unique_slots="${pg_reconcile_unique_slots//[[:space:]]/}"
       pg_reconcile_missing_sha="${pg_reconcile_missing_sha//[[:space:]]/}"
       pg_reconcile_invalid_sha="${pg_reconcile_invalid_sha//[[:space:]]/}"
-      if ! [[ "$pg_reconcile_rows" =~ ^[0-9]+$ ]] \
-        || ! [[ "$pg_reconcile_unique_slots" =~ ^[0-9]+$ ]] \
-        || ! [[ "$pg_reconcile_missing_sha" =~ ^[0-9]+$ ]] \
-        || ! [[ "$pg_reconcile_invalid_sha" =~ ^[0-9]+$ ]]; then
+      if ! [[ "$pg_reconcile_rows" =~ ^[0-9]+$ ]] || ! [[ "$pg_reconcile_unique_slots" =~ ^[0-9]+$ ]] || ! [[ "$pg_reconcile_missing_sha" =~ ^[0-9]+$ ]] || ! [[ "$pg_reconcile_invalid_sha" =~ ^[0-9]+$ ]]; then
         pg_reconcile_status="FAIL"
         echo "PG_RECONCILIATION=FAIL code=INVALID_QUERY_RESULT"
         overall=1
       else
         pg_reconcile_duplicate_slots=$((pg_reconcile_rows - pg_reconcile_unique_slots))
-        if [ "$pg_reconcile_rows" -eq "$EXPECTED_TOTAL" ] \
-          && [ "$pg_reconcile_unique_slots" -eq "$EXPECTED_TOTAL" ] \
-          && [ "$pg_reconcile_missing_sha" -eq 0 ] \
-          && [ "$pg_reconcile_invalid_sha" -eq 0 ]; then
+        if [ "$pg_reconcile_rows" -eq "$EXPECTED_TOTAL" ] && [ "$pg_reconcile_unique_slots" -eq "$EXPECTED_TOTAL" ] && [ "$pg_reconcile_missing_sha" -eq 0 ] && [ "$pg_reconcile_invalid_sha" -eq 0 ]; then
           pg_reconcile_status="PASS"
           echo "PG_RECONCILIATION=PASS rows=$pg_reconcile_rows distinct_slots=$pg_reconcile_unique_slots duplicates=$pg_reconcile_duplicate_slots missing_sha=$pg_reconcile_missing_sha invalid_sha=$pg_reconcile_invalid_sha"
         else
@@ -421,7 +410,6 @@ exit "$overall"
     fi
   fi
 fi
-
 cat > h1-corpus-summary.json <<EOF
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
