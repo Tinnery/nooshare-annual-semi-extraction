@@ -90,15 +90,22 @@ class TestDetectL1Decoupled:
         assert result is not None
         assert len(result) == 4
     
-    def test_detect_l1_still_requires_minimum_count(self):
-        """少于 4 个标题仍返回 None。"""
+    def test_detect_l1_preserves_two_observed_headings(self):
+        """两个连续编号的原始标题应保留，是否完整由后续质量状态判断。"""
         items = [
-            {"ordinal": 1, "name": "重要提示", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 1, "start": 0, "end": 10, "verbatim": "第一节 重要提示"},
-            {"ordinal": 2, "name": "公司简介", "md_level": 1, "heading_like": True, "system": "CH_ZH", "line": 2, "start": 11, "end": 20, "verbatim": "第二节 公司简介"},
+            {"ordinal": 1, "name": "重要提示", "md_level": 0, "heading_like": True, "system": "CH_ZH", "line": 1, "start": 0, "end": 10, "verbatim": "第一节 重要提示"},
+            {"ordinal": 2, "name": "公司简介", "md_level": 0, "heading_like": True, "system": "CH_ZH", "line": 2, "start": 11, "end": 20, "verbatim": "第二节 公司简介"},
         ]
-        conditional = set()
-        result = _detect_l1(items, conditional)
-        assert result is None
+        result = _detect_l1(items, set())
+        assert result is not None
+        assert [item["ordinal"] for item in result] == [1, 2]
+
+    def test_detect_l1_rejects_single_unconfirmed_heading(self):
+        """单个编号候选不足以形成章节集合。"""
+        items = [
+            {"ordinal": 1, "name": "重要提示", "md_level": 0, "heading_like": True, "system": "CH_ZH", "line": 1, "start": 0, "end": 10, "verbatim": "第一节 重要提示"},
+        ]
+        assert _detect_l1(items, set()) is None
 
 
 class TestCoverageSpecApplicable:
@@ -309,6 +316,33 @@ class TestExtractBatchApplicability:
         assert record["spec_resolution_status"] == "UNRESOLVED"
         assert record["coverage_ratio"] is None
         assert failures.read_text(encoding="utf-8") == ""
+
+    def test_short_historical_heading_set_is_preserved_and_flagged(self, tmp_path):
+        """两到三节的历史样本保留原始标题，但标记 LOW_HEADING_COUNT 残差。"""
+        root = tmp_path / "published"
+        report_dir = root / "000001"
+        report_dir.mkdir(parents=True)
+        md_path = report_dir / "000001_2006_2.md"
+        md_path.write_text(
+            "第一节 重要提示\\n正文\\n"
+            "第二节 公司基本情况\\n正文\\n"
+            "第三节 主要财务数据和指标\\n正文\\n",
+            encoding="utf-8",
+        )
+        output = tmp_path / "h1.jsonl"
+        failures = tmp_path / "failures.jsonl"
+
+        stats = extract_batch(root, output, failures)
+
+        record = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
+        assert record["n_headings"] == 3
+        assert [h["ordinal"] for h in record["headings"]] == [1, 2, 3]
+        assert record["heading_set_status"] == "LOW_HEADING_COUNT"
+        assert stats["n_low_heading_sets"] == 1
+        assert stats["n_without_headings"] == 0
+        assert stats["residual"] == 1
+        failure = json.loads(failures.read_text(encoding="utf-8").splitlines()[0])
+        assert "LOW_HEADING_COUNT" in failure["reasons"]
 
     def test_applicable_but_unmapped_coverage_is_not_a_zero_percent_failure(self, tmp_path):
         """规则适用但类别映射器缺失时，H1 原始抽取保留，覆盖率标记不可评估。"""
