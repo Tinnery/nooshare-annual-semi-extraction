@@ -73,6 +73,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ci-probe
     continue-on-error: true
+    # 串行依赖 infra-probe：两者用同一 PSK identity 连同一 SNI router，
+    # 并行时 server 端 PG 连接槽被占用，导致 psycopg2 连接被关闭
+    # （server closed the connection unexpectedly）。串行后隧道不重叠。
+    needs: infra-probe
 
     steps:
     - uses: actions/checkout@v4
@@ -85,10 +89,10 @@ jobs:
     - name: Install dependencies (locked)
       run: uv sync --locked
 
-    - name: Install stunnel
+    - name: Install stunnel, psql
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -y -qq stunnel4 netcat-openbsd
+        sudo apt-get install -y -qq stunnel4 netcat-openbsd postgresql-client
 
     # 隧道 + 下载 + 抽取 + PG 写入必须在同一 step（stunnel 进程组绑定）
     - name: Tunnel + corpus download + H1 extraction + PG load

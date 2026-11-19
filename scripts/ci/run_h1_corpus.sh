@@ -79,6 +79,17 @@ pg_skipped=0
 pg_status="SKIPPED"
 if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl ]; then
   echo "PG_LOAD start"
+  PG_LOCAL="${PG_LOCAL_PORT:-15432}"
+
+  # 诊断探针：区分隧道问题 vs psycopg2 客户端问题
+  if nc -z 127.0.0.1 "$PG_LOCAL" 2>/dev/null; then
+    echo "PG_DIAG_TCP=ALIVE port=$PG_LOCAL"
+  else
+    echo "PG_DIAG_TCP=DEAD port=$PG_LOCAL"
+  fi
+  psql "host=127.0.0.1 port=${PG_LOCAL} dbname=nooshare_dev user=ci_probe sslmode=disable connect_timeout=5" \
+    -tAc "SELECT 1" >/dev/null 2>&1 && echo "PG_DIAG_PSQL=PASS" || echo "PG_DIAG_PSQL=FAIL"
+
   set +e
   pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
       --input h1-extraction.jsonl \
