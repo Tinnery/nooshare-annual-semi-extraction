@@ -69,6 +69,15 @@ def h1_extract(
     输入：本地 MD 文件目录（递归扫描）
     输出：每行一个 JSON 对象，包含 slot_key、headings、extraction_method 等字段。
     """
+    # 诊断：确认 pattern library 是否加载成功（Run #87 根因：PG_HOST 未传导致静默降级）
+    from annual_semi_extraction.h1.pattern_matcher import get_pattern_matcher
+    _m = get_pattern_matcher()
+    logger.info(
+        f"pattern_library: available={_m.is_available}, "
+        f"size={_m.size}, titles={_m.title_count}, "
+        f"error={_m.load_error!r}"
+    )
+
     logger.info(f"H1 抽取: input={input_dir}, output={output}")
     result = extract_batch(input_dir, output, failures,
                            limit=limit, offset=offset,
