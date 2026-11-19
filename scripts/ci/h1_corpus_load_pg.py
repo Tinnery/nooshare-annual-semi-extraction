@@ -47,7 +47,9 @@ def json_literal(value: Any) -> str:
 
 
 def int_array_literal(values: Any) -> str:
-    """把整数列表转为 PG integer[] 字面量。"""
+    """把整数列表转为 PG integer[] 字面量；None 保留 SQL NULL 语义。"""
+    if values is None:
+        return "NULL::integer[]"
     if not values:
         return "ARRAY[]::integer[]"
     items = ",".join(str(int(v)) for v in values)
