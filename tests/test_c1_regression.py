@@ -250,7 +250,9 @@ class TestExtractHistoricalReports:
         # 有适用法规
         assert result["spec_applicable"] is True
         assert result["reg_version"] == "no3_2021_16"
-        assert isinstance(result["coverage_ratio"], float)
+        assert result["coverage_available"] is False
+        assert result["coverage_status"] == "CATEGORY_MAPPING_UNAVAILABLE"
+        assert result["coverage_ratio"] is None
 
 
 
@@ -263,10 +265,10 @@ class TestExtractBatchApplicability:
         report_dir.mkdir(parents=True, exist_ok=True)
         path = report_dir / f"000001_{year}_2.md"
         path.write_text(
-            "第一节 历史概况\\n正文\\n"
-            "第二节 公司基本情况\\n正文\\n"
-            "第三节 经营情况\\n正文\\n"
-            "第四节 财务报告\\n正文\\n",
+            "第一节 历史概况\n正文\n"
+            "第二节 公司基本情况\n正文\n"
+            "第三节 经营情况\n正文\n"
+            "第四节 财务报告\n正文\n",
             encoding="utf-8",
         )
         return path
