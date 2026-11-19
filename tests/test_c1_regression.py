@@ -2,7 +2,7 @@
 
 问题 A 修复：H1 抽取与法规匹配解耦
 - 不再因法规词表不匹配而丢弃原始标题
-- 2016 年以前的报告标记为无适用法规（spec_applicable=False）
+- 注册表未覆盖的历史期间标记为法规版本未解析
 - coverage_ratio 不再伪装成 0.0
 """
 import json
@@ -25,7 +25,7 @@ class TestRegVersionKey:
     """法规版本映射测试。"""
     
     def test_pre_2016_returns_none(self):
-        """2016 年以前无适用法规。"""
+        """注册表未覆盖的历史期间不伪造法规版本。"""
         assert reg_version_key(2003, 2) is None
         assert reg_version_key(2010, 2) is None
         assert reg_version_key(2015, 2) is None
@@ -104,8 +104,8 @@ class TestDetectL1Decoupled:
 class TestCoverageSpecApplicable:
     """问题 B/C 修复：无适用法规时不伪装成 coverage_ratio=0。"""
     
-    def test_coverage_pre_2016_returns_not_applicable(self):
-        """2016 年以前返回 spec_applicable=False。"""
+    def test_coverage_pre_2016_returns_unresolved(self):
+        """注册表未覆盖的期间返回 VERSION_UNRESOLVED。"""
         headings = [
             {"canonical_cat": "notice", "raw_name": "重要提示"},
             {"canonical_cat": "company_profile", "raw_name": "公司基本情况"},
