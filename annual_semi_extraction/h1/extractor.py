@@ -307,7 +307,9 @@ def _detect_l1(items: list[dict], conditional: set[int]) -> list[dict] | None:
             best[o] = it
     ords = sorted(best)
     n = len(ords)
-    if n < 4:
+    # Preserve observed source headings even when the historical report format
+    # exposes fewer top-level sections. Completeness is assessed separately.
+    if n < 2:
         return None
     # C1: 移除法规匹配率阈值，不再因法规词表不匹配而丢弃原始标题
     # rate = sum(1 for o in ords if legal_name_of(best[o]["name"])) / n
@@ -520,11 +522,17 @@ def extract(path: Path) -> dict | None:
     cov = _coverage(headings, year, period)
 
     ov = ordinal_verdict(headings)
+    heading_set_status = (
+        "NO_CANDIDATE" if not headings
+        else "LOW_HEADING_COUNT" if len(headings) < 4
+        else "CANDIDATES_FOUND"
+    )
     rec = {
         "slot_key": slot, "stock_code": code, "report_year": year, "period": period,
         "source_sha256": sha, "n_bytes": len(raw),
         "extraction_method": method,
         "n_headings": len(headings),
+        "heading_set_status": heading_set_status,
         "ordinal_valid": ov["ordinal_valid"],
         "ordinal_verdict": ov["ordinal_verdict"],
         "ordinal_n": ov["ordinal_n"],
@@ -575,6 +583,7 @@ def extract_batch(
     n_coverage_evaluated = 0
     n_coverage_unavailable = 0
     n_without_headings = 0
+    n_low_heading_sets = 0
     n_extraction_errors = 0
     n_skipped = 0
     dual_vals: list[float] = []
@@ -642,6 +651,9 @@ def extract_batch(
             if rec.get("n_headings", 0) == 0:
                 n_without_headings += 1
                 reasons.append("NO_HEADINGS")
+            elif rec.get("heading_set_status") == "LOW_HEADING_COUNT":
+                n_low_heading_sets += 1
+                reasons.append("LOW_HEADING_COUNT")
 
             ordinal_verdict = rec.get("ordinal_verdict", "UNKNOWN")
             ordinal_counter[ordinal_verdict] += 1
@@ -680,6 +692,7 @@ def extract_batch(
         "n_coverage_evaluated": n_coverage_evaluated,
         "n_coverage_unavailable": n_coverage_unavailable,
         "n_without_headings": n_without_headings,
+        "n_low_heading_sets": n_low_heading_sets,
         "complete": complete,
         "residual": residual,
         "method_distribution": method_counter.most_common(),
