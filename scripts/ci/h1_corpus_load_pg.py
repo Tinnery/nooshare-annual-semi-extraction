@@ -92,6 +92,10 @@ def load_pg(
         user=user,
         password=password,
         connect_timeout=10,
+        # stunnel 已在外层做 TLS 封装；本地 15432 到 PG 之间是明文。
+        # psycopg2-binary 内置 libpq 默认 sslmode=prefer 会先发 SSLRequest，
+        # 内层再协商 SSL 会被对端关闭（server closed the connection unexpectedly）。
+        sslmode="disable",
     )
     try:
         with conn.cursor() as cur:
