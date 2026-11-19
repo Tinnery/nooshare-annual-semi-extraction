@@ -39,6 +39,13 @@ else
   echo "TUNNEL_S3_ALIVE_AFTER_BUILD=0"
 fi
 
+# 1c) 隧道刚建好时的 PG 对照探针（S3 下载前），用于区分「隧道初始就坏」vs「下载后失效」
+if [ -n "${PG_PASSWORD:-}" ]; then
+  PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "${PG_LOCAL_PORT:-15432}" \
+    -U ci_probe -d nooshare_dev -tAc "SELECT 1" >/dev/null 2>&1 \
+    && echo "PG_DIAG_PSQL_BEFORE_DOWNLOAD=PASS" || echo "PG_DIAG_PSQL_BEFORE_DOWNLOAD=FAIL"
+fi
+
 # 2) 语料下载
 export CORPUS_OUTPUT_DIR="corpus-data"
 export CORPUS_PREFIX="published/"
@@ -81,14 +88,18 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
   echo "PG_LOAD start"
   PG_LOCAL="${PG_LOCAL_PORT:-15432}"
 
-  # 诊断探针：区分隧道问题 vs psycopg2 客户端问题
+  # 诊断探针：与 infra-probe 完全一致的 psql 调用（带密码），对比下载前后隧道状态
   if nc -z 127.0.0.1 "$PG_LOCAL" 2>/dev/null; then
     echo "PG_DIAG_TCP=ALIVE port=$PG_LOCAL"
   else
     echo "PG_DIAG_TCP=DEAD port=$PG_LOCAL"
   fi
-  psql "host=127.0.0.1 port=${PG_LOCAL} dbname=nooshare_dev user=ci_probe sslmode=disable connect_timeout=5" \
-    -tAc "SELECT 1" >/dev/null 2>&1 && echo "PG_DIAG_PSQL=PASS" || echo "PG_DIAG_PSQL=FAIL"
+  if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" \
+      -U ci_probe -d nooshare_dev -tAc "SELECT 1" >/dev/null 2>&1; then
+    echo "PG_DIAG_PSQL_AFTER_DOWNLOAD=PASS"
+  else
+    echo "PG_DIAG_PSQL_AFTER_DOWNLOAD=FAIL"
+  fi
 
   set +e
   pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
