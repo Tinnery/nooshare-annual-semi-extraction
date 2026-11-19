@@ -568,7 +568,10 @@ def extract_batch(
     n_ok = 0
 
     mode = "a" if append else "w"
-    with (\n        out.open(mode, encoding="utf-8") as fout,\n        failures.open(mode, encoding="utf-8") as ffail,\n    ):
+    with (
+        out.open(mode, encoding="utf-8") as fout,
+        failures.open(mode, encoding="utf-8") as ffail,
+    ):
         for i, path in enumerate(files, start=1):
             try:
                 rec = extract(path)
