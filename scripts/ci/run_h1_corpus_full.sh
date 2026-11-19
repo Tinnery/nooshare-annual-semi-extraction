@@ -187,7 +187,7 @@ PY
 
   SQL_FILE="$WORK_DIR/h1_corpus_load_$batch_name.sql"
   if ! uv run python scripts/ci/h1_corpus_load_pg.py \
-      --input "$batch_h1" --emit-sql "$SQL_FILE"; then
+      --input "$batch_h1" --emit-csv "$SQL_FILE"; then
     echo "H1_BATCH_SQL=FAIL index=$batch_no"
     overall=1
     break
@@ -201,12 +201,34 @@ PY
     break
   fi
 
-  if PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
-      -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" \
-      >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
-    echo "PG_BATCH_LOAD=PASS index=$batch_no rows=$batch_extracted"
-  else
-    echo "PG_BATCH_LOAD=FAIL index=$batch_no"
+  # P0 链路韧性：PG 写入失败后自动重试（最多 3 次）。
+  # 安全保证：单事务回滚 + ON CONFLICT 幂等 + frp 1.7s 即恢复。
+  # 根因：pro↔VPS 公网链路 frp 控制连接瞬断（Run #87 实据 0.3s 内三处日志互证）。
+  pg_batch_ok=0
+  pg_batch_attempts=0
+  PG_BATCH_MAX_ATTEMPTS="${H1_PG_BATCH_MAX_ATTEMPTS:-3}"
+  for pg_attempt in $(seq 1 "$PG_BATCH_MAX_ATTEMPTS"); do
+    pg_batch_attempts=$pg_attempt
+    if PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+        -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" \
+        >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
+      echo "PG_BATCH_LOAD=PASS index=$batch_no rows=$batch_extracted attempt=$pg_attempt"
+      pg_batch_ok=1
+      break
+    fi
+    echo "PG_BATCH_LOAD=RETRY index=$batch_no attempt=$pg_attempt/$PG_BATCH_MAX_ATTEMPTS"
+    head -3 "$WORK_DIR/pg_load_err.txt" 2>/dev/null || true
+    if [ "$pg_attempt" -lt "$PG_BATCH_MAX_ATTEMPTS" ]; then
+      # 重建隧道后重试（frpc 断前无告警、1.7s 即重连成功，说明 VPS 侧活着）
+      if ! tunnel_restart; then
+        echo "PG_BATCH_TUNNEL_REBUILD=FAIL index=$batch_no attempt=$pg_attempt"
+        break
+      fi
+      sleep 2
+    fi
+  done
+  if [ "$pg_batch_ok" -ne 1 ]; then
+    echo "PG_BATCH_LOAD=FAIL index=$batch_no attempts=$pg_batch_attempts"
     head -5 "$WORK_DIR/pg_load_err.txt" 2>/dev/null || true
     overall=1
     break
