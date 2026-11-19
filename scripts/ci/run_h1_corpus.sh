@@ -79,13 +79,15 @@ pg_skipped=0
 pg_status="SKIPPED"
 if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl ]; then
   echo "PG_LOAD start"
+  set +e
   pg_output=$(uv run python scripts/ci/h1_corpus_load_pg.py \
       --input h1-extraction.jsonl \
       --host 127.0.0.1 \
       --port "${PG_LOCAL_PORT:-15432}" \
       --db nooshare_dev \
-      --user ci_probe 2>&1) || true
+      --user ci_probe 2>&1)
   pg_rc=$?
+  set -e
   
   if [ $pg_rc -eq 0 ] && echo "$pg_output" | grep -q "PG_LOAD=PASS"; then
     echo "PG_LOAD=PASS"
@@ -93,8 +95,8 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
     pg_loaded=$(echo "$pg_output" | grep -oP 'loaded=\K[0-9]+' || echo 0)
     pg_skipped=$(echo "$pg_output" | grep -oP 'skipped=\K[0-9]+' || echo 0)
   else
-    echo "PG_LOAD=FAIL"
-    echo "$pg_output" | grep -E "PG_LOAD=FAIL|code=" || true
+    echo "PG_LOAD=FAIL (exit_code=$pg_rc)"
+    echo "$pg_output" | grep -E "PG_LOAD=FAIL|code=|Error|Exception" || echo "$pg_output" | tail -5
     pg_status="FAIL"
     overall=1
   fi
