@@ -77,9 +77,19 @@ def h1_extract(
     n_files = result["n_files"]
     complete = result["complete"]
     residual = result["residual"]
-    logger.info(f"完成: {n_ok}/{n_files} 份, "
-                f"完整 L1: {complete} ({complete/max(1,n_ok):.1%}), "
-                f"残差: {residual}")
+    n_spec_applicable = result["n_spec_applicable"]
+    n_spec_not_applicable = result["n_spec_not_applicable"]
+    n_coverage_evaluated = result["n_coverage_evaluated"]
+    n_coverage_unavailable = result["n_coverage_unavailable"]
+    logger.info(
+        f"完成: {n_ok}/{n_files} 份, "
+        f"法规适用: {n_spec_applicable}, 不适用: {n_spec_not_applicable}, "
+        f"覆盖率可评估: {n_coverage_evaluated}, 映射不可用: {n_coverage_unavailable}, "
+        f"完整 L1: {complete}/{n_coverage_evaluated} "
+        f"({complete/max(1,n_coverage_evaluated):.1%}), "
+        f"残差: {residual}, 无标题: {result['n_without_headings']}, "
+        f"抽取异常: {result['n_extraction_errors']}"
+    )
     typer.echo(f"-> {output}")
 
 
