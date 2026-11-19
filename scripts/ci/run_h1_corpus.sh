@@ -50,9 +50,12 @@ if ! uv run python scripts/ci/h1_corpus_download.py; then
 fi
 
 # 3) H1 抽取（如果下载成功）
+if [ "${CORPUS_INVENTORY_ONLY:-0}" = "1" ] && [ "$overall" -eq 0 ]; then
+  echo "H1_EXTRACT=SKIPPED_INVENTORY_ONLY"
+fi
 n_extracted=0
 n_failures=0
-if [ "$overall" -eq 0 ]; then
+if [ "$overall" -eq 0 ] && [ "${CORPUS_INVENTORY_ONLY:-0}" != "1" ]; then
   echo "H1_EXTRACT start"
   
   # 使用 uv run 调用 h1-extract CLI
@@ -137,6 +140,7 @@ fi
 cat > h1-corpus-summary.json <<EOF
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+  "mode": "$([ "${CORPUS_INVENTORY_ONLY:-0}" = "1" ] && echo 'inventory_only' || echo 'h1_extract')",
   "corpus_output_dir": "corpus-data",
   "h1_extraction_file": "h1-extraction.jsonl",
   "h1_extraction_failures": "h1-extraction-failures.jsonl",

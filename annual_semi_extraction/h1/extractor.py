@@ -82,23 +82,33 @@ TITLE_PREFIX = re.compile(r"^.{0,25}?(?:年度报告|半年度报告)\s*")
 _SPEC_DIR = Path(__file__).resolve().parents[1] / "spec" / "specs"
 _LC = json.loads((_SPEC_DIR / "legal_chapters.json").read_text(encoding="utf-8"))
 TEMPLATE = {k: v["sections"] for k, v in _LC["chapters"].items()}
+REGULATORY_VERSIONS = json.loads((_SPEC_DIR / "regulatory_versions.json").read_text(encoding="utf-8"))
 
 
 def reg_version_key(year: int, period: int) -> str | None:
-    """返回适用的法规版本 key。
-    
-    法规版本生效日期：
-    - 2016 修订：〔2016〕31号（年报）/ 未单独列出半年报，假设同期适用
-    - 2021 修订：〔2021〕15号（年报）/ 〔2021〕16号（半年报）
-    - 2025 修订：〔2025〕3号（年报）/ 〔2025〕4号（半年报）
-    
-    2016 年以前的报告无适用法规版本，返回 None。
+    """按注册表的 by_period_end 规则解析已登记的法规版本。
+
+    没有覆盖该期间的版本记录时返回 None；None 表示版本未解析，
+    不等于该报告不受法规约束。
     """
-    if year < 2016:
-        return None  # 无适用法规版本
-    if year <= 2024:
-        return "no2_2021_15" if period == 4 else "no3_2021_16"
-    return "no2_2025_3" if period == 4 else "no3_2025_4"
+    if period == 4:
+        period_end = f"{year:04d}-12-31"
+    elif period == 2:
+        period_end = f"{year:04d}-06-30"
+    else:
+        raise ValueError(f"period 必须是 2 或 4，实际: {period}")
+
+    candidates = [
+        version
+        for version in REGULATORY_VERSIONS["versions"]
+        if int(version["applies_to_period"]) == period
+        and version["effective_from"] <= period_end
+        and version.get("chapter_set_key") in TEMPLATE
+    ]
+    if not candidates:
+        return None
+    selected = max(candidates, key=lambda version: version["effective_from"])
+    return selected["chapter_set_key"]
 
 
 def legal_name_of(name: str) -> str:
@@ -271,7 +281,7 @@ def _rep_rank(it: dict) -> tuple:
 def _conditional_ords(year: int, period: int) -> set[int]:
     key = reg_version_key(year, period)
     if key is None:
-        return set()  # 无适用法规，无条件章节
+        return set()  # 法规版本未解析时，不套用未知版本的条件章节规则
     return {i for i, sec in enumerate(TEMPLATE[key], start=1) if sec["required"] != "always"}
 
 
@@ -341,30 +351,45 @@ def _recover_from_toc(toc_lines: list[tuple[int, int, str]]) -> list[dict]:
 
 
 def _coverage(headings: list[dict], year: int, period: int) -> dict:
-    """计算法规覆盖率。
-    
-    C1 修复：无适用法规版本时，不伪装成 coverage_ratio=0。
-    返回 spec_applicable=False，coverage 相关字段为 null。
-    """
+    """计算法规覆盖率；无法可靠映射类别时明确返回 unavailable，而非伪造 0%。"""
     key = reg_version_key(year, period)
     if key is None:
-        # 无适用法规版本（2016 年以前）
         return {
             "reg_version": None,
-            "spec_applicable": False,
+            "spec_applicable": None,
+            "spec_resolution_status": "UNRESOLVED",
+            "coverage_available": False,
+            "coverage_status": "VERSION_UNRESOLVED",
             "expected_sections": None,
-            "n_present": len(headings),
+            "n_present": None,
             "missing_always_sections": None,
             "missing_conditional_sections": None,
             "is_complete_l1": None,
             "coverage_ratio": None,
         }
-    
+
     sections = TEMPLATE[key]
+    # 类别映射器目前是外部扩展点；未配置时，局部变体表并不能覆盖全部
+    # 法规章节。此时不能将空 category 集合解释成所有法定章节均缺失。
+    if _map_heading_to_category is None:
+        return {
+            "reg_version": key,
+            "spec_applicable": True,
+            "spec_resolution_status": "RESOLVED",
+            "coverage_available": False,
+            "coverage_status": "CATEGORY_MAPPING_UNAVAILABLE",
+            "expected_sections": len(sections),
+            "n_present": None,
+            "missing_always_sections": None,
+            "missing_conditional_sections": None,
+            "is_complete_l1": None,
+            "coverage_ratio": None,
+        }
+
     present_cats = {h["canonical_cat"] for h in headings if h.get("canonical_cat")}
     missing_always, missing_conditional = [], []
     for i, sec in enumerate(sections, start=1):
-        cat = (_map_heading_to_category(sec["name"]) if _map_heading_to_category else None) or ""
+        cat = _map_heading_to_category(sec["name"]) or ""
         req = sec["required"]
         if cat not in present_cats:
             (missing_conditional if req != "always" else missing_always).append(i)
@@ -373,6 +398,9 @@ def _coverage(headings: list[dict], year: int, period: int) -> dict:
     return {
         "reg_version": key,
         "spec_applicable": True,
+        "spec_resolution_status": "RESOLVED",
+        "coverage_available": True,
+        "coverage_status": "ASSESSED",
         "expected_sections": len(sections),
         "n_present": len(present_cats),
         "missing_always_sections": missing_always,
@@ -380,7 +408,6 @@ def _coverage(headings: list[dict], year: int, period: int) -> dict:
         "is_complete_l1": len(missing_always) == 0,
         "coverage_ratio": round(cov, 4),
     }
-
 
 def extract(path: Path) -> dict | None:
     """抽取单份报告的 H1 标题集合。"""
@@ -490,16 +517,7 @@ def extract(path: Path) -> dict | None:
                         if lib_h.get("canonical_name"):
                             h["canonical_name"] = lib_h["canonical_name"]
 
-    cov = (_coverage(headings, year, period) if headings else {
-        "reg_version": reg_version_key(year, period),
-        "spec_applicable": reg_version_key(year, period) is not None,
-        "expected_sections": expected if reg_version_key(year, period) is not None else None,
-        "n_present": 0,
-        "missing_always_sections": list(range(1, expected + 1)) if reg_version_key(year, period) is not None else None,
-        "missing_conditional_sections": [] if reg_version_key(year, period) is not None else None,
-        "is_complete_l1": False if reg_version_key(year, period) is not None else None,
-        "coverage_ratio": 0.0 if reg_version_key(year, period) is not None else None,
-    })
+    cov = _coverage(headings, year, period)
 
     ov = ordinal_verdict(headings)
     rec = {
@@ -518,6 +536,9 @@ def extract(path: Path) -> dict | None:
         "missing_conditional_sections": cov["missing_conditional_sections"],
         "reg_version": cov["reg_version"],
         "spec_applicable": cov["spec_applicable"],
+        "spec_resolution_status": cov["spec_resolution_status"],
+        "coverage_available": cov["coverage_available"],
+        "coverage_status": cov["coverage_status"],
         "expected_sections": cov["expected_sections"],
         "n_candidate_sets": 1 if primary_set else 0,
         "dual_agreement": dual,
@@ -537,7 +558,7 @@ def extract_batch(
     offset: int = 0,
     append: bool = False,
 ) -> dict:
-    """批量抽取 H1 标题，输出 JSONL。返回统计摘要。"""
+    """批量抽取 H1 标题；将法规不适用、覆盖率不可评估和结构残差分开统计。"""
     files = sorted(root.rglob("*.md"))
     if offset:
         files = files[offset:]
@@ -545,56 +566,129 @@ def extract_batch(
         files = files[:limit]
 
     method_counter: Counter = Counter()
+    ordinal_counter: Counter = Counter()
     complete = 0
     residual = 0
+    n_spec_applicable = 0
+    n_spec_not_applicable = 0
+    n_spec_unresolved = 0
+    n_coverage_evaluated = 0
+    n_coverage_unavailable = 0
+    n_without_headings = 0
+    n_extraction_errors = 0
+    n_skipped = 0
     dual_vals: list[float] = []
     missing_always_freq: Counter = Counter()
     n_headings_total = 0
     n_ok = 0
 
     mode = "a" if append else "w"
-    with out.open(mode, encoding="utf-8") as fout, \
-         failures.open(mode, encoding="utf-8") as ffail:
-        for i, p in enumerate(files, start=1):
+    with (
+        out.open(mode, encoding="utf-8") as fout,
+        failures.open(mode, encoding="utf-8") as ffail,
+    ):
+        for i, path in enumerate(files, start=1):
             try:
-                rec = extract(p)
-            except Exception as e:
-                ffail.write(json.dumps({"path": str(p), "error": f"{type(e).__name__}: {e}"},
-                                      ensure_ascii=False) + "\n")
+                rec = extract(path)
+            except Exception as exc:
+                ffail.write(json.dumps({
+                    "path": str(path),
+                    "reason": "EXTRACTION_ERROR",
+                    "error": f"{type(exc).__name__}: {exc}",
+                }, ensure_ascii=False) + "\n")
                 residual += 1
+                n_extraction_errors += 1
                 continue
+
             if rec is None:
+                n_skipped += 1
                 continue
+
             fout.write(json.dumps(rec, ensure_ascii=False) + "\n")
             n_ok += 1
             method_counter[rec["extraction_method"]] += 1
-            if rec["is_complete_l1"]:
-                complete += 1
-            else:
-                residual += 1
-                ffail.write(json.dumps({"slot_key": rec["slot_key"],
-                                        "method": rec["extraction_method"],
-                                        "missing_always": rec["missing_always_sections"]},
-                                       ensure_ascii=False) + "\n")
             n_headings_total += rec["n_headings"]
-            for m in rec["missing_always_sections"]:
-                missing_always_freq[m] += 1
-            if rec["dual_agreement"] is not None:
+
+            # spec_applicable=None 表示版本尚未解析；只有显式 NOT_APPLICABLE
+            # 才能计入不适用，不能把未知规则当成没有法规义务。
+            spec_applicable = rec.get("spec_applicable")
+            if spec_applicable is None:
+                if rec.get("reg_version") is not None:
+                    spec_applicable = True
+                elif rec.get("spec_resolution_status") == "NOT_APPLICABLE":
+                    spec_applicable = False
+
+            reasons: list[str] = []
+            if spec_applicable is True:
+                n_spec_applicable += 1
+                coverage_available = rec.get("coverage_available")
+                if coverage_available is None:
+                    coverage_available = rec.get("coverage_ratio") is not None
+                if coverage_available:
+                    n_coverage_evaluated += 1
+                    if rec.get("is_complete_l1") is True:
+                        complete += 1
+                    elif rec.get("is_complete_l1") is False:
+                        reasons.append("REGULATORY_COVERAGE_INCOMPLETE")
+                    for missing in (rec.get("missing_always_sections") or []):
+                        missing_always_freq[missing] += 1
+                else:
+                    n_coverage_unavailable += 1
+            elif spec_applicable is False:
+                n_spec_not_applicable += 1
+            else:
+                n_spec_unresolved += 1
+
+            if rec.get("n_headings", 0) == 0:
+                n_without_headings += 1
+                reasons.append("NO_HEADINGS")
+
+            ordinal_verdict = rec.get("ordinal_verdict", "UNKNOWN")
+            ordinal_counter[ordinal_verdict] += 1
+            if ordinal_verdict != "PASS":
+                reasons.append(f"ORDINAL_{ordinal_verdict}")
+
+            if reasons:
+                residual += 1
+                ffail.write(json.dumps({
+                    "slot_key": rec["slot_key"],
+                    "reasons": reasons,
+                    "method": rec["extraction_method"],
+                    "spec_applicable": spec_applicable,
+                    "coverage_status": rec.get("coverage_status"),
+                    "missing_always": rec.get("missing_always_sections"),
+                    "ordinal_verdict": ordinal_verdict,
+                }, ensure_ascii=False) + "\n")
+
+            if rec.get("dual_agreement") is not None:
                 dual_vals.append(rec["dual_agreement"])
             if i % 3000 == 0:
-                print(f"  {i}/{len(files)} ok={n_ok} complete={complete} residual={residual}", flush=True)
+                print(
+                    f"  {i}/{len(files)} ok={n_ok} complete={complete} "
+                    f"residual={residual} unresolved={n_spec_unresolved}",
+                    flush=True,
+                )
 
     return {
         "n_files": len(files),
         "n_ok": n_ok,
+        "n_skipped": n_skipped,
+        "n_extraction_errors": n_extraction_errors,
+        "n_spec_applicable": n_spec_applicable,
+        "n_spec_not_applicable": n_spec_not_applicable,
+        "n_spec_unresolved": n_spec_unresolved,
+        "n_coverage_evaluated": n_coverage_evaluated,
+        "n_coverage_unavailable": n_coverage_unavailable,
+        "n_without_headings": n_without_headings,
         "complete": complete,
         "residual": residual,
         "method_distribution": method_counter.most_common(),
+        "ordinal_verdict_distribution": ordinal_counter.most_common(),
         "avg_headings": n_headings_total / max(1, n_ok),
         "missing_always_freq": missing_always_freq.most_common(),
         "dual_agreement": {
             "count": len(dual_vals),
-            "agree_rate": sum(1 for d in dual_vals if d >= 0.98) / len(dual_vals) if dual_vals else 0,
+            "agree_rate": sum(1 for value in dual_vals if value >= 0.98) / len(dual_vals) if dual_vals else 0,
             "mean": sum(dual_vals) / len(dual_vals) if dual_vals else 0,
         },
     }

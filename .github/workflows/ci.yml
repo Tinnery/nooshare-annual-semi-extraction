@@ -5,6 +5,22 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      corpus_mode:
+        description: "H1 corpus operation"
+        type: choice
+        options:
+          - sample
+          - inventory
+          - full
+        default: sample
+        required: true
+      corpus_limit:
+        description: "Sample limit (ignored for inventory/full)"
+        type: string
+        default: "10"
+        required: false
 
 permissions:
   contents: read
@@ -72,7 +88,7 @@ jobs:
   h1-corpus:
     runs-on: ubuntu-latest
     environment: ci-probe
-    continue-on-error: true
+    # H1 是数据生产 job；抽取或入库失败必须使该 job 失败。
     # 串行依赖 infra-probe：两者用同一 PSK identity 连同一 SNI router，
     # 并行时 server 端 PG 连接槽被占用，导致 psycopg2 连接被关闭
     # （server closed the connection unexpectedly）。串行后隧道不重叠。
@@ -103,8 +119,9 @@ jobs:
         RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
         RUSTFS_BUCKET: annual-semi
         PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
-        # 调试用：限制下载文件数（0 = 不限制）
-        H1_CORPUS_LIMIT: '10'
+        # push/PR 默认小样本；手动 workflow_dispatch 可选 sample / inventory / full。
+        H1_CORPUS_LIMIT: ${{ github.event_name == 'workflow_dispatch' && (inputs.corpus_mode == 'inventory' || inputs.corpus_mode == 'full') && '0' || github.event_name == 'workflow_dispatch' && inputs.corpus_limit || '10' }}
+        CORPUS_INVENTORY_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'inventory' && '1' || '0' }}
       run: bash scripts/ci/run_h1_corpus.sh
 
     - name: Upload H1 corpus artifacts
@@ -113,7 +130,9 @@ jobs:
       with:
         name: h1-corpus-output
         path: |
-          corpus-data/
+          corpus-data/input-manifest.jsonl
+          corpus-data/batch-summary.json
+          corpus-data/corpus-inventory.jsonl
           h1-extraction.jsonl
           h1-extraction-failures.jsonl
           h1-corpus-summary.json

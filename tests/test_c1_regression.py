@@ -2,7 +2,7 @@
 
 问题 A 修复：H1 抽取与法规匹配解耦
 - 不再因法规词表不匹配而丢弃原始标题
-- 2016 年以前的报告标记为无适用法规（spec_applicable=False）
+- 注册表未覆盖的历史期间标记为法规版本未解析
 - coverage_ratio 不再伪装成 0.0
 """
 import json
@@ -16,6 +16,7 @@ from annual_semi_extraction.h1.extractor import (
     reg_version_key,
     _detect_l1,
     _coverage,
+    extract_batch,
 )
 from annual_semi_extraction.h1.numbering import expected_sections
 
@@ -24,20 +25,25 @@ class TestRegVersionKey:
     """法规版本映射测试。"""
     
     def test_pre_2016_returns_none(self):
-        """2016 年以前无适用法规。"""
+        """注册表未覆盖的历史期间不伪造法规版本。"""
         assert reg_version_key(2003, 2) is None
         assert reg_version_key(2010, 2) is None
         assert reg_version_key(2015, 2) is None
     
-    def test_2016_2024_uses_2021_template(self):
-        """2016-2024 使用 2021 修订模板。"""
-        assert reg_version_key(2016, 2) == "no3_2021_16"
+    def test_annual_rules_follow_period_end(self):
+        """年度报告按期末日期选用 2016、2021、2025 版本。"""
+        assert reg_version_key(2016, 4) == "no2_2016_31"
+        assert reg_version_key(2020, 4) == "no2_2016_31"
+        assert reg_version_key(2021, 4) == "no2_2021_15"
+        assert reg_version_key(2024, 4) == "no2_2021_15"
+        assert reg_version_key(2025, 4) == "no2_2025_3"
+
+    def test_semiannual_rules_follow_period_end(self):
+        """2025 半年报期末早于 2025-07-01，仍适用 2021 版。"""
+        assert reg_version_key(2016, 2) is None  # 注册表尚无该期间版本
+        assert reg_version_key(2020, 2) is None  # 注册表尚无该期间版本
         assert reg_version_key(2021, 2) == "no3_2021_16"
-        assert reg_version_key(2024, 2) == "no3_2021_16"
-    
-    def test_2025_plus_uses_2025_template(self):
-        """2025 年起使用 2025 修订模板。"""
-        assert reg_version_key(2025, 2) == "no3_2025_4"
+        assert reg_version_key(2025, 2) == "no3_2021_16"
         assert reg_version_key(2026, 2) == "no3_2025_4"
 
 
@@ -49,14 +55,20 @@ class TestExpectedSections:
         assert expected_sections(2003, 2) is None
         assert expected_sections(2010, 2) is None
     
-    def test_2016_2024_returns_10(self):
-        """2016-2024 预期 10 节。"""
-        assert expected_sections(2016, 2) == 10
+    def test_missing_registry_period_returns_none(self):
+        """注册表未覆盖的期间不得套用默认模板。"""
+        assert expected_sections(2016, 2) is None
+        assert expected_sections(2020, 2) is None
+
+    def test_annual_expected_sections(self):
+        assert expected_sections(2016, 4) == 12
+        assert expected_sections(2021, 4) == 10
+        assert expected_sections(2025, 4) == 8
+
+    def test_semiannual_expected_sections(self):
         assert expected_sections(2021, 2) == 10
-    
-    def test_2025_plus_returns_8(self):
-        """2025 年起预期 8 节。"""
-        assert expected_sections(2025, 2) == 8
+        assert expected_sections(2025, 2) == 10
+        assert expected_sections(2026, 2) == 8
 
 
 class TestDetectL1Decoupled:
@@ -92,15 +104,16 @@ class TestDetectL1Decoupled:
 class TestCoverageSpecApplicable:
     """问题 B/C 修复：无适用法规时不伪装成 coverage_ratio=0。"""
     
-    def test_coverage_pre_2016_returns_not_applicable(self):
-        """2016 年以前返回 spec_applicable=False。"""
+    def test_coverage_pre_2016_returns_unresolved(self):
+        """注册表未覆盖的期间返回 VERSION_UNRESOLVED。"""
         headings = [
             {"canonical_cat": "notice", "raw_name": "重要提示"},
             {"canonical_cat": "company_profile", "raw_name": "公司基本情况"},
         ]
         result = _coverage(headings, year=2006, period=2)
         
-        assert result["spec_applicable"] is False
+        assert result["spec_applicable"] is None
+        assert result["spec_resolution_status"] == "UNRESOLVED"
         assert result["reg_version"] is None
         assert result["coverage_ratio"] is None
         assert result["is_complete_l1"] is None
@@ -116,7 +129,11 @@ class TestCoverageSpecApplicable:
         
         assert result["spec_applicable"] is True
         assert result["reg_version"] == "no3_2021_16"
-        assert isinstance(result["coverage_ratio"], float)
+        # 当前外部 category mapper 未配置；不能把空映射误判为 0% 覆盖率。
+        assert result["coverage_available"] is False
+        assert result["coverage_status"] == "CATEGORY_MAPPING_UNAVAILABLE"
+        assert result["coverage_ratio"] is None
+        assert result["is_complete_l1"] is None
 
 
 class TestExtractHistoricalReports:
@@ -182,7 +199,8 @@ class TestExtractHistoricalReports:
         assert result["n_headings"] >= 4
         
         # 无适用法规
-        assert result["spec_applicable"] is False
+        assert result["spec_applicable"] is None
+        assert result["spec_resolution_status"] == "UNRESOLVED"
         assert result["reg_version"] is None
         assert result["coverage_ratio"] is None
         
@@ -245,4 +263,70 @@ class TestExtractHistoricalReports:
         # 有适用法规
         assert result["spec_applicable"] is True
         assert result["reg_version"] == "no3_2021_16"
-        assert isinstance(result["coverage_ratio"], float)
+        assert result["coverage_available"] is False
+        assert result["coverage_status"] == "CATEGORY_MAPPING_UNAVAILABLE"
+        assert result["coverage_ratio"] is None
+
+
+
+class TestExtractBatchApplicability:
+    """批处理必须区分法规不适用与抽取失败。"""
+
+    @staticmethod
+    def _write_numbered_report(root: Path, year: int) -> Path:
+        report_dir = root / "000001"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        path = report_dir / f"000001_{year}_2.md"
+        path.write_text(
+            "第一节 历史概况\n正文\n"
+            "第二节 公司基本情况\n正文\n"
+            "第三节 经营情况\n正文\n"
+            "第四节 财务报告\n正文\n",
+            encoding="utf-8",
+        )
+        return path
+
+    def test_pre_2016_none_fields_do_not_crash_batch_or_count_as_failure(self, tmp_path):
+        """2016 年前的 coverage None 不应在批处理汇总时被遍历。"""
+        root = tmp_path / "published"
+        self._write_numbered_report(root, 2006)
+        output = tmp_path / "h1.jsonl"
+        failures = tmp_path / "failures.jsonl"
+
+        stats = extract_batch(root, output, failures)
+
+        assert stats["n_files"] == 1
+        assert stats["n_ok"] == 1
+        assert stats["n_spec_not_applicable"] == 0
+        assert stats["n_spec_unresolved"] == 1
+        assert stats["n_spec_applicable"] == 0
+        assert stats["complete"] == 0
+        assert stats["residual"] == 0
+        assert stats["n_extraction_errors"] == 0
+        record = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
+        assert record["missing_always_sections"] is None
+        assert record["spec_applicable"] is None
+        assert record["spec_resolution_status"] == "UNRESOLVED"
+        assert record["coverage_ratio"] is None
+        assert failures.read_text(encoding="utf-8") == ""
+
+    def test_applicable_but_unmapped_coverage_is_not_a_zero_percent_failure(self, tmp_path):
+        """规则适用但类别映射器缺失时，H1 原始抽取保留，覆盖率标记不可评估。"""
+        root = tmp_path / "published"
+        self._write_numbered_report(root, 2021)
+        output = tmp_path / "h1.jsonl"
+        failures = tmp_path / "failures.jsonl"
+
+        stats = extract_batch(root, output, failures)
+
+        assert stats["n_ok"] == 1
+        assert stats["n_spec_applicable"] == 1
+        assert stats["n_coverage_unavailable"] == 1
+        assert stats["n_coverage_evaluated"] == 0
+        assert stats["complete"] == 0
+        assert stats["residual"] == 0
+        record = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
+        assert record["spec_applicable"] is True
+        assert record["coverage_available"] is False
+        assert record["coverage_ratio"] is None
+        assert failures.read_text(encoding="utf-8") == ""
