@@ -122,6 +122,9 @@ def main():
             config=Config(
                 s3={"addressing_style": "path"},
                 signature_version="s3v4",
+                connect_timeout=10,
+                read_timeout=90,
+                retries={"max_attempts": 3, "mode": "standard"},
                 request_checksum_calculation="when_required",
                 response_checksum_validation="when_required",
             ),
