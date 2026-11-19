@@ -24,7 +24,7 @@ if ! [[ "$BATCH_SIZE" =~ ^[1-9][0-9]*$ ]]; then
   echo "ORCHESTRATOR=FAIL code=INVALID_BATCH_SIZE"
   exit 1
 fi
-if ! [[ "$EXPECTED_TOTAL" =~ ^[0-9]+$ ]] || ! [[ "$PROCESSED_BEFORE" =~ ^[0-9]+$ ]] \\
+if ! [[ "$EXPECTED_TOTAL" =~ ^[0-9]+$ ]] || ! [[ "$PROCESSED_BEFORE" =~ ^[0-9]+$ ]] \
   || ! [[ "$PROCESS_LIMIT" =~ ^[0-9]+$ ]]; then
   echo "ORCHESTRATOR=FAIL code=INVALID_EXPECTED_COUNT"
   exit 1
@@ -176,9 +176,9 @@ PY
   fi
 
   batch_validation="$batch_dir/input-validation.json"
-  if ! uv run python scripts/ci/validate_h1_batch.py \\
-      --manifest "$batch_dir/input-manifest.jsonl" \\
-      --extraction "$batch_h1" \\
+  if ! uv run python scripts/ci/validate_h1_batch.py \
+      --manifest "$batch_dir/input-manifest.jsonl" \
+      --extraction "$batch_h1" \
       --output "$batch_validation"; then
     echo "H1_BATCH_INPUT_VALIDATION=FAIL index=$batch_no"
     overall=1
