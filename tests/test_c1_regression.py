@@ -324,9 +324,9 @@ class TestExtractBatchApplicability:
         report_dir.mkdir(parents=True)
         md_path = report_dir / "000001_2006_2.md"
         md_path.write_text(
-            "第一节 重要提示\\n正文\\n"
-            "第二节 公司基本情况\\n正文\\n"
-            "第三节 主要财务数据和指标\\n正文\\n",
+            "第一节 重要提示\n正文\n"
+            "第二节 公司基本情况\n正文\n"
+            "第三节 主要财务数据和指标\n正文\n",
             encoding="utf-8",
         )
         output = tmp_path / "h1.jsonl"
