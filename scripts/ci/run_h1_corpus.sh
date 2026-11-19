@@ -96,7 +96,9 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
     pg_skipped=$(echo "$pg_output" | grep -oP 'skipped=\K[0-9]+' || echo 0)
   else
     echo "PG_LOAD=FAIL (exit_code=$pg_rc)"
-    echo "$pg_output" | grep -E "PG_LOAD=FAIL|code=|Error|Exception" || echo "$pg_output" | tail -5
+    echo "PG_LOAD_OUTPUT_START"
+    echo "$pg_output"
+    echo "PG_LOAD_OUTPUT_END"
     pg_status="FAIL"
     overall=1
   fi
