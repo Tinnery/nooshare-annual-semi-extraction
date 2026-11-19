@@ -82,6 +82,7 @@ TITLE_PREFIX = re.compile(r"^.{0,25}?(?:年度报告|半年度报告)\s*")
 _SPEC_DIR = Path(__file__).resolve().parents[1] / "spec" / "specs"
 _LC = json.loads((_SPEC_DIR / "legal_chapters.json").read_text(encoding="utf-8"))
 TEMPLATE = {k: v["sections"] for k, v in _LC["chapters"].items()}
+REGULATORY_VERSIONS = json.loads((_SPEC_DIR / "regulatory_versions.json").read_text(encoding="utf-8"))
 
 
 def reg_version_key(year: int, period: int) -> str | None:
@@ -97,11 +98,9 @@ def reg_version_key(year: int, period: int) -> str | None:
     else:
         raise ValueError(f"period 必须是 2 或 4，实际: {period}")
 
-    versions_path = _SPEC_DIR / "regulatory_versions.json"
-    registry = json.loads(versions_path.read_text(encoding="utf-8"))
     candidates = [
         version
-        for version in registry["versions"]
+        for version in REGULATORY_VERSIONS["versions"]
         if int(version["applies_to_period"]) == period
         and version["effective_from"] <= period_end
         and version.get("chapter_set_key") in TEMPLATE
