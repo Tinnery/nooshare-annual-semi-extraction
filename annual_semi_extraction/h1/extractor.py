@@ -85,20 +85,31 @@ TEMPLATE = {k: v["sections"] for k, v in _LC["chapters"].items()}
 
 
 def reg_version_key(year: int, period: int) -> str | None:
-    """返回适用的法规版本 key。
-    
-    法规版本生效日期：
-    - 2016 修订：〔2016〕31号（年报）/ 未单独列出半年报，假设同期适用
-    - 2021 修订：〔2021〕15号（年报）/ 〔2021〕16号（半年报）
-    - 2025 修订：〔2025〕3号（年报）/ 〔2025〕4号（半年报）
-    
-    2016 年以前的报告无适用法规版本，返回 None。
+    """按注册表的 by_period_end 规则解析已登记的法规版本。
+
+    没有覆盖该期间的版本记录时返回 None；None 表示版本未解析，
+    不等于该报告不受法规约束。
     """
-    if year < 2016:
-        return None  # 无适用法规版本
-    if year <= 2024:
-        return "no2_2021_15" if period == 4 else "no3_2021_16"
-    return "no2_2025_3" if period == 4 else "no3_2025_4"
+    if period == 4:
+        period_end = f"{year:04d}-12-31"
+    elif period == 2:
+        period_end = f"{year:04d}-06-30"
+    else:
+        raise ValueError(f"period 必须是 2 或 4，实际: {period}")
+
+    versions_path = _SPEC_DIR / "regulatory_versions.json"
+    registry = json.loads(versions_path.read_text(encoding="utf-8"))
+    candidates = [
+        version
+        for version in registry["versions"]
+        if int(version["applies_to_period"]) == period
+        and version["effective_from"] <= period_end
+        and version.get("chapter_set_key") in TEMPLATE
+    ]
+    if not candidates:
+        return None
+    selected = max(candidates, key=lambda version: version["effective_from"])
+    return selected["chapter_set_key"]
 
 
 def legal_name_of(name: str) -> str:
@@ -346,9 +357,10 @@ def _coverage(headings: list[dict], year: int, period: int) -> dict:
     if key is None:
         return {
             "reg_version": None,
-            "spec_applicable": False,
+            "spec_applicable": None,
+            "spec_resolution_status": "UNRESOLVED",
             "coverage_available": False,
-            "coverage_status": "NOT_APPLICABLE",
+            "coverage_status": "VERSION_UNRESOLVED",
             "expected_sections": None,
             "n_present": None,
             "missing_always_sections": None,
@@ -364,6 +376,7 @@ def _coverage(headings: list[dict], year: int, period: int) -> dict:
         return {
             "reg_version": key,
             "spec_applicable": True,
+            "spec_resolution_status": "RESOLVED",
             "coverage_available": False,
             "coverage_status": "CATEGORY_MAPPING_UNAVAILABLE",
             "expected_sections": len(sections),
@@ -386,6 +399,7 @@ def _coverage(headings: list[dict], year: int, period: int) -> dict:
     return {
         "reg_version": key,
         "spec_applicable": True,
+        "spec_resolution_status": "RESOLVED",
         "coverage_available": True,
         "coverage_status": "ASSESSED",
         "expected_sections": len(sections),
@@ -523,6 +537,7 @@ def extract(path: Path) -> dict | None:
         "missing_conditional_sections": cov["missing_conditional_sections"],
         "reg_version": cov["reg_version"],
         "spec_applicable": cov["spec_applicable"],
+        "spec_resolution_status": cov["spec_resolution_status"],
         "coverage_available": cov["coverage_available"],
         "coverage_status": cov["coverage_status"],
         "expected_sections": cov["expected_sections"],
@@ -557,6 +572,7 @@ def extract_batch(
     residual = 0
     n_spec_applicable = 0
     n_spec_not_applicable = 0
+    n_spec_unresolved = 0
     n_coverage_evaluated = 0
     n_coverage_unavailable = 0
     n_without_headings = 0
@@ -598,10 +614,13 @@ def extract_batch(
             # 兼容旧记录：spec_applicable 缺失时才根据 reg_version 推断。
             spec_applicable = rec.get("spec_applicable")
             if spec_applicable is None:
-                spec_applicable = rec.get("reg_version") is not None
+                if rec.get("reg_version") is not None:
+                    spec_applicable = True
+                elif rec.get("spec_resolution_status") == "NOT_APPLICABLE":
+                    spec_applicable = False
 
             reasons: list[str] = []
-            if spec_applicable:
+            if spec_applicable is True:
                 n_spec_applicable += 1
                 coverage_available = rec.get("coverage_available")
                 if coverage_available is None:
@@ -616,8 +635,10 @@ def extract_batch(
                         missing_always_freq[missing] += 1
                 else:
                     n_coverage_unavailable += 1
-            else:
+            elif spec_applicable is False:
                 n_spec_not_applicable += 1
+            else:
+                n_spec_unresolved += 1
 
             if rec.get("n_headings", 0) == 0:
                 n_without_headings += 1
@@ -645,7 +666,7 @@ def extract_batch(
             if i % 3000 == 0:
                 print(
                     f"  {i}/{len(files)} ok={n_ok} complete={complete} "
-                    f"residual={residual} not_applicable={n_spec_not_applicable}",
+                    f"residual={residual} unresolved={n_spec_unresolved}",
                     flush=True,
                 )
 
@@ -656,6 +677,7 @@ def extract_batch(
         "n_extraction_errors": n_extraction_errors,
         "n_spec_applicable": n_spec_applicable,
         "n_spec_not_applicable": n_spec_not_applicable,
+        "n_spec_unresolved": n_spec_unresolved,
         "n_coverage_evaluated": n_coverage_evaluated,
         "n_coverage_unavailable": n_coverage_unavailable,
         "n_without_headings": n_without_headings,
