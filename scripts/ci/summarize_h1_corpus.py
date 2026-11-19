@@ -136,7 +136,8 @@ def summarize(input_path: Path, failures_path: Path, expected: int) -> dict[str,
         "n_complete_l1": n_complete_l1,
         "n_without_headings": n_no_headings,
         "n_low_heading_sets": n_low_heading_sets,
-        "acceptance": "PASS" if count_matches and duplicates_clear and sha_complete else "FAIL",
+        "accounting_status": "PASS" if count_matches and duplicates_clear and sha_complete else "FAIL",
+        "h1_quality_status": "NOT_ASSESSED_WITHOUT_GOLD_LABELS",
     }
 
 
@@ -154,12 +155,12 @@ def main() -> None:
         encoding="utf-8",
     )
     print(
-        "H1_QUALITY_SUMMARY="
-        + str(result["acceptance"])
+        "H1_ACCOUNTING_SUMMARY="
+        + str(result["accounting_status"])
         + f" records={result['n_records']} residuals={result['n_failures_or_residuals']} "
         + f"duplicates={result['n_duplicate_slots']} missing_sha={result['n_without_source_sha256']}"
     )
-    if result["acceptance"] != "PASS":
+    if result["accounting_status"] != "PASS":
         raise SystemExit(1)
 
 
