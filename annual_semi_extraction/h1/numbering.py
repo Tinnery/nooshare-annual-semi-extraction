@@ -20,6 +20,9 @@ if _LC_PATH.exists():
 else:
     SECTION_COUNTS = {}
 
+_VERSIONS_PATH = _SPEC_DIR / "regulatory_versions.json"
+_REGULATORY_VERSIONS = json.loads(_VERSIONS_PATH.read_text(encoding="utf-8"))
+
 
 def expected_sections(year: int, period: int) -> int | None:
     """按 regulatory_versions.json 的生效日和报告期末返回法定节数。
@@ -34,11 +37,9 @@ def expected_sections(year: int, period: int) -> int | None:
     else:
         raise ValueError(f"period 必须是 2 或 4，实际: {period}")
 
-    versions_path = _SPEC_DIR / "regulatory_versions.json"
-    registry = json.loads(versions_path.read_text(encoding="utf-8"))
     candidates = [
         version
-        for version in registry["versions"]
+        for version in _REGULATORY_VERSIONS["versions"]
         if int(version["applies_to_period"]) == period
         and version["effective_from"] <= period_end
         and version.get("chapter_set_key") in SECTION_COUNTS
