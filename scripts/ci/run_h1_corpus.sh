@@ -39,13 +39,6 @@ else
   echo "TUNNEL_S3_ALIVE_AFTER_BUILD=0"
 fi
 
-# 1c) 隧道刚建好时的 PG 对照探针（S3 下载前），用于区分「隧道初始就坏」vs「下载后失效」
-if [ -n "${PG_PASSWORD:-}" ]; then
-  PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "${PG_LOCAL_PORT:-15432}" \
-    -U ci_probe -d nooshare_dev -tAc "SELECT 1" >/dev/null 2>&1 \
-    && echo "PG_DIAG_PSQL_BEFORE_DOWNLOAD=PASS" || echo "PG_DIAG_PSQL_BEFORE_DOWNLOAD=FAIL"
-fi
-
 # 2) 语料下载
 export CORPUS_OUTPUT_DIR="corpus-data"
 export CORPUS_PREFIX="published/"
@@ -77,6 +70,15 @@ if [ "$overall" -eq 0 ]; then
     n_failures=$(wc -l < h1-extraction-failures.jsonl 2>/dev/null || echo 0)
     echo "H1_EXTRACTED=$n_extracted"
     echo "H1_FAILURES=$n_failures"
+
+    # 隧道重建前生成 SQL（纯本地操作，不连 PG）。
+    # 这样重建后第一次 PG 连接直接用于写入，不浪费在探针或 python 子进程上。
+    SQL_FILE="$WORK_DIR/h1_corpus_load.sql"
+    if ! uv run python scripts/ci/h1_corpus_load_pg.py \
+        --input h1-extraction.jsonl --emit-sql "$SQL_FILE"; then
+      echo "SQL_EMIT=FAIL"
+      overall=1
+    fi
   fi
 fi
 
@@ -111,25 +113,12 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
     overall=1
   else
     echo "PG_TUNNEL_REBUILD=PASS"
-    # 重建后验证 PG 段恢复
-    if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" \
-        -U ci_probe -d nooshare_dev -tAc "SELECT 1" >/dev/null 2>&1; then
-      echo "PG_DIAG_PSQL_AFTER_REBUILD=PASS"
-    else
-      echo "PG_DIAG_PSQL_AFTER_REBUILD=FAIL"
-      overall=1
-    fi
-
     if [ "$overall" -eq 0 ]; then
-      # 分两步：(1) python 只生成 SQL（不连 PG）；(2) shell 原生 psql -f 执行。
-      # 避免 uv run python 子进程的 libpq 环境影响 psql，从而复用已验证可用的 shell psql 路径。
+      # 关键：不在写入前做 psql 探针。
+      # 实测探针会消耗 router 重建后唯一的可用连接槽，导致紧随的写入连接被关闭。
+      # SQL 生成放在隧道重建前（不连 PG），重建后第一次 PG 连接直接用于写入。
       SQL_FILE="$WORK_DIR/h1_corpus_load.sql"
-      if ! uv run python scripts/ci/h1_corpus_load_pg.py \
-          --input h1-extraction.jsonl --emit-sql "$SQL_FILE"; then
-        echo "SQL_EMIT=FAIL"
-        pg_status="FAIL"
-        overall=1
-      elif PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+      if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
           -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
         pg_loaded="$n_extracted"
         pg_status="PASS"
