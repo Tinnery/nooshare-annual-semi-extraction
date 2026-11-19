@@ -59,5 +59,8 @@ jobs:
         PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
         RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY }}
         RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
+        # 生产语料桶（annual-semi）：CI 探针直接读写该桶做 canary 往返，
+        # 桶名非敏感，显式声明而非依赖脚本默认值（默认 nooshare-ci-probe）。
+        RUSTFS_BUCKET: annual-semi
         CI_CANARY: ${{ secrets.CI_CANARY }}
       run: bash scripts/ci/run_probes.sh
