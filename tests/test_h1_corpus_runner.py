@@ -62,7 +62,7 @@ def option(name):
         raise SystemExit(2)
 
 
-if "h1_corpus_download.py" in args:
+if any("h1_corpus_download.py" in arg for arg in args):
     state = runner_temp / "download-count"
     batch = int(state.read_text() if state.exists() else "0") + 1
     state.write_text(str(batch), encoding="utf-8")
@@ -117,7 +117,7 @@ if "h1-extract" in args:
     print("H1_EXTRACT=PASS")
     raise SystemExit(0)
 
-if "validate_h1_batch.py" in args:
+if any("validate_h1_batch.py" in arg for arg in args):
     required = ("--manifest", "--extraction", "--output")
     if not all(name in args for name in required):
         print("VALIDATION_ARGUMENTS_MISSING", file=sys.stderr)
@@ -134,13 +134,13 @@ if "validate_h1_batch.py" in args:
     print("H1_BATCH_INPUT_VALIDATION=PASS")
     raise SystemExit(0)
 
-if "h1_corpus_load_pg.py" in args and "--emit-sql" in args:
+if any("h1_corpus_load_pg.py" in arg for arg in args) and "--emit-sql" in args:
     output = Path(option("--emit-sql"))
     output.write_text("BEGIN;\nCOMMIT;\n", encoding="utf-8")
     print("SQL_EMIT=PASS")
     raise SystemExit(0)
 
-if "summarize_h1_corpus.py" in args:
+if any("summarize_h1_corpus.py" in arg for arg in args):
     output = Path(option("--output"))
     output.write_text(json.dumps({"accounting_status": "PASS"}), encoding="utf-8")
     print("H1_ACCOUNTING_SUMMARY=PASS")
