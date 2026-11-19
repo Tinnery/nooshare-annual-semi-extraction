@@ -79,11 +79,13 @@ def h1_extract(
     residual = result["residual"]
     n_spec_applicable = result["n_spec_applicable"]
     n_spec_not_applicable = result["n_spec_not_applicable"]
+    n_spec_unresolved = result["n_spec_unresolved"]
     n_coverage_evaluated = result["n_coverage_evaluated"]
     n_coverage_unavailable = result["n_coverage_unavailable"]
     logger.info(
         f"完成: {n_ok}/{n_files} 份, "
         f"法规适用: {n_spec_applicable}, 不适用: {n_spec_not_applicable}, "
+        f"版本未解析: {n_spec_unresolved}, "
         f"覆盖率可评估: {n_coverage_evaluated}, 映射不可用: {n_coverage_unavailable}, "
         f"完整 L1: {complete}/{n_coverage_evaluated} "
         f"({complete/max(1,n_coverage_evaluated):.1%}), "
