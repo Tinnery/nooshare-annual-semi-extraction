@@ -85,11 +85,10 @@ jobs:
     - name: Install dependencies (locked)
       run: uv sync --locked
 
-    - name: Install stunnel, boto3
+    - name: Install stunnel
       run: |
         sudo apt-get update -qq
         sudo apt-get install -y -qq stunnel4 netcat-openbsd
-        python3 -m pip install --quiet boto3
 
     # 隧道 + 下载 + 抽取必须在同一 step（stunnel 进程组绑定）
     - name: Tunnel + corpus download + H1 extraction

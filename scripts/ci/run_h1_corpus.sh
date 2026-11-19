@@ -44,7 +44,7 @@ export CORPUS_OUTPUT_DIR="corpus-data"
 export CORPUS_PREFIX="published/"
 export CORPUS_LIMIT="${H1_CORPUS_LIMIT:-0}"  # 0 = 不限制
 
-if ! python3 scripts/ci/h1_corpus_download.py; then
+if ! uv run python scripts/ci/h1_corpus_download.py; then
   echo "CORPUS_DOWNLOAD=FAIL"
   overall=1
 fi
