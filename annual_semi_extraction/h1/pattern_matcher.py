@@ -131,6 +131,7 @@ class PatternMatcher:
                 user=os.environ.get("PG_USER", "").strip(),
                 password=os.environ.get("PG_PASSWORD", ""),
                 connect_timeout=5,
+                sslmode="disable",  # stunnel 是 TCP 代理，强制明文连接
             )
             cur = conn.cursor()
             cur.execute(
