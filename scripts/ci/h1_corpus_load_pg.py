@@ -214,15 +214,14 @@ def main():
         )
         print(f"PG_LOAD=PASS loaded={result['loaded']} skipped={result['skipped']} total={result['total']}")
     except Exception as e:
-        # 不回显原始错误（可能含连接信息）
-        code = "PG_LOAD_ERROR"
-        if "password authentication" in str(e).lower():
-            code = "PG_AUTH_FAIL"
-        elif "connection refused" in str(e).lower():
-            code = "PG_TCP_REFUSED"
-        elif "timeout" in str(e).lower():
-            code = "PG_CONN_TIMEOUT"
-        print(f"PG_LOAD=FAIL code={code}", file=sys.stderr)
+        # 调试模式：输出完整异常信息
+        import traceback
+        print(f"PG_LOAD=FAIL code=PG_LOAD_ERROR", file=sys.stderr)
+        print(f"ERROR_TYPE={type(e).__name__}", file=sys.stderr)
+        print(f"ERROR_MSG={str(e)}", file=sys.stderr)
+        print("TRACEBACK_START", file=sys.stderr)
+        traceback.print_exc(file=sys.stderr)
+        print("TRACEBACK_END", file=sys.stderr)
         sys.exit(1)
 
 
