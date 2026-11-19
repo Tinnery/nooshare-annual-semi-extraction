@@ -155,18 +155,35 @@ jobs:
         CORPUS_START_AFTER: ${{ github.event_name == 'workflow_dispatch' && inputs.start_after || '' }}
       run: bash scripts/ci/run_h1_corpus.sh
 
-    - name: Upload H1 corpus artifacts
-      if: always()
+    - name: Upload sample H1 artifacts
+      if: always() && env.H1_CORPUS_FULL != '1' && env.CORPUS_INVENTORY_ONLY != '1'
       uses: actions/upload-artifact@v4
       with:
-        name: h1-corpus-output
+        name: h1-corpus-sample
         path: |
           corpus-data/input-manifest.jsonl
           corpus-data/batch-summary.json
-          corpus-data/corpus-inventory.jsonl
-          corpus-data/batch-summaries/
           h1-extraction.jsonl
           h1-extraction-failures.jsonl
+          h1-corpus-summary.json
+        retention-days: 3
+
+    - name: Upload inventory summary only
+      if: always() && env.CORPUS_INVENTORY_ONLY == '1'
+      uses: actions/upload-artifact@v4
+      with:
+        name: h1-corpus-inventory-summary
+        path: |
+          corpus-data/batch-summary.json
+          h1-corpus-summary.json
+        retention-days: 1
+
+    - name: Upload full-run checkpoint and summary
+      if: always() && env.H1_CORPUS_FULL == '1'
+      uses: actions/upload-artifact@v4
+      with:
+        name: h1-corpus-full-summary
+        path: |
           h1-corpus-checkpoint.json
           h1-quality-summary.json
           h1-corpus-summary.json
