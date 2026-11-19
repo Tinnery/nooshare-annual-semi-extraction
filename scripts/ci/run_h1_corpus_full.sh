@@ -113,12 +113,12 @@ while true; do
   batch_meta="$(python3 - "$batch_summary" <<'PY'
 import json, sys
 d = json.load(open(sys.argv[1], encoding="utf-8"))
-print("\t".join(str(d.get(k, "")) for k in (
+print("|".join(str(d.get(k, "")) for k in (
     "n_enumerated", "n_downloaded", "last_key", "end_of_corpus", "total_bytes"
 )))
 PY
 )"
-  IFS=$'\t' read -r n_enumerated n_downloaded batch_last_key batch_end batch_bytes <<< "$batch_meta"
+  IFS='|' read -r n_enumerated n_downloaded batch_last_key batch_end batch_bytes <<< "$batch_meta"
 
   if [ "$n_enumerated" = "0" ] && [ "$batch_end" = "True" ]; then
     echo "H1_FULL_END_OF_CORPUS after=$CURSOR"
@@ -190,10 +190,20 @@ PY
   rm -f "$SQL_FILE"
 
   # Only advance the resumable cursor after the PG transaction committed.
-  cat "$batch_dir/input-manifest.jsonl" >> corpus-data/input-manifest.jsonl
-  cat "$batch_h1" >> h1-extraction.jsonl
-  if [ -s "$batch_failures" ]; then
-    cat "$batch_failures" >> h1-extraction-failures.jsonl
+  if ! cat "$batch_dir/input-manifest.jsonl" >> corpus-data/input-manifest.jsonl; then
+    echo "H1_BATCH_COMMIT=FAIL code=MANIFEST_APPEND index=$batch_no"
+    overall=1
+    break
+  fi
+  if ! cat "$batch_h1" >> h1-extraction.jsonl; then
+    echo "H1_BATCH_COMMIT=FAIL code=RESULT_APPEND index=$batch_no"
+    overall=1
+    break
+  fi
+  if [ -s "$batch_failures" ] && ! cat "$batch_failures" >> h1-extraction-failures.jsonl; then
+    echo "H1_BATCH_COMMIT=FAIL code=FAILURE_APPEND index=$batch_no"
+    overall=1
+    break
   fi
 
   python3 - "$batch_summary" "corpus-data/batch-summaries/$batch_name.json" \
@@ -216,7 +226,7 @@ PY
   CURSOR="$batch_last_key"
   last_key="$batch_last_key"
 
-  python3 - "h1-corpus-checkpoint.json" "$batch_no" "$CURSOR" \
+  if ! python3 - "h1-corpus-checkpoint.json" "$batch_no" "$CURSOR" \
       "$total_downloaded" "$total_extracted" "$total_failures" \
       "$total_pg_loaded" "$total_bytes" "$EXPECTED_TOTAL" "$PROCESSED_BEFORE" <<'PY'
 import json, sys
@@ -228,6 +238,11 @@ values = [sys.argv[i] if i == 3 else int(sys.argv[i]) for i in range(2, len(sys.
 d = dict(zip(keys, values))
 json.dump(d, open(sys.argv[1], "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 PY
+  then
+    echo "H1_BATCH_COMMIT=FAIL code=CHECKPOINT index=$batch_no"
+    overall=1
+    break
+  fi
 
   echo "H1_BATCH_DONE index=$batch_no downloaded=$n_downloaded extracted=$batch_extracted residuals=$batch_failure_count total=$total_downloaded cursor=$CURSOR"
 
@@ -266,7 +281,7 @@ if [ -f h1-extraction.jsonl ]; then
   if ! uv run python scripts/ci/summarize_h1_corpus.py \
       --input h1-extraction.jsonl \
       --failures h1-extraction-failures.jsonl \
-      --expected "$total_extracted" \
+      --expected "$expected_remaining" \
       --output h1-quality-summary.json; then
     echo "H1_QUALITY_SUMMARY=FAIL"
     overall=1
