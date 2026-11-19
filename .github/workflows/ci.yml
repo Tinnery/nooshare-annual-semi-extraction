@@ -72,7 +72,7 @@ jobs:
   h1-corpus:
     runs-on: ubuntu-latest
     environment: ci-probe
-    continue-on-error: true
+    # H1 是数据生产 job；抽取或入库失败必须使该 job 失败。
     # 串行依赖 infra-probe：两者用同一 PSK identity 连同一 SNI router，
     # 并行时 server 端 PG 连接槽被占用，导致 psycopg2 连接被关闭
     # （server closed the connection unexpectedly）。串行后隧道不重叠。
@@ -113,7 +113,9 @@ jobs:
       with:
         name: h1-corpus-output
         path: |
-          corpus-data/
+          corpus-data/input-manifest.jsonl
+          corpus-data/batch-summary.json
+          corpus-data/corpus-inventory.jsonl
           h1-extraction.jsonl
           h1-extraction-failures.jsonl
           h1-corpus-summary.json
