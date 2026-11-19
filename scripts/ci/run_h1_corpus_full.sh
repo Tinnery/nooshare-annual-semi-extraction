@@ -161,6 +161,16 @@ PY
     break
   fi
 
+  batch_validation="$batch_dir/input-validation.json"
+  if ! uv run python scripts/ci/validate_h1_batch.py \\
+      --manifest "$batch_dir/input-manifest.jsonl" \\
+      --extraction "$batch_h1" \\
+      --output "$batch_validation"; then
+    echo "H1_BATCH_INPUT_VALIDATION=FAIL index=$batch_no"
+    overall=1
+    break
+  fi
+
   SQL_FILE="$WORK_DIR/h1_corpus_load_$batch_name.sql"
   if ! uv run python scripts/ci/h1_corpus_load_pg.py \
       --input "$batch_h1" --emit-sql "$SQL_FILE"; then
@@ -215,6 +225,8 @@ d["n_extracted"] = int(sys.argv[3])
 d["n_residuals"] = int(sys.argv[4])
 d["pg_status"] = "PASS"
 d["pg_loaded"] = int(sys.argv[3])
+validation_path = src.replace("batch-summary.json", "input-validation.json")
+d["input_validation"] = json.load(open(validation_path, encoding="utf-8"))
 json.dump(d, open(dst, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
 PY
 
@@ -283,7 +295,7 @@ if [ -f h1-extraction.jsonl ]; then
       --failures h1-extraction-failures.jsonl \
       --expected "$expected_remaining" \
       --output h1-quality-summary.json; then
-    echo "H1_QUALITY_SUMMARY=FAIL"
+    echo "H1_ACCOUNTING_SUMMARY=FAIL"
     overall=1
   fi
 fi
