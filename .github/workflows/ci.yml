@@ -109,6 +109,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 350
     environment: ci-probe
+    # Job-level flags are also consumed by the later artifact-upload conditions.
+    env:
+      CORPUS_INVENTORY_ONLY: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'inventory' || github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-inventory]')) && '1' || '0' }}
+      H1_CORPUS_FULL: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'full' || github.event_name == 'pull_request' && (contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]'))) && '1' || '0' }}
     # H1 是数据生产 job；抽取或入库失败必须使该 job 失败。
     # 串行依赖 infra-probe：两者用同一 PSK identity 连同一 SNI router，
     # 并行时 server 端 PG 连接槽被占用，导致 psycopg2 连接被关闭
