@@ -132,6 +132,7 @@ def main():
     # 1) 枚举 published/ 下符合年报/半年报槽位格式的 MD 文件
     audit("CORPUS_ENUMERATE start")
     keys_to_download: list[str] = []
+    object_metadata: dict[str, dict] = {}
     n_ignored_malformed = 0
     try:
         paginator = s3.get_paginator("list_objects_v2")
@@ -144,6 +145,11 @@ def main():
                     n_ignored_malformed += 1
                     continue
                 keys_to_download.append(key)
+                object_metadata[key] = {
+                    "size": int(obj.get("Size", 0)),
+                    "etag": obj.get("ETag"),
+                    "last_modified": obj.get("LastModified"),
+                }
                 if limit > 0 and len(keys_to_download) >= limit:
                     break
             if limit > 0 and len(keys_to_download) >= limit:
@@ -158,6 +164,62 @@ def main():
     if n_enumerated == 0:
         audit("CORPUS_DOWNLOAD=FAIL code=NO_FILES_FOUND")
         sys.exit(1)
+
+    # Inventory 模式仅读取 ListObjects 元数据；不下载 MD、不运行 H1、不写 PG。
+    if os.environ.get("CORPUS_INVENTORY_ONLY", "0") == "1":
+        manifest_path = out_path / "input-manifest.jsonl"
+        annual_count = 0
+        semi_count = 0
+        stocks: set[str] = set()
+        years: list[int] = []
+        total_bytes = 0
+        with manifest_path.open("w", encoding="utf-8") as f_manifest:
+            for key in keys_to_download:
+                slot_key = extract_slot_key(key)
+                code, year_s, period_s = slot_key.split("_")
+                meta = object_metadata[key]
+                total_bytes += meta["size"]
+                stocks.add(code)
+                years.append(int(year_s))
+                if period_s == "4":
+                    annual_count += 1
+                else:
+                    semi_count += 1
+                modified = meta["last_modified"]
+                f_manifest.write(json.dumps({
+                    "s3_key": key,
+                    "slot_key": slot_key,
+                    "size": meta["size"],
+                    "etag": meta["etag"],
+                    "last_modified": modified.isoformat() if modified else None,
+                    "status": "INVENTORY_ONLY",
+                }, ensure_ascii=False) + "\\n")
+
+        summary = {
+            "mode": "inventory_only",
+            "n_enumerated": n_enumerated,
+            "n_downloaded": 0,
+            "n_failed": 0,
+            "n_ignored_malformed": n_ignored_malformed,
+            "estimated_total_bytes": total_bytes,
+            "stock_count": len(stocks),
+            "annual_count": annual_count,
+            "semi_count": semi_count,
+            "report_year_min": min(years),
+            "report_year_max": max(years),
+            "manifest_path": str(manifest_path),
+        }
+        (out_path / "batch-summary.json").write_text(
+            json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        (out_path / "corpus-inventory.jsonl").write_text(
+            manifest_path.read_text(encoding="utf-8"), encoding="utf-8"
+        )
+        audit(
+            f"CORPUS_INVENTORY=PASS objects={n_enumerated} bytes={total_bytes} "
+            f"stocks={len(stocks)} annual={annual_count} semi={semi_count}"
+        )
+        sys.exit(0)
 
     # 2) 批量下载 + 计算 SHA256
     manifest_path = out_path / "input-manifest.jsonl"
