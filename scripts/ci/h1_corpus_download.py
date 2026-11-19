@@ -20,6 +20,7 @@ import os
 import sys
 import json
 import hashlib
+import re
 from pathlib import Path
 from typing import Optional
 
@@ -72,15 +73,17 @@ def classify_exception(exc: Exception) -> str:
 
 
 def extract_slot_key(s3_key: str) -> Optional[str]:
-    """从 S3 key 提取 slot_key：published/<code>/<code>_<year>_<period>.md -> <code>_<year>_<period>。"""
-    # 期望格式：published/000001/000001_2024_4.md
+    """只接受 published/<6位代码>/<代码>_<年份>_<2或4>.md。"""
     parts = s3_key.split("/")
     if len(parts) != 3 or parts[0] != "published":
         return None
-    filename = parts[2]
-    if not filename.endswith(".md"):
+    code = parts[1]
+    match = re.fullmatch(r"(\d{6})_(\d{4})_([24])\.md", parts[2])
+    if not re.fullmatch(r"\d{6}", code) or match is None:
         return None
-    return filename[:-3]  # 去掉 .md
+    if match.group(1) != code:
+        return None
+    return parts[2][:-3]
 
 
 def main():
@@ -91,7 +94,11 @@ def main():
     endpoint = os.environ.get("S3_LOCAL_ENDPOINT", "http://127.0.0.1:15500")
     output_dir = os.environ.get("CORPUS_OUTPUT_DIR", "corpus-data")
     prefix = os.environ.get("CORPUS_PREFIX", "published/")
-    limit = int(os.environ.get("CORPUS_LIMIT", "0"))  # 0 = 不限制
+    try:
+        limit = int(os.environ.get("CORPUS_LIMIT", "0"))  # 0 = 不限制
+    except ValueError:
+        audit("CORPUS_DOWNLOAD=FAIL code=INVALID_LIMIT")
+        sys.exit(1)
 
     if not access or not secret:
         audit("CORPUS_DOWNLOAD=FAIL code=S3_NO_CRED")
@@ -122,18 +129,23 @@ def main():
         audit(f"CORPUS_DOWNLOAD=FAIL code={classify_exception(e)}")
         sys.exit(1)
 
-    # 1) 枚举 published/ 前缀下的所有 .md 文件
+    # 1) 枚举 published/ 下符合年报/半年报槽位格式的 MD 文件
     audit("CORPUS_ENUMERATE start")
     keys_to_download: list[str] = []
+    n_ignored_malformed = 0
     try:
         paginator = s3.get_paginator("list_objects_v2")
         for page in paginator.paginate(Bucket=bucket, Prefix=prefix):
             for obj in page.get("Contents", []):
                 key = obj["Key"]
-                if key.endswith(".md"):
-                    keys_to_download.append(key)
-                    if limit > 0 and len(keys_to_download) >= limit:
-                        break
+                if not key.endswith(".md"):
+                    continue
+                if extract_slot_key(key) is None:
+                    n_ignored_malformed += 1
+                    continue
+                keys_to_download.append(key)
+                if limit > 0 and len(keys_to_download) >= limit:
+                    break
             if limit > 0 and len(keys_to_download) >= limit:
                 break
     except Exception as e:
@@ -141,7 +153,7 @@ def main():
         sys.exit(1)
 
     n_enumerated = len(keys_to_download)
-    audit(f"CORPUS_ENUMERATE done n={n_enumerated}")
+    audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed}")
 
     if n_enumerated == 0:
         audit("CORPUS_DOWNLOAD=FAIL code=NO_FILES_FOUND")
@@ -165,6 +177,9 @@ def main():
                 # 下载
                 response = s3.get_object(Bucket=bucket, Key=key)
                 body = response["Body"].read()
+                expected_length = int(response.get("ContentLength", len(body)))
+                if expected_length != len(body):
+                    raise ValueError("S3_CONTENT_LENGTH_MISMATCH")
                 local_file.write_bytes(body)
 
                 # 计算 SHA256
@@ -179,6 +194,9 @@ def main():
                     "sha256": sha,
                     "size": size,
                     "slot_key": slot_key,
+                    "etag": response.get("ETag"),
+                    "last_modified": response.get("LastModified").isoformat()
+                    if response.get("LastModified") else None,
                 }, ensure_ascii=False) + "\n")
 
                 n_downloaded += 1
@@ -199,6 +217,7 @@ def main():
         "n_enumerated": n_enumerated,
         "n_downloaded": n_downloaded,
         "n_failed": n_failed,
+        "n_ignored_malformed": n_ignored_malformed,
         "total_bytes": total_bytes,
         "failed_keys": failed_keys[:100],  # 只保留前 100 个失败 key，避免摘要过大
         "manifest_path": str(manifest_path),
@@ -215,7 +234,7 @@ def main():
         sys.exit(1)
     elif n_failed > 0:
         audit(f"CORPUS_DOWNLOAD=PARTIAL ok={n_downloaded} fail={n_failed}")
-        sys.exit(0)  # 部分成功仍算通过，由下游决定是否接受
+        sys.exit(1)  # 部分下载不得伪装为完整成功
     else:
         audit("CORPUS_DOWNLOAD=PASS")
         sys.exit(0)
