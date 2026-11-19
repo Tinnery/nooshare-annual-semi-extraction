@@ -41,6 +41,11 @@ on:
         type: string
         default: "0"
         required: false
+      process_limit:
+        description: "Maximum records for this invocation (0=unbounded)"
+        type: string
+        default: "0"
+        required: false
 
 permissions:
   contents: read
@@ -106,6 +111,10 @@ jobs:
   # - infra-probe 验证基础设施（canary 往返）
   # - h1-corpus 生产研究数据（批量读取 + 抽取）
   h1-corpus:
+    # Regular PRs validate code without starting a RustFS data job.
+    # Data jobs require an explicit mode marker; main/master pushes keep the
+    # bounded 10-record sample as a connectivity smoke check.
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h1-sample]') || contains(github.event.pull_request.title, '[h1-inventory]') || contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]')
     runs-on: ubuntu-latest
     timeout-minutes: 350
     environment: ci-probe
@@ -156,6 +165,7 @@ jobs:
         H1_CORPUS_BATCH_SIZE: ${{ (github.event_name == 'workflow_dispatch' && inputs.batch_size) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '10') || '1000' }}
         H1_EXPECTED_CORPUS_COUNT: ${{ (github.event_name == 'workflow_dispatch' && inputs.expected_total) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '20') || '113526' }}
         H1_PROCESSED_BEFORE: ${{ github.event_name == 'workflow_dispatch' && inputs.processed_before || '0' }}
+        H1_PROCESS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && inputs.process_limit) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '20') || '0' }}
         CORPUS_START_AFTER: ${{ github.event_name == 'workflow_dispatch' && inputs.start_after || '' }}
       run: bash scripts/ci/run_h1_corpus.sh
 
