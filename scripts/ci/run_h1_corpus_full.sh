@@ -15,6 +15,7 @@ trap cleanup EXIT
 BATCH_SIZE="${H1_CORPUS_BATCH_SIZE:-1000}"
 EXPECTED_TOTAL="${H1_EXPECTED_CORPUS_COUNT:-0}"
 PROCESSED_BEFORE="${H1_PROCESSED_BEFORE:-0}"
+PROCESS_LIMIT="${H1_PROCESS_LIMIT:-0}"
 CURSOR="${CORPUS_START_AFTER:-}"
 PG_LOCAL="${PG_LOCAL_PORT:-15432}"
 S3_LOCAL="${S3_LOCAL_PORT:-15500}"
@@ -23,7 +24,8 @@ if ! [[ "$BATCH_SIZE" =~ ^[1-9][0-9]*$ ]]; then
   echo "ORCHESTRATOR=FAIL code=INVALID_BATCH_SIZE"
   exit 1
 fi
-if ! [[ "$EXPECTED_TOTAL" =~ ^[0-9]+$ ]] || ! [[ "$PROCESSED_BEFORE" =~ ^[0-9]+$ ]]; then
+if ! [[ "$EXPECTED_TOTAL" =~ ^[0-9]+$ ]] || ! [[ "$PROCESSED_BEFORE" =~ ^[0-9]+$ ]] \\
+  || ! [[ "$PROCESS_LIMIT" =~ ^[0-9]+$ ]]; then
   echo "ORCHESTRATOR=FAIL code=INVALID_EXPECTED_COUNT"
   exit 1
 fi
@@ -77,8 +79,9 @@ total_pg_loaded=0
 total_bytes=0
 last_key="$CURSOR"
 end_of_corpus=0
+process_limit_reached=0
 
-echo "H1_FULL_CONFIG batch_size=$BATCH_SIZE expected_total=$EXPECTED_TOTAL processed_before=$PROCESSED_BEFORE"
+echo "H1_FULL_CONFIG batch_size=$BATCH_SIZE process_limit=$PROCESS_LIMIT expected_total=$EXPECTED_TOTAL processed_before=$PROCESSED_BEFORE"
 if ! tunnel_up; then
   echo "ORCHESTRATOR=FAIL code=INITIAL_TUNNEL"
   exit 1
@@ -92,7 +95,18 @@ while true; do
 
   export CORPUS_OUTPUT_DIR="$batch_dir"
   export CORPUS_PREFIX="published/"
-  export CORPUS_LIMIT="$BATCH_SIZE"
+  request_limit="$BATCH_SIZE"
+  if [ "$PROCESS_LIMIT" -gt 0 ]; then
+    remaining_limit=$((PROCESS_LIMIT - total_downloaded))
+    if [ "$remaining_limit" -le 0 ]; then
+      process_limit_reached=1
+      break
+    fi
+    if [ "$remaining_limit" -lt "$request_limit" ]; then
+      request_limit="$remaining_limit"
+    fi
+  fi
+  export CORPUS_LIMIT="$request_limit"
   export CORPUS_START_AFTER="$CURSOR"
   export CORPUS_INVENTORY_ONLY="0"
 
@@ -261,7 +275,13 @@ PY
   # Free the runner disk before fetching the next group of source MD files.
   rm -rf "$batch_dir"
 
-  if [ "$n_enumerated" -lt "$BATCH_SIZE" ]; then
+  if [ "$PROCESS_LIMIT" -gt 0 ] && [ "$total_downloaded" -ge "$PROCESS_LIMIT" ]; then
+    process_limit_reached=1
+    echo "H1_PROCESS_LIMIT_REACHED count=$total_downloaded"
+    break
+  fi
+
+  if [ "$n_enumerated" -lt "$request_limit" ]; then
     end_of_corpus=1
     break
   fi
@@ -309,6 +329,8 @@ cat > h1-corpus-summary.json <<EOF
   "expected_total": $EXPECTED_TOTAL,
   "processed_before": $PROCESSED_BEFORE,
   "batch_size": $BATCH_SIZE,
+  "process_limit": $PROCESS_LIMIT,
+  "process_limit_reached": $process_limit_reached,
   "n_batches": $batch_no,
   "n_downloaded": $total_downloaded,
   "n_extracted": $total_extracted,
