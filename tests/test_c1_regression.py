@@ -30,15 +30,20 @@ class TestRegVersionKey:
         assert reg_version_key(2010, 2) is None
         assert reg_version_key(2015, 2) is None
     
-    def test_2016_2024_uses_2021_template(self):
-        """2016-2024 使用 2021 修订模板。"""
-        assert reg_version_key(2016, 2) == "no3_2021_16"
+    def test_annual_rules_follow_period_end(self):
+        """年度报告按期末日期选用 2016、2021、2025 版本。"""
+        assert reg_version_key(2016, 4) == "no2_2016_31"
+        assert reg_version_key(2020, 4) == "no2_2016_31"
+        assert reg_version_key(2021, 4) == "no2_2021_15"
+        assert reg_version_key(2024, 4) == "no2_2021_15"
+        assert reg_version_key(2025, 4) == "no2_2025_3"
+
+    def test_semiannual_rules_follow_period_end(self):
+        """2025 半年报期末早于 2025-07-01，仍适用 2021 版。"""
+        assert reg_version_key(2016, 2) is None  # 注册表尚无该期间版本
+        assert reg_version_key(2020, 2) is None  # 注册表尚无该期间版本
         assert reg_version_key(2021, 2) == "no3_2021_16"
-        assert reg_version_key(2024, 2) == "no3_2021_16"
-    
-    def test_2025_plus_uses_2025_template(self):
-        """2025 年起使用 2025 修订模板。"""
-        assert reg_version_key(2025, 2) == "no3_2025_4"
+        assert reg_version_key(2025, 2) == "no3_2021_16"
         assert reg_version_key(2026, 2) == "no3_2025_4"
 
 
@@ -50,14 +55,20 @@ class TestExpectedSections:
         assert expected_sections(2003, 2) is None
         assert expected_sections(2010, 2) is None
     
-    def test_2016_2024_returns_10(self):
-        """2016-2024 预期 10 节。"""
-        assert expected_sections(2016, 2) == 10
+    def test_missing_registry_period_returns_none(self):
+        """注册表未覆盖的期间不得套用默认模板。"""
+        assert expected_sections(2016, 2) is None
+        assert expected_sections(2020, 2) is None
+
+    def test_annual_expected_sections(self):
+        assert expected_sections(2016, 4) == 12
+        assert expected_sections(2021, 4) == 10
+        assert expected_sections(2025, 4) == 8
+
+    def test_semiannual_expected_sections(self):
         assert expected_sections(2021, 2) == 10
-    
-    def test_2025_plus_returns_8(self):
-        """2025 年起预期 8 节。"""
-        assert expected_sections(2025, 2) == 8
+        assert expected_sections(2025, 2) == 10
+        assert expected_sections(2026, 2) == 8
 
 
 class TestDetectL1Decoupled:
@@ -101,7 +112,8 @@ class TestCoverageSpecApplicable:
         ]
         result = _coverage(headings, year=2006, period=2)
         
-        assert result["spec_applicable"] is False
+        assert result["spec_applicable"] is None
+        assert result["spec_resolution_status"] == "UNRESOLVED"
         assert result["reg_version"] is None
         assert result["coverage_ratio"] is None
         assert result["is_complete_l1"] is None
@@ -187,7 +199,8 @@ class TestExtractHistoricalReports:
         assert result["n_headings"] >= 4
         
         # 无适用法规
-        assert result["spec_applicable"] is False
+        assert result["spec_applicable"] is None
+        assert result["spec_resolution_status"] == "UNRESOLVED"
         assert result["reg_version"] is None
         assert result["coverage_ratio"] is None
         
@@ -284,13 +297,16 @@ class TestExtractBatchApplicability:
 
         assert stats["n_files"] == 1
         assert stats["n_ok"] == 1
-        assert stats["n_spec_not_applicable"] == 1
+        assert stats["n_spec_not_applicable"] == 0
+        assert stats["n_spec_unresolved"] == 1
         assert stats["n_spec_applicable"] == 0
         assert stats["complete"] == 0
         assert stats["residual"] == 0
         assert stats["n_extraction_errors"] == 0
         record = json.loads(output.read_text(encoding="utf-8").splitlines()[0])
         assert record["missing_always_sections"] is None
+        assert record["spec_applicable"] is None
+        assert record["spec_resolution_status"] == "UNRESOLVED"
         assert record["coverage_ratio"] is None
         assert failures.read_text(encoding="utf-8") == ""
 
