@@ -24,7 +24,7 @@ if ! [[ "$BATCH_SIZE" =~ ^[1-9][0-9]*$ ]]; then
   echo "ORCHESTRATOR=FAIL code=INVALID_BATCH_SIZE"
   exit 1
 fi
-if ! [[ "$EXPECTED_TOTAL" =~ ^[0-9]+$ ]] || ! [[ "$PROCESSED_BEFORE" =~ ^[0-9]+$ ]] \\
+if ! [[ "$EXPECTED_TOTAL" =~ ^[0-9]+$ ]] || ! [[ "$PROCESSED_BEFORE" =~ ^[0-9]+$ ]] \
   || ! [[ "$PROCESS_LIMIT" =~ ^[0-9]+$ ]]; then
   echo "ORCHESTRATOR=FAIL code=INVALID_EXPECTED_COUNT"
   exit 1
@@ -176,9 +176,9 @@ PY
   fi
 
   batch_validation="$batch_dir/input-validation.json"
-  if ! uv run python scripts/ci/validate_h1_batch.py \\
-      --manifest "$batch_dir/input-manifest.jsonl" \\
-      --extraction "$batch_h1" \\
+  if ! uv run python scripts/ci/validate_h1_batch.py \
+      --manifest "$batch_dir/input-manifest.jsonl" \
+      --extraction "$batch_h1" \
       --output "$batch_validation"; then
     echo "H1_BATCH_INPUT_VALIDATION=FAIL index=$batch_no"
     overall=1
@@ -294,13 +294,18 @@ PY
 done
 
 expected_remaining=0
+expected_this_run=0
 if [ "$EXPECTED_TOTAL" -gt 0 ]; then
   expected_remaining=$((EXPECTED_TOTAL - PROCESSED_BEFORE))
+  expected_this_run="$expected_remaining"
+  if [ "$PROCESS_LIMIT" -gt 0 ] && [ "$PROCESS_LIMIT" -lt "$expected_this_run" ]; then
+    expected_this_run="$PROCESS_LIMIT"
+  fi
 fi
 
 if [ "$overall" -eq 0 ] && [ "$EXPECTED_TOTAL" -gt 0 ] \
-  && [ "$total_downloaded" -ne "$expected_remaining" ]; then
-  echo "H1_FULL=FAIL code=EXPECTED_COUNT_MISMATCH expected=$expected_remaining actual=$total_downloaded"
+  && [ "$total_downloaded" -ne "$expected_this_run" ]; then
+  echo "H1_FULL=FAIL code=EXPECTED_COUNT_MISMATCH expected=$expected_this_run actual=$total_downloaded"
   overall=1
 fi
 if [ "$total_downloaded" -ne "$total_extracted" ] \
@@ -313,7 +318,7 @@ if [ -f h1-extraction.jsonl ]; then
   if ! uv run python scripts/ci/summarize_h1_corpus.py \
       --input h1-extraction.jsonl \
       --failures h1-extraction-failures.jsonl \
-      --expected "$expected_remaining" \
+      --expected "$expected_this_run" \
       --output h1-quality-summary.json; then
     echo "H1_ACCOUNTING_SUMMARY=FAIL"
     overall=1
@@ -327,6 +332,7 @@ cat > h1-corpus-summary.json <<EOF
   "bucket": "annual-semi",
   "prefix": "published/",
   "expected_total": $EXPECTED_TOTAL,
+  "expected_this_run": $expected_this_run,
   "processed_before": $PROCESSED_BEFORE,
   "batch_size": $BATCH_SIZE,
   "process_limit": $PROCESS_LIMIT,
