@@ -140,6 +140,7 @@ fi
 cat > h1-corpus-summary.json <<EOF
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+  "mode": "$([ "${CORPUS_INVENTORY_ONLY:-0}" = "1" ] && echo 'inventory_only' || echo 'h1_extract')",
   "corpus_output_dir": "corpus-data",
   "h1_extraction_file": "h1-extraction.jsonl",
   "h1_extraction_failures": "h1-extraction-failures.jsonl",
