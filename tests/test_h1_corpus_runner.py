@@ -8,6 +8,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import pytest
+
 
 def write_executable(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -28,7 +30,13 @@ def test_full_runner_has_no_escaped_continuation_lines() -> None:
     assert malformed == [], f"double-backslash line continuations at lines {malformed}"
 
 
-def test_full_runner_stops_after_two_committed_batches_at_process_limit(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    ("expected_total", "process_limit", "reconciliation_status"),
+    [("100", "19", "SKIPPED_INCOMPLETE"), ("19", "0", "PASS")],
+)
+def test_full_runner_limits_batches_and_reconciles_completed_corpus(
+    tmp_path: Path, expected_total: str, process_limit: str, reconciliation_status: str
+) -> None:
     project = tmp_path / "project"
     ci_dir = project / "scripts" / "ci"
     ci_dir.mkdir(parents=True)
@@ -70,9 +78,10 @@ if any("h1_corpus_download.py" in arg for arg in args):
     output = Path(os.environ["CORPUS_OUTPUT_DIR"])
     output.mkdir(parents=True, exist_ok=True)
     first_year = 2000 + (batch - 1) * 10
+    n_records = 10 if batch == 1 else 9
     rows = []
     keys = []
-    for offset in range(10):
+    for offset in range(n_records):
         year = first_year + offset
         slot_key = f"000001_{year}_2"
         key = f"published/000001/{slot_key}.md"
@@ -90,8 +99,8 @@ if any("h1_corpus_download.py" in arg for arg in args):
     )
     (output / "batch-summary.json").write_text(
         json.dumps({
-            "n_enumerated": 10,
-            "n_downloaded": 10,
+            "n_enumerated": n_records,
+            "n_downloaded": n_records,
             "last_key": keys[-1],
             "end_of_corpus": False,
             "total_bytes": 10,
@@ -157,11 +166,16 @@ raise SystemExit(97)
 
     fake_psql = r"""#!/usr/bin/env python3
 import os
+import sys
 from pathlib import Path
 
-calls = Path(os.environ["RUNNER_TEMP"]) / "pg-calls"
-with calls.open("a", encoding="utf-8") as stream:
-    stream.write("committed\n")
+if "-c" in sys.argv:
+    Path(os.environ["RUNNER_TEMP"], "pg-reconciliation-query").write_text("called", encoding="utf-8")
+    print(os.environ["FAKE_PG_COUNTS"])
+else:
+    calls = Path(os.environ["RUNNER_TEMP"]) / "pg-calls"
+    with calls.open("a", encoding="utf-8") as stream:
+        stream.write("committed\n")
 """
     write_executable(fake_bin / "psql", fake_psql)
     write_executable(fake_bin / "nc", "#!/usr/bin/env bash\nexit 1\n")
@@ -172,9 +186,11 @@ with calls.open("a", encoding="utf-8") as stream:
         "PATH": str(fake_bin) + os.pathsep + env.get("PATH", ""),
         "RUNNER_TEMP": str(runner_temp),
         "H1_CORPUS_BATCH_SIZE": "10",
-        "H1_EXPECTED_CORPUS_COUNT": "100",
+        "H1_EXPECTED_CORPUS_COUNT": expected_total,
         "H1_PROCESSED_BEFORE": "0",
-        "H1_PROCESS_LIMIT": "20",
+        "H1_PROCESS_LIMIT": process_limit,
+        "H1_VERIFY_PG_CORPUS": "1",
+        "FAKE_PG_COUNTS": "19,19,0,0",
         "CORPUS_START_AFTER": "",
     })
 
@@ -191,16 +207,24 @@ with calls.open("a", encoding="utf-8") as stream:
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
     assert result.stdout.count("H1_BATCH_DONE") == 2
     assert result.stdout.count("PG_BATCH_LOAD=PASS") == 2
-    assert "H1_PROCESS_LIMIT_REACHED count=20" in result.stdout
-    assert "H1_FULL_SUMMARY written batches=2 downloaded=20 extracted=20 pg_loaded=20" in result.stdout
+    assert "H1_FULL_SUMMARY written batches=2 downloaded=19 extracted=19 pg_loaded=19" in result.stdout
+    if process_limit == "0":
+        assert "H1_PROCESS_LIMIT_REACHED" not in result.stdout
+        assert "PG_RECONCILIATION=PASS rows=19 distinct_slots=19 duplicates=0 missing_sha=0 invalid_sha=0" in result.stdout
+    else:
+        assert "H1_PROCESS_LIMIT_REACHED count=19" in result.stdout
+        assert "PG_RECONCILIATION=SKIPPED code=CORPUS_NOT_COMPLETE" in result.stdout
 
     checkpoint = json.loads((project / "h1-corpus-checkpoint.json").read_text(encoding="utf-8"))
     assert checkpoint["batch_no"] == 2
-    assert checkpoint["downloaded"] == 20
-    assert checkpoint["extracted"] == 20
-    assert checkpoint["pg_loaded"] == 20
-    assert checkpoint["last_key"] == "published/000001/000001_2019_2.md"
-    assert checkpoint["expected_total"] == 100
+    assert checkpoint["downloaded"] == 19
+    assert checkpoint["extracted"] == 19
+    assert checkpoint["pg_loaded"] == 19
+    assert checkpoint["last_key"] == "published/000001/000001_2018_2.md"
+    assert checkpoint["expected_total"] == int(expected_total)
+    summary = json.loads((project / "h1-corpus-summary.json").read_text(encoding="utf-8"))
+    assert summary["expected_this_run"] == 19
+    assert summary["pg_reconciliation_status"] == reconciliation_status
 
     assert (runner_temp / "validation-calls").read_text(encoding="utf-8").splitlines() == [
         "validated",
@@ -210,4 +234,8 @@ with calls.open("a", encoding="utf-8") as stream:
         "committed",
         "committed",
     ]
-    assert (runner_temp / "summary-expected").read_text(encoding="utf-8") == "20"
+    assert (runner_temp / "summary-expected").read_text(encoding="utf-8") == "19"
+    if reconciliation_status == "PASS":
+        assert (runner_temp / "pg-reconciliation-query").read_text(encoding="utf-8") == "called"
+    else:
+        assert not (runner_temp / "pg-reconciliation-query").exists()
