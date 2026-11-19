@@ -163,7 +163,10 @@ def load_pg(
             pass
 
     if proc.returncode != 0:
-        # 只映射为固定错误码，不回显原始错误（可能含连接信息）
+        # 诊断：输出 psql stderr 供定位（trust 认证无密码；仅取前若干行并截断）
+        diag = "\n".join(proc.stderr.strip().splitlines()[:8])
+        print(f"PG_PSQL_STDERR={diag[:1200]}", file=sys.stderr)
+        # 映射为固定错误码
         err = proc.stderr.lower()
         code = "PG_LOAD_ERROR"
         if "authentication" in err:
