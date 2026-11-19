@@ -141,6 +141,10 @@ if any("h1_corpus_load_pg.py" in arg for arg in args) and "--emit-sql" in args:
     raise SystemExit(0)
 
 if any("summarize_h1_corpus.py" in arg for arg in args):
+    expected = args[args.index("--expected") + 1]
+    assert expected == "20", expected
+    calls = runner_temp / "summary-expected"
+    calls.write_text(expected, encoding="utf-8")
     output = Path(option("--output"))
     output.write_text(json.dumps({"accounting_status": "PASS"}), encoding="utf-8")
     print("H1_ACCOUNTING_SUMMARY=PASS")
@@ -168,7 +172,7 @@ with calls.open("a", encoding="utf-8") as stream:
         "PATH": str(fake_bin) + os.pathsep + env.get("PATH", ""),
         "RUNNER_TEMP": str(runner_temp),
         "H1_CORPUS_BATCH_SIZE": "10",
-        "H1_EXPECTED_CORPUS_COUNT": "20",
+        "H1_EXPECTED_CORPUS_COUNT": "100",
         "H1_PROCESSED_BEFORE": "0",
         "H1_PROCESS_LIMIT": "20",
         "CORPUS_START_AFTER": "",
@@ -196,6 +200,7 @@ with calls.open("a", encoding="utf-8") as stream:
     assert checkpoint["extracted"] == 20
     assert checkpoint["pg_loaded"] == 20
     assert checkpoint["last_key"] == "published/000001/000001_2019_2.md"
+    assert checkpoint["expected_total"] == 100
 
     assert (runner_temp / "validation-calls").read_text(encoding="utf-8").splitlines() == [
         "validated",
@@ -205,3 +210,4 @@ with calls.open("a", encoding="utf-8") as stream:
         "committed",
         "committed",
     ]
+    assert (runner_temp / "summary-expected").read_text(encoding="utf-8") == "20"
