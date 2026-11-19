@@ -281,7 +281,7 @@ def _rep_rank(it: dict) -> tuple:
 def _conditional_ords(year: int, period: int) -> set[int]:
     key = reg_version_key(year, period)
     if key is None:
-        return set()  # 无适用法规，无条件章节
+        return set()  # 法规版本未解析时，不套用未知版本的条件章节规则
     return {i for i, sec in enumerate(TEMPLATE[key], start=1) if sec["required"] != "always"}
 
 
@@ -609,8 +609,8 @@ def extract_batch(
             method_counter[rec["extraction_method"]] += 1
             n_headings_total += rec["n_headings"]
 
-            # C1 的 None 表示法规不适用，不是“缺少全部法定章节”。
-            # 兼容旧记录：spec_applicable 缺失时才根据 reg_version 推断。
+            # spec_applicable=None 表示版本尚未解析；只有显式 NOT_APPLICABLE
+            # 才能计入不适用，不能把未知规则当成没有法规义务。
             spec_applicable = rec.get("spec_applicable")
             if spec_applicable is None:
                 if rec.get("reg_version") is not None:
