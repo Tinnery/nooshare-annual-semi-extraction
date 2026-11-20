@@ -95,7 +95,7 @@ SELECT * FROM iwen.limit_up ORDER BY trade_date DESC, stock_code;
 
 \o $OUT_DIR/limit_up_2024.csv
 SELECT * FROM iwen.limit_up
-WHERE trade_date BETWEEN DATE '2024-01-01' AND DATE '2024-12-31'
+WHERE trade_date BETWEEN '2024-01-01' AND '2024-12-31'
 ORDER BY trade_date DESC, stock_code;
 \o
 
