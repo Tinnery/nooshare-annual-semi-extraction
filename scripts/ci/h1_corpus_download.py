@@ -102,6 +102,7 @@ def main():
         audit("CORPUS_DOWNLOAD=FAIL code=INVALID_LIMIT")
         sys.exit(1)
     start_after = os.environ.get("CORPUS_START_AFTER", "").strip()
+    start_year = int(os.environ.get("H1_START_YEAR", "2019"))
 
     if not access or not secret:
         audit("CORPUS_DOWNLOAD=FAIL code=S3_NO_CRED")
@@ -136,12 +137,12 @@ def main():
         sys.exit(1)
 
     # 1) 枚举 published/ 下符合年报/半年报槽位格式的 MD 文件
-    # 只保留 2019 年及之后的报告（早期报告格式混乱，标准化程度低）
+    # 只保留 start_year 年及之后的报告（早期报告格式混乱，标准化程度低）
     audit("CORPUS_ENUMERATE start")
     all_valid_keys: list[str] = []
     object_metadata: dict[str, dict] = {}
     n_ignored_malformed = 0
-    n_ignored_pre_2019 = 0
+    n_ignored_before_start_year = 0
     try:
         paginator = s3.get_paginator("list_objects_v2")
         pagination_args = {"Bucket": bucket, "Prefix": prefix}
@@ -156,11 +157,11 @@ def main():
                 if slot_key is None:
                     n_ignored_malformed += 1
                     continue
-                # 年份过滤：只保留 2019 年及之后的报告
+                # 年份过滤：只保留 start_year 年及之后的报告
                 code, year_s, period = slot_key.split("_")
                 year = int(year_s)
-                if year < 2019:
-                    n_ignored_pre_2019 += 1
+                if year < start_year:
+                    n_ignored_before_start_year += 1
                     continue
                 all_valid_keys.append(key)
                 object_metadata[key] = {
@@ -223,7 +224,7 @@ def main():
         keys_to_download = all_valid_keys
 
     n_enumerated = len(keys_to_download)
-    audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed} ignored_pre_2019={n_ignored_pre_2019}")
+    audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed} ignored_before_start_year={n_ignored_before_start_year}")
 
     if n_enumerated == 0:
         if start_after and os.environ.get("CORPUS_INVENTORY_ONLY", "0") != "1":
