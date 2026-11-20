@@ -104,6 +104,25 @@ def main():
     start_after = os.environ.get("CORPUS_START_AFTER", "").strip()
     start_year = int(os.environ.get("H1_START_YEAR", "2019"))
 
+    # 权威报告列表白名单（由 h1_report_list_export.py 从 reconciled_report 导出）。
+    # 下载脚本本身不连 PG：只读 JSONL 清单，排除未进入裁决的孤儿文件。
+    report_list_path = os.environ.get("REPORT_LIST_PATH", "").strip()
+    report_slot_keys: Optional[set[str]] = None
+    if report_list_path:
+        try:
+            report_slot_keys = set()
+            with open(report_list_path, encoding="utf-8") as f_rl:
+                for line in f_rl:
+                    if not line.strip():
+                        continue
+                    sk = json.loads(line).get("slot_key")
+                    if sk:
+                        report_slot_keys.add(sk)
+        except Exception:
+            audit("CORPUS_DOWNLOAD=FAIL code=REPORT_LIST_UNREADABLE")
+            sys.exit(1)
+        audit(f"CORPUS_REPORT_LIST loaded n={len(report_slot_keys)} path={report_list_path}")
+
     if not access or not secret:
         audit("CORPUS_DOWNLOAD=FAIL code=S3_NO_CRED")
         sys.exit(1)
@@ -143,6 +162,7 @@ def main():
     object_metadata: dict[str, dict] = {}
     n_ignored_malformed = 0
     n_ignored_before_start_year = 0
+    n_ignored_not_in_report_list = 0
     try:
         paginator = s3.get_paginator("list_objects_v2")
         pagination_args = {"Bucket": bucket, "Prefix": prefix}
@@ -162,6 +182,10 @@ def main():
                 year = int(year_s)
                 if year < start_year:
                     n_ignored_before_start_year += 1
+                    continue
+                # 权威报告列表白名单：只处理 reconciled_report 裁决过的报告
+                if report_slot_keys is not None and slot_key not in report_slot_keys:
+                    n_ignored_not_in_report_list += 1
                     continue
                 all_valid_keys.append(key)
                 object_metadata[key] = {
@@ -224,7 +248,7 @@ def main():
         keys_to_download = all_valid_keys
 
     n_enumerated = len(keys_to_download)
-    audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed} ignored_before_start_year={n_ignored_before_start_year}")
+    audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed} ignored_before_start_year={n_ignored_before_start_year} ignored_not_in_report_list={n_ignored_not_in_report_list}")
 
     if n_enumerated == 0:
         if start_after and os.environ.get("CORPUS_INVENTORY_ONLY", "0") != "1":

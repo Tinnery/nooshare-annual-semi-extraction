@@ -87,6 +87,15 @@ if ! tunnel_up; then
   exit 1
 fi
 
+# 导出权威报告清单（PG 读，初始隧道新鲜、连接配额充足）。
+# 仅导出一次，所有 batch 共享同一份白名单；清单落在 corpus-data/ 不受 batch 目录影响。
+export CORPUS_OUTPUT_DIR="corpus-data"
+if ! uv run python scripts/ci/h1_report_list_export.py; then
+  echo "ORCHESTRATOR=FAIL code=REPORT_LIST_EXPORT"
+  exit 1
+fi
+export REPORT_LIST_PATH="corpus-data/report-list.jsonl"
+
 while true; do
   batch_no=$((batch_no + 1))
   batch_name="$(printf '%06d' "$batch_no")"

@@ -44,17 +44,25 @@ else
   echo "TUNNEL_S3_ALIVE_AFTER_BUILD=0"
 fi
 
-# 2) 语料下载
+# 2) 导出权威报告清单（PG 读，隧道刚建立、连接配额充足）
+# 清单来自 annual_semi.reconciled_report，作为下载的白名单。
 export CORPUS_OUTPUT_DIR="corpus-data"
+if ! uv run python scripts/ci/h1_report_list_export.py; then
+  echo "REPORT_LIST_EXPORT=FAIL"
+  overall=1
+fi
+export REPORT_LIST_PATH="corpus-data/report-list.jsonl"
+
+# 3) 语料下载（仅清单内的报告）
 export CORPUS_PREFIX="published/"
 export CORPUS_LIMIT="${H1_CORPUS_LIMIT:-0}"  # 0 = 不限制
 
-if ! uv run python scripts/ci/h1_corpus_download.py; then
+if [ "$overall" -eq 0 ] && ! uv run python scripts/ci/h1_corpus_download.py; then
   echo "CORPUS_DOWNLOAD=FAIL"
   overall=1
 fi
 
-# 3) H1 抽取（如果下载成功）
+# 4) H1 抽取（如果下载成功）
 if [ "${CORPUS_INVENTORY_ONLY:-0}" = "1" ] && [ "$overall" -eq 0 ]; then
   echo "H1_EXTRACT=SKIPPED_INVENTORY_ONLY"
 fi
@@ -90,7 +98,7 @@ if [ "$overall" -eq 0 ] && [ "${CORPUS_INVENTORY_ONLY:-0}" != "1" ]; then
   fi
 fi
 
-# 4) PG 写入（如果抽取成功且有 PG_PASSWORD）
+# 5) PG 写入（如果抽取成功且有 PG_PASSWORD）
 pg_loaded=0
 pg_skipped=0
 pg_status="SKIPPED"
@@ -141,7 +149,7 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
   fi
 fi
 
-# 5) 生成最终批次摘要
+# 6) 生成最终批次摘要
 cat > h1-corpus-summary.json <<EOF
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
@@ -160,7 +168,7 @@ EOF
 
 echo "H1_CORPUS_SUMMARY written to h1-corpus-summary.json"
 
-# 5) 泄露证伪（始终检查审计日志）
+# 7) 泄露证伪（始终检查审计日志）
 bash scripts/ci/leak_check.sh "$AUDIT" || overall=1
 
 if [ "$overall" -eq 0 ]; then

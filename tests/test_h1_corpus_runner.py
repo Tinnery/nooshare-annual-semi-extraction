@@ -70,6 +70,14 @@ def option(name):
         raise SystemExit(2)
 
 
+if any("h1_report_list_export.py" in arg for arg in args):
+    # 模拟从 reconciled_report 导出的权威报告清单；下载 mock 不消费白名单内容。
+    output = Path(os.environ["CORPUS_OUTPUT_DIR"])
+    output.mkdir(parents=True, exist_ok=True)
+    (output / "report-list.jsonl").write_text("", encoding="utf-8")
+    print("REPORT_LIST=PASS n=19 start_year=2019 min_year=2018 max_year=2026 annual=9 semi=10")
+    raise SystemExit(0)
+
 if any("h1_corpus_download.py" in arg for arg in args):
     state = runner_temp / "download-count"
     batch = int(state.read_text() if state.exists() else "0") + 1
