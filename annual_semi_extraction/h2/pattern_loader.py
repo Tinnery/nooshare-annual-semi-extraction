@@ -38,7 +38,9 @@ LIBRARY_TABLE = "annual_semi.h2_pattern_library"
 
 # 只读查询的默认参数
 DEFAULT_MIN_COUNT = 10
-DEFAULT_LEVELS = (2,)
+# 默认加载全部层级：候选行可能是任意序号风格（一、/1、/（一）），
+# 识别器只负责告知命中的模板与其层级，层级筛选由消费方决定
+DEFAULT_LEVELS = (1, 2, 3)
 
 # ---- 归一化（与上游构建脚本同语义） ----
 RE_CJK = re.compile(r"[\u4e00-\u9fff]")
