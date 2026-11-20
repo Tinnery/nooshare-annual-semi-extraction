@@ -41,6 +41,9 @@ fi
 # 2) PG 探针（失败不中断其余步骤，继续采集诊断）
 bash scripts/ci/probe_pg.sh || overall=1
 
+# 2b) iwen.limit_up 一次性只读导出（先检查 ci_probe 权限）
+bash scripts/ci/export_iwen_limit_up.sh || overall=1
+
 # 3) RustFS 探针
 python3 scripts/ci/probe_s3.py || overall=1
 
