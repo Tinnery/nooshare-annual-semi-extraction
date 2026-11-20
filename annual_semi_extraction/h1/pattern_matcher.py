@@ -187,6 +187,7 @@ class PatternMatcher:
             self._loaded = True  # 标记为已尝试，避免重复失败；降级为空匹配
 
 
+    @property
     def title_count(self) -> int:
         """标准标题词条数（供 fail-fast / 诊断使用）。"""
         self._load()
