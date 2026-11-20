@@ -106,14 +106,6 @@ jobs:
         CI_CANARY: ${{ secrets.CI_CANARY }}
       run: bash scripts/ci/run_probes.sh
 
-    - name: Upload read-only H1 pattern library snapshot
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: h1-pattern-library-readonly
-        path: ${{ runner.temp }}/h1_pattern_library.csv
-        if-no-files-found: ignore
-        retention-days: 1
 
   # H1 语料批量生产：从 RustFS annual-semi 桶下载已发布的 MD 文件，
   # 执行 H1 标题抽取，产出 JSONL 结果。与 infra-probe 解耦：
