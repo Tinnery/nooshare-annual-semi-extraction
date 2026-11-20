@@ -171,6 +171,11 @@ PY
   batch_failure_count="$(wc -l < "$batch_failures" 2>/dev/null || echo 0)"
   if [ "$batch_extracted" != "$n_downloaded" ]; then
     echo "H1_BATCH_EXTRACT=FAIL code=ROW_COUNT_MISMATCH index=$batch_no downloaded=$n_downloaded extracted=$batch_extracted"
+    if [ -s "$batch_failures" ]; then
+      echo "::group::Batch $batch_no extraction failures (first 20)"
+      head -20 "$batch_failures"
+      echo "::endgroup::"
+    fi
     overall=1
     break
   fi
@@ -187,7 +192,7 @@ PY
 
   SQL_FILE="$WORK_DIR/h1_corpus_load_$batch_name.sql"
   if ! uv run python scripts/ci/h1_corpus_load_pg.py \
-      --input "$batch_h1" --emit-sql "$SQL_FILE"; then
+      --input "$batch_h1" --emit-csv "$SQL_FILE"; then
     echo "H1_BATCH_SQL=FAIL index=$batch_no"
     overall=1
     break
@@ -201,12 +206,36 @@ PY
     break
   fi
 
-  if PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
-      -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" \
-      >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
-    echo "PG_BATCH_LOAD=PASS index=$batch_no rows=$batch_extracted"
-  else
-    echo "PG_BATCH_LOAD=FAIL index=$batch_no"
+  # P0 链路韧性：PG 写入失败后自动重试（最多 3 次）。
+  # 安全保证：单事务回滚 + ON CONFLICT 幂等 + frp 1.7s 即恢复。
+  # 根因：pro↔VPS 公网链路 frp 控制连接瞬断（Run #87 实据 0.3s 内三处日志互证）。
+  pg_batch_ok=0
+  pg_batch_attempts=0
+  PG_BATCH_MAX_ATTEMPTS="${H1_PG_BATCH_MAX_ATTEMPTS:-3}"
+  PG_APPNAME="h1-corpus/run-${GITHUB_RUN_ID:-0}/batch-${batch_no}"
+  for pg_attempt in $(seq 1 "$PG_BATCH_MAX_ATTEMPTS"); do
+    pg_batch_attempts=$pg_attempt
+    if PGPASSWORD="${PG_PASSWORD:-}" PGAPPNAME="$PG_APPNAME" \
+        psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+        -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" \
+        >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
+      echo "PG_BATCH_LOAD=PASS index=$batch_no rows=$batch_extracted attempt=$pg_attempt"
+      pg_batch_ok=1
+      break
+    fi
+    echo "PG_BATCH_LOAD=RETRY index=$batch_no attempt=$pg_attempt/$PG_BATCH_MAX_ATTEMPTS"
+    head -3 "$WORK_DIR/pg_load_err.txt" 2>/dev/null || true
+    if [ "$pg_attempt" -lt "$PG_BATCH_MAX_ATTEMPTS" ]; then
+      # 重建隧道后重试（frpc 断前无告警、1.7s 即重连成功，说明 VPS 侧活着）
+      if ! tunnel_restart; then
+        echo "PG_BATCH_TUNNEL_REBUILD=FAIL index=$batch_no attempt=$pg_attempt"
+        break
+      fi
+      sleep 2
+    fi
+  done
+  if [ "$pg_batch_ok" -ne 1 ]; then
+    echo "PG_BATCH_LOAD=FAIL index=$batch_no attempts=$pg_batch_attempts"
     head -5 "$WORK_DIR/pg_load_err.txt" 2>/dev/null || true
     overall=1
     break
@@ -325,6 +354,53 @@ if [ -f h1-extraction.jsonl ]; then
   fi
 fi
 
+pg_reconcile_status="NOT_REQUESTED"
+pg_reconcile_rows=0
+pg_reconcile_unique_slots=0
+pg_reconcile_duplicate_slots=0
+pg_reconcile_missing_sha=0
+pg_reconcile_invalid_sha=0
+
+if [ "${H1_VERIFY_PG_CORPUS:-0}" = "1" ]; then
+  completed_total=$((PROCESSED_BEFORE + total_downloaded))
+  if [ "$overall" -ne 0 ] || [ "$EXPECTED_TOTAL" -le 0 ] || [ "$completed_total" -ne "$EXPECTED_TOTAL" ]; then
+    pg_reconcile_status="SKIPPED_INCOMPLETE"
+    echo "PG_RECONCILIATION=SKIPPED code=CORPUS_NOT_COMPLETE completed=$completed_total expected=$EXPECTED_TOTAL"
+  else
+    echo "PG_RECONCILIATION=start expected_rows=$EXPECTED_TOTAL"
+    query="SELECT COUNT(*)::bigint, COUNT(DISTINCT slot_key)::bigint, COUNT(*) FILTER (WHERE source_sha256 IS NULL)::bigint, COUNT(*) FILTER (WHERE source_sha256 !~ '^[0-9a-f]{64}$')::bigint FROM annual_semi.h1_corpus_results;"
+    pg_counts="$(PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer -d nooshare_dev -A -t -F ',' -v ON_ERROR_STOP=1 -c "$query" 2>"$WORK_DIR/pg_reconciliation_err.txt")"
+    pg_rc=$?
+    if [ "$pg_rc" -ne 0 ]; then
+      pg_reconcile_status="FAIL"
+      echo "PG_RECONCILIATION=FAIL code=QUERY_FAILED"
+      head -5 "$WORK_DIR/pg_reconciliation_err.txt" 2>/dev/null || true
+      overall=1
+    else
+      IFS=',' read -r pg_reconcile_rows pg_reconcile_unique_slots pg_reconcile_missing_sha pg_reconcile_invalid_sha <<< "$pg_counts"
+      pg_reconcile_rows="${pg_reconcile_rows//[[:space:]]/}"
+      pg_reconcile_unique_slots="${pg_reconcile_unique_slots//[[:space:]]/}"
+      pg_reconcile_missing_sha="${pg_reconcile_missing_sha//[[:space:]]/}"
+      pg_reconcile_invalid_sha="${pg_reconcile_invalid_sha//[[:space:]]/}"
+      if ! [[ "$pg_reconcile_rows" =~ ^[0-9]+$ ]] || ! [[ "$pg_reconcile_unique_slots" =~ ^[0-9]+$ ]] || ! [[ "$pg_reconcile_missing_sha" =~ ^[0-9]+$ ]] || ! [[ "$pg_reconcile_invalid_sha" =~ ^[0-9]+$ ]]; then
+        pg_reconcile_status="FAIL"
+        echo "PG_RECONCILIATION=FAIL code=INVALID_QUERY_RESULT"
+        overall=1
+      else
+        pg_reconcile_duplicate_slots=$((pg_reconcile_rows - pg_reconcile_unique_slots))
+        if [ "$pg_reconcile_rows" -eq "$EXPECTED_TOTAL" ] && [ "$pg_reconcile_unique_slots" -eq "$EXPECTED_TOTAL" ] && [ "$pg_reconcile_missing_sha" -eq 0 ] && [ "$pg_reconcile_invalid_sha" -eq 0 ]; then
+          pg_reconcile_status="PASS"
+          echo "PG_RECONCILIATION=PASS rows=$pg_reconcile_rows distinct_slots=$pg_reconcile_unique_slots duplicates=$pg_reconcile_duplicate_slots missing_sha=$pg_reconcile_missing_sha invalid_sha=$pg_reconcile_invalid_sha"
+        else
+          pg_reconcile_status="FAIL"
+          echo "PG_RECONCILIATION=FAIL rows=$pg_reconcile_rows distinct_slots=$pg_reconcile_unique_slots duplicates=$pg_reconcile_duplicate_slots missing_sha=$pg_reconcile_missing_sha invalid_sha=$pg_reconcile_invalid_sha expected=$EXPECTED_TOTAL"
+          overall=1
+        fi
+      fi
+    fi
+  fi
+fi
+
 cat > h1-corpus-summary.json <<EOF
 {
   "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
@@ -345,6 +421,12 @@ cat > h1-corpus-summary.json <<EOF
   "total_bytes": $total_bytes,
   "last_key": "$last_key",
   "end_of_corpus": $end_of_corpus,
+  "pg_reconciliation_status": "$pg_reconcile_status",
+  "pg_reconciliation_rows": $pg_reconcile_rows,
+  "pg_reconciliation_distinct_slots": $pg_reconcile_unique_slots,
+  "pg_reconciliation_duplicate_slots": $pg_reconcile_duplicate_slots,
+  "pg_reconciliation_missing_sha": $pg_reconcile_missing_sha,
+  "pg_reconciliation_invalid_sha": $pg_reconcile_invalid_sha,
   "overall_status": $([ "$overall" -eq 0 ] && echo '"PASS"' || echo '"FAIL"')
 }
 EOF

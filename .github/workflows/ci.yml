@@ -75,6 +75,9 @@ jobs:
   # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
   # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
   infra-probe:
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     environment: ci-probe
     continue-on-error: true
@@ -84,9 +87,9 @@ jobs:
 
     - name: Install stunnel, psql, boto3
       run: |
-        sudo apt-get update -qq
-        sudo apt-get install -y -qq stunnel4 postgresql-client netcat-openbsd
-        python3 -m pip install --quiet boto3 cryptography
+        sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true update -qq
+        sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true install -y -qq stunnel4 postgresql-client netcat-openbsd
+        python3 -m pip install --quiet --retries 5 --timeout 30 boto3
 
     # 隧道与所有探针必须在同一 step：GitHub Actions 会回收上一步派生的后台进程，
     # 独立的 build step 会导致 stunnel 在探针 step 启动时已被杀（PG_LOCAL_REFUSED）。
@@ -124,6 +127,9 @@ jobs:
   # - infra-probe 验证基础设施（canary 往返）
   # - h1-corpus 生产研究数据（批量读取 + 抽取）
   h1-corpus:
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
     # Regular PRs validate code without starting a RustFS data job.
     # Data jobs require an explicit mode marker; main/master pushes keep the
     # bounded 10-record sample as a connectivity smoke check.
@@ -160,7 +166,7 @@ jobs:
     - name: Install stunnel, psql
       run: |
         sudo apt-get update -qq
-        sudo apt-get install -y -qq stunnel4 netcat-openbsd postgresql-client
+        sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true install -y -qq stunnel4 netcat-openbsd postgresql-client
 
     # 隧道 + 下载 + 抽取 + PG 写入必须在同一 step（stunnel 进程组绑定）
     - name: Tunnel + corpus download + H1 extraction + PG load
@@ -170,6 +176,10 @@ jobs:
         RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY }}
         RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
         RUSTFS_BUCKET: annual-semi
+        PG_HOST: ${{ secrets.PG_HOST }}
+        PG_PORT: ${{ secrets.PG_PORT }}
+        PG_NAME: ${{ secrets.PG_DB }}
+        PG_USER: ${{ secrets.PG_USER }}
         PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
         # push/PR 默认小样本；手动 workflow_dispatch 可选 sample / inventory / full。
         H1_CORPUS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && (inputs.corpus_mode == 'inventory' || inputs.corpus_mode == 'full')) && '0' || (github.event_name == 'pull_request' && (contains(github.event.pull_request.title, '[h1-inventory]') || contains(github.event.pull_request.title, '[h1-full]') || contains(github.event.pull_request.title, '[h1-full-smoke]'))) && '0' || (github.event_name == 'workflow_dispatch' && inputs.corpus_limit) || '10' }}
@@ -180,6 +190,7 @@ jobs:
         H1_PROCESSED_BEFORE: ${{ github.event_name == 'workflow_dispatch' && inputs.processed_before || '0' }}
         H1_PROCESS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && inputs.process_limit) || (github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full-smoke]') && '20') || '0' }}
         CORPUS_START_AFTER: ${{ github.event_name == 'workflow_dispatch' && inputs.start_after || '' }}
+        H1_VERIFY_PG_CORPUS: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_mode == 'full' || github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[h1-full]')) && '1' || '0' }}
       run: bash scripts/ci/run_h1_corpus.sh
 
     - name: Upload sample H1 artifacts

@@ -187,6 +187,93 @@ def load_pg(
     return {"loaded": len(valid), "skipped": skipped, "total": total}
 
 
+def emit_key_map(records: list[dict], output_path: Path) -> None:
+    """生成批次 key 映射文件（row_no, slot_key, source_sha256）。
+    
+    用于失败时上传，精确定位到具体记录。由同一组 valid records 生成，
+    保证与 SQL/CSV 一一对应。row_no 从 1 开始（批次内记录序号）。
+    """
+    with output_path.open("w", encoding="utf-8") as f:
+        for i, rec in enumerate(records, start=1):
+            f.write(json.dumps({
+                "row_no": i,
+                "slot_key": rec.get("slot_key"),
+                "source_sha256": rec.get("source_sha256"),
+            }, ensure_ascii=False) + "\n")
+
+
+def emit_csv_mode(records: list[dict], csv_path: Path, sql_path: Path) -> None:
+    """生成 CSV 数据文件 + SQL 脚本（COPY staging 模式）。
+    
+    性能优化：COPY 批量加载到临时表，然后一条 INSERT ON CONFLICT merge。
+    把 19 分钟抖动窗口压到秒级，与 P0 链路韧性协同。
+    """
+    import csv
+    
+    columns = [
+        "slot_key", "stock_code", "report_year", "period",
+        "source_sha256", "n_bytes", "extraction_method", "n_headings",
+        "ordinal_valid", "ordinal_verdict", "is_complete_l1", "coverage_ratio",
+        "headings_json", "missing_always_sections", "missing_conditional_sections",
+        "reg_version",
+    ]
+    
+    def format_value(col: str, val: Any) -> Any:
+        if val is None:
+            return None  # NULL
+        if col == "headings_json":
+            return json.dumps(val, ensure_ascii=False, separators=(",", ":"))
+        if col in ("missing_always_sections", "missing_conditional_sections"):
+            if not val:
+                return "{}"
+            return "{" + ",".join(str(int(v)) for v in val) + "}"
+        return val
+    
+    with csv_path.open("w", encoding="utf-8", newline="") as f:
+        writer = csv.writer(f)
+        for rec in records:
+            row = [format_value(col, rec.get(col)) for col in columns]
+            writer.writerow(row)
+    
+    csv_escaped = str(csv_path).replace("'", "''")
+    col_list = ", ".join(columns)
+    
+    update_cols = [c for c in columns if c != "slot_key"]
+    update_set = ", ".join(f"{c}=EXCLUDED.{c}" for c in update_cols)
+    update_set += ", loaded_at=EXCLUDED.loaded_at"
+    
+    insert_cols = col_list + ", loaded_at"
+    select_cols = col_list + ", NOW()"
+    
+    sql = f"""BEGIN;
+CREATE TEMP TABLE h1_staging (
+  slot_key TEXT,
+  stock_code TEXT,
+  report_year INTEGER,
+  period INTEGER,
+  source_sha256 TEXT,
+  n_bytes BIGINT,
+  extraction_method TEXT,
+  n_headings INTEGER,
+  ordinal_valid BOOLEAN,
+  ordinal_verdict TEXT,
+  is_complete_l1 BOOLEAN,
+  coverage_ratio DOUBLE PRECISION,
+  headings_json JSONB,
+  missing_always_sections INTEGER[],
+  missing_conditional_sections INTEGER[],
+  reg_version TEXT
+);
+\\copy h1_staging ({col_list}) FROM '{csv_escaped}' WITH (FORMAT csv, HEADER false);
+INSERT INTO annual_semi.h1_corpus_results ({insert_cols})
+SELECT {select_cols} FROM h1_staging
+ON CONFLICT (slot_key) DO UPDATE SET {update_set};
+DROP TABLE h1_staging;
+COMMIT;
+"""
+    sql_path.write_text(sql, encoding="utf-8")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Load H1 extraction results to PG via psql")
     parser.add_argument("--input", required=True, help="Path to h1-extraction.jsonl")
@@ -204,6 +291,12 @@ def main():
         metavar="PATH",
         help="只生成 UPSERT SQL 到指定文件并返回，不连接 PG（供 shell 直接调 psql -f）",
     )
+    parser.add_argument(
+        "--emit-csv",
+        metavar="SQL_PATH",
+        help="生成 CSV 数据文件 + SQL 脚本（COPY staging 模式）。"
+             "SQL_PATH 为 SQL 文件路径，CSV 文件自动生成同目录同名 .csv。",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input)
@@ -216,8 +309,26 @@ def main():
         with input_path.open("r", encoding="utf-8") as f:
             records = [json.loads(line) for line in f if line.strip()]
         valid = [r for r in records if r.get("slot_key")]
-        Path(args.emit_sql).write_text(build_sql(valid), encoding="utf-8")
-        print(f"SQL_EMIT=PASS path={args.emit_sql} rows={len(valid)}")
+        sql_path = Path(args.emit_sql)
+        sql_path.write_text(build_sql(valid), encoding="utf-8")
+        # 同步生成 key map（供失败时上传定位）
+        key_map_path = sql_path.with_suffix(".key-map.jsonl")
+        emit_key_map(valid, key_map_path)
+        print(f"SQL_EMIT=PASS path={sql_path} key_map={key_map_path} rows={len(valid)}")
+        return
+
+    # --emit-csv 模式：生成 CSV + SQL（COPY staging 模式），性能优化。
+    if args.emit_csv:
+        sql_path = Path(args.emit_csv)
+        csv_path = sql_path.with_suffix(".csv")
+        with input_path.open("r", encoding="utf-8") as f:
+            records = [json.loads(line) for line in f if line.strip()]
+        valid = [r for r in records if r.get("slot_key")]
+        emit_csv_mode(valid, csv_path, sql_path)
+        # 同步生成 key map（供失败时上传定位）
+        key_map_path = sql_path.with_suffix(".key-map.jsonl")
+        emit_key_map(valid, key_map_path)
+        print(f"CSV_EMIT=PASS sql={sql_path} csv={csv_path} key_map={key_map_path} rows={len(valid)}")
         return
 
     result = load_pg(

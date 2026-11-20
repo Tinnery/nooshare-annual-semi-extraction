@@ -304,56 +304,89 @@ def main():
         )
         sys.exit(0)
 
-    # 2) 批量下载 + 计算 SHA256
+    # 2) 批量下载 + 计算 SHA256（并发模式）
     manifest_path = out_path / "input-manifest.jsonl"
     n_downloaded = 0
     n_failed = 0
     total_bytes = 0
     failed_keys: list[str] = []
 
-    audit("CORPUS_DOWNLOAD start")
+    # 并发配置：默认 4 workers，可通过环境变量调整
+    max_workers = int(os.environ.get("CORPUS_DOWNLOAD_WORKERS", "4"))
+    
+    def download_one(key: str) -> dict:
+        """下载单个文件并返回结果（不写入 manifest）。"""
+        local_file = out_path / key
+        local_file.parent.mkdir(parents=True, exist_ok=True)
+        
+        try:
+            response = s3.get_object(Bucket=bucket, Key=key)
+            body = response["Body"].read()
+            expected_length = int(response.get("ContentLength", len(body)))
+            if expected_length != len(body):
+                raise ValueError("S3_CONTENT_LENGTH_MISMATCH")
+            local_file.write_bytes(body)
+            
+            sha = hashlib.sha256(body).hexdigest()
+            size = len(body)
+            slot_key = extract_slot_key(key)
+            
+            return {
+                "status": "ok",
+                "path": str(local_file),
+                "s3_key": key,
+                "sha256": sha,
+                "size": size,
+                "slot_key": slot_key,
+                "etag": response.get("ETag"),
+                "last_modified": response.get("LastModified").isoformat()
+                if response.get("LastModified") else None,
+            }
+        except Exception as e:
+            return {
+                "status": "fail",
+                "s3_key": key,
+                "error_code": classify_exception(e),
+            }
+
+    audit(f"CORPUS_DOWNLOAD start workers={max_workers}")
+    
+    # 并发下载，按原始顺序处理结果（断点续传依赖 last_key 顺序）
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    
+    results_by_key: dict[str, dict] = {}
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_key = {executor.submit(download_one, key): key for key in keys_to_download}
+        
+        # 按完成顺序收集结果
+        for i, future in enumerate(as_completed(future_to_key), start=1):
+            result = future.result()
+            results_by_key[result["s3_key"]] = result
+            
+            if i % 1000 == 0:
+                audit(f"CORPUS_DOWNLOAD progress {i}/{n_enumerated}")
+    
+    # 按原始顺序写入 manifest（保持 slot_key 顺序，断点续传依赖）
+    audit("CORPUS_MANIFEST_WRITE start")
     with manifest_path.open("w", encoding="utf-8") as f_manifest:
-        for i, key in enumerate(keys_to_download, start=1):
-            # 本地路径：保持 S3 目录结构
-            local_file = out_path / key
-            local_file.parent.mkdir(parents=True, exist_ok=True)
-
-            try:
-                # 下载
-                response = s3.get_object(Bucket=bucket, Key=key)
-                body = response["Body"].read()
-                expected_length = int(response.get("ContentLength", len(body)))
-                if expected_length != len(body):
-                    raise ValueError("S3_CONTENT_LENGTH_MISMATCH")
-                local_file.write_bytes(body)
-
-                # 计算 SHA256
-                sha = hashlib.sha256(body).hexdigest()
-                size = len(body)
-                slot_key = extract_slot_key(key)
-
-                # 写入 manifest
+        for key in keys_to_download:
+            result = results_by_key[key]
+            if result["status"] == "ok":
                 f_manifest.write(json.dumps({
-                    "path": str(local_file),
-                    "s3_key": key,
-                    "sha256": sha,
-                    "size": size,
-                    "slot_key": slot_key,
-                    "etag": response.get("ETag"),
-                    "last_modified": response.get("LastModified").isoformat()
-                    if response.get("LastModified") else None,
+                    "path": result["path"],
+                    "s3_key": result["s3_key"],
+                    "sha256": result["sha256"],
+                    "size": result["size"],
+                    "slot_key": result["slot_key"],
+                    "etag": result["etag"],
+                    "last_modified": result["last_modified"],
                 }, ensure_ascii=False) + "\n")
-
                 n_downloaded += 1
-                total_bytes += size
-
-                if i % 1000 == 0:
-                    audit(f"CORPUS_DOWNLOAD progress {i}/{n_enumerated} ok={n_downloaded} fail={n_failed}")
-
-            except Exception as e:
+                total_bytes += result["size"]
+            else:
                 n_failed += 1
-                failed_keys.append(key)
-                audit(f"CORPUS_DOWNLOAD_FAIL key={key} code={classify_exception(e)}")
+                failed_keys.append(result["s3_key"])
+                audit(f"CORPUS_DOWNLOAD_FAIL key={result['s3_key']} code={result['error_code']}")
 
     audit(f"CORPUS_DOWNLOAD done ok={n_downloaded} fail={n_failed} bytes={total_bytes}")
 

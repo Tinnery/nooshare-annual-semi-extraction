@@ -122,31 +122,70 @@ class PatternMatcher:
             return
 
         try:
-            import psycopg2
-
-            conn = psycopg2.connect(
-                host=host,
-                port=int(os.environ.get("PG_PORT", "5432")),
-                dbname=os.environ.get("PG_NAME", "").strip(),
-                user=os.environ.get("PG_USER", "").strip(),
-                password=os.environ.get("PG_PASSWORD", ""),
-                connect_timeout=5,
+            import subprocess
+            
+            # 构建 psql 连接参数
+            port = os.environ.get("PG_PORT", "5432")
+            dbname = os.environ.get("PG_NAME", "").strip()
+            user = os.environ.get("PG_USER", "").strip()
+            password = os.environ.get("PG_PASSWORD", "")
+            
+            # 构建 psql 命令
+            sql = f"SELECT pattern_hash, pattern, count, headings FROM {LIBRARY_TABLE} ORDER BY count DESC"
+            
+            # 构建环境变量（psql 通过环境变量读取密码）
+            env = os.environ.copy()
+            env["PGPASSWORD"] = password
+            
+            # 执行 psql，输出分隔格式
+            cmd = [
+                "psql",
+                "-h", host,
+                "-p", port,
+                "-U", user,
+                "-d", dbname,
+                "--no-psqlrc",
+                "--tuples-only",
+                "--field-separator=|",
+                "-c", sql,
+            ]
+            
+            result = subprocess.run(
+                cmd,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=10,
             )
-            cur = conn.cursor()
-            cur.execute(
-                f"SELECT pattern_hash, pattern, count, headings "
-                f"FROM {LIBRARY_TABLE} ORDER BY count DESC"
-            )
+            
+            if result.returncode != 0:
+                raise RuntimeError(f"psql failed: {result.stderr.strip()}")
+            
+            # 解析输出
             rows: dict[str, dict] = {}
-            for phash, pattern, count, headings in cur.fetchall():
-                rows[phash] = {"pattern": pattern, "count": count, "headings": headings}
-            cur.close()
-            conn.close()
+            for line in result.stdout.strip().split("\n"):
+                if not line.strip():
+                    continue
+                parts = line.split("|", 3)
+                if len(parts) != 4:
+                    continue
+                phash, pattern, count_str, headings = parts
+                try:
+                    count = int(count_str.strip())
+                except ValueError:
+                    continue
+                rows[phash.strip()] = {
+                    "pattern": pattern.strip(),
+                    "count": count,
+                    "headings": headings.strip(),
+                }
+            
             self._ingest(rows)
             self._loaded = True
         except Exception as e:
             self._load_error = str(e)
             self._loaded = True  # 标记为已尝试，避免重复失败；降级为空匹配
+
 
     @property
     def title_count(self) -> int:
