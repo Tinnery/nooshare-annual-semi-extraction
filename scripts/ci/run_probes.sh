@@ -41,11 +41,25 @@ fi
 # 2) PG 探针（失败不中断其余步骤，继续采集诊断）
 bash scripts/ci/probe_pg.sh || overall=1
 
-# 2b) iwen.limit_up 一次性只读导出（先检查 ci_probe 权限）
-bash scripts/ci/export_iwen_limit_up.sh || overall=1
-
 # 3) RustFS 探针
 python3 scripts/ci/probe_s3.py || overall=1
+
+# 4) iwen 导出必须使用新建隧道后的首个 PG 会话。
+# 当前 SNI/PSK 路由对同一 identity 有连接槽限制；旧 PG 探针已占用过一次会话。
+bash scripts/ci/teardown.sh || overall=1
+if bash scripts/ci/build_stunnel.sh; then
+  PG_LOCAL_PORT_CHECK="${PG_LOCAL_PORT:-15432}"
+  if nc -z 127.0.0.1 "$PG_LOCAL_PORT_CHECK" 2>/dev/null; then
+    bash scripts/ci/export_iwen_limit_up.sh || overall=1
+  else
+    echo "PG_IWEN_EXPORT=FAIL code=PG_IWEN_TUNNEL_NOT_LISTENING"
+    overall=1
+  fi
+else
+  echo "PG_IWEN_EXPORT=FAIL code=PG_IWEN_TUNNEL_REBUILD"
+  overall=1
+fi
+bash scripts/ci/teardown.sh || overall=1
 
 # 4) 泄露证伪（始终检查审计日志）
 bash scripts/ci/leak_check.sh "$AUDIT" || overall=1
