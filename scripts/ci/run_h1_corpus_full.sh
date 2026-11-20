@@ -171,6 +171,11 @@ PY
   batch_failure_count="$(wc -l < "$batch_failures" 2>/dev/null || echo 0)"
   if [ "$batch_extracted" != "$n_downloaded" ]; then
     echo "H1_BATCH_EXTRACT=FAIL code=ROW_COUNT_MISMATCH index=$batch_no downloaded=$n_downloaded extracted=$batch_extracted"
+    if [ -s "$batch_failures" ]; then
+      echo "::group::Batch $batch_no extraction failures (first 20)"
+      head -20 "$batch_failures"
+      echo "::endgroup::"
+    fi
     overall=1
     break
   fi
