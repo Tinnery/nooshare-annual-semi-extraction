@@ -94,7 +94,7 @@ jobs:
       run: |
         sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true update -qq
         sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true install -y -qq stunnel4 postgresql-client netcat-openbsd
-        python3 -m pip install --quiet --retries 5 --timeout 30 boto3
+        python3 -m pip install --quiet --retries 5 --timeout 30 boto3 cryptography
 
     # 隧道与所有探针必须在同一 step：GitHub Actions 会回收上一步派生的后台进程，
     # 独立的 build step 会导致 stunnel 在探针 step 启动时已被杀（PG_LOCAL_REFUSED）。
@@ -126,6 +126,19 @@ jobs:
     - name: Remove encrypted export from runner
       if: always()
       run: rm -f "${{ runner.temp }}/h1_pattern_library.encrypted.json"
+
+    - name: Upload encrypted iwen limit-up snapshot
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: iwen-limit-up-encrypted
+        path: ${{ runner.temp }}/iwen_limit_up.encrypted.json
+        if-no-files-found: ignore
+        retention-days: 1
+
+    - name: Remove encrypted iwen export
+      if: always()
+      run: rm -f "${{ runner.temp }}/iwen_limit_up.encrypted.json"
 
   # H1 语料批量生产：从 RustFS annual-semi 桶下载已发布的 MD 文件，
   # 执行 H1 标题抽取，产出 JSONL 结果。与 infra-probe 解耦：
