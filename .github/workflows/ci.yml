@@ -127,16 +127,16 @@ jobs:
       if: always()
       run: rm -f "${{ runner.temp }}/h1_pattern_library.encrypted.json"
 
-    - name: Upload encrypted iwen limit-up snapshot
+    - name: Upload encrypted matrix PG and RustFS catalog
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: iwen-limit-up-encrypted
+        name: matrix-data-catalog-encrypted
         path: ${{ runner.temp }}/iwen_limit_up.encrypted.json
         if-no-files-found: ignore
         retention-days: 1
 
-    - name: Remove encrypted iwen export
+    - name: Remove encrypted matrix catalog export
       if: always()
       run: rm -f "${{ runner.temp }}/iwen_limit_up.encrypted.json"
 
