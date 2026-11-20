@@ -1,0 +1,342 @@
+{
+  "n_total": 36899,
+  "n_boot": 1000,
+  "seed": 20261114,
+  "method": "bootstrap percentile, 1000 resamples, seed=20261114",
+  "sections": {
+    "overall": {
+      "legal_rate": {
+        "n": 36899,
+        "mean": 0.9864,
+        "ci_low": 0.9856,
+        "ci_high": 0.9872,
+        "median": 1.0,
+        "std": 0.0755
+      },
+      "legal_rate_ge_0_9": {
+        "n": 36899,
+        "rate": 0.9825,
+        "ci_low": 0.9811,
+        "ci_high": 0.9838
+      },
+      "cross_agreement": {
+        "n": 8340,
+        "mean": 0.8296,
+        "ci_low": 0.8238,
+        "ci_high": 0.835,
+        "median": 0.955,
+        "std": 0.2746
+      },
+      "cross_agreement_ge_0_8": {
+        "n": 8340,
+        "rate": 0.7783,
+        "ci_low": 0.7693,
+        "ci_high": 0.7871
+      },
+      "n_headings": {
+        "n": 36899,
+        "mean": 11.8247,
+        "ci_low": 11.6521,
+        "ci_high": 12.021,
+        "median": 11.0,
+        "std": 18.5171
+      }
+    },
+    "by_source": {
+      "md": {
+        "n": 34060,
+        "legal_rate": {
+          "n": 34060,
+          "mean": 0.9929,
+          "ci_low": 0.9925,
+          "ci_high": 0.9932,
+          "median": 1.0,
+          "std": 0.0316
+        },
+        "legal_rate_ge_0_9": {
+          "n": 34060,
+          "rate": 0.9926,
+          "ci_low": 0.9917,
+          "ci_high": 0.9935
+        },
+        "mean_confidence": 0.9489
+      },
+      "pdf_replace": {
+        "n": 2163,
+        "legal_rate": {
+          "n": 2163,
+          "mean": 0.9953,
+          "ci_low": 0.9944,
+          "ci_high": 0.9962,
+          "median": 1.0,
+          "std": 0.0212
+        },
+        "legal_rate_ge_0_9": {
+          "n": 2163,
+          "rate": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0
+        },
+        "mean_confidence": 0.92
+      },
+      "pdf_replace_review": {
+        "n": 254,
+        "legal_rate": {
+          "n": 254,
+          "mean": 0.9846,
+          "ci_low": 0.9799,
+          "ci_high": 0.989,
+          "median": 1.0,
+          "std": 0.0361
+        },
+        "legal_rate_ge_0_9": {
+          "n": 254,
+          "rate": 1.0,
+          "ci_low": 1.0,
+          "ci_high": 1.0
+        },
+        "mean_confidence": 0.82
+      },
+      "pdf_low_conf": {
+        "n": 241,
+        "legal_rate": {
+          "n": 241,
+          "mean": 0.5602,
+          "ci_low": 0.5261,
+          "ci_high": 0.5959,
+          "median": 0.6,
+          "std": 0.2909
+        },
+        "legal_rate_ge_0_9": {
+          "n": 241,
+          "rate": 0.0913,
+          "ci_low": 0.0539,
+          "ci_high": 0.1246
+        },
+        "mean_confidence": 0.6546
+      },
+      "unrepairable": {
+        "n": 181,
+        "legal_rate": {
+          "n": 181,
+          "mean": 0.2359,
+          "ci_low": 0.2077,
+          "ci_high": 0.2657,
+          "median": 0.2,
+          "std": 0.1966
+        },
+        "legal_rate_ge_0_9": {
+          "n": 181,
+          "rate": 0.0387,
+          "ci_low": 0.0166,
+          "ci_high": 0.0718
+        },
+        "mean_confidence": 0.5
+      }
+    },
+    "by_period": {
+      "2": {
+        "n": 18599,
+        "legal_rate": {
+          "n": 18599,
+          "mean": 0.9912,
+          "ci_low": 0.9902,
+          "ci_high": 0.9922,
+          "median": 1.0,
+          "std": 0.0696
+        },
+        "legal_rate_ge_0_9": {
+          "n": 18599,
+          "rate": 0.9824,
+          "ci_low": 0.9806,
+          "ci_high": 0.9844
+        }
+      },
+      "4": {
+        "n": 18300,
+        "legal_rate": {
+          "n": 18300,
+          "mean": 0.9815,
+          "ci_low": 0.9803,
+          "ci_high": 0.9827,
+          "median": 1.0,
+          "std": 0.0806
+        },
+        "legal_rate_ge_0_9": {
+          "n": 18300,
+          "rate": 0.9826,
+          "ci_low": 0.9806,
+          "ci_high": 0.9845
+        }
+      }
+    },
+    "by_year": {
+      "2021": {
+        "n": 8103,
+        "legal_rate": {
+          "n": 8103,
+          "mean": 0.9889,
+          "ci_low": 0.9874,
+          "ci_high": 0.9902,
+          "median": 1.0,
+          "std": 0.0636
+        },
+        "legal_rate_ge_0_9": {
+          "n": 8103,
+          "rate": 0.9805,
+          "ci_low": 0.9775,
+          "ci_high": 0.9836
+        }
+      },
+      "2022": {
+        "n": 9038,
+        "legal_rate": {
+          "n": 9038,
+          "mean": 0.9874,
+          "ci_low": 0.9859,
+          "ci_high": 0.9888,
+          "median": 1.0,
+          "std": 0.0727
+        },
+        "legal_rate_ge_0_9": {
+          "n": 9038,
+          "rate": 0.984,
+          "ci_low": 0.9813,
+          "ci_high": 0.9865
+        }
+      },
+      "2023": {
+        "n": 9679,
+        "legal_rate": {
+          "n": 9679,
+          "mean": 0.9854,
+          "ci_low": 0.9839,
+          "ci_high": 0.9869,
+          "median": 1.0,
+          "std": 0.0796
+        },
+        "legal_rate_ge_0_9": {
+          "n": 9679,
+          "rate": 0.9832,
+          "ci_low": 0.9806,
+          "ci_high": 0.9857
+        }
+      },
+      "2024": {
+        "n": 10079,
+        "legal_rate": {
+          "n": 10079,
+          "mean": 0.9845,
+          "ci_low": 0.9829,
+          "ci_high": 0.9862,
+          "median": 1.0,
+          "std": 0.0821
+        },
+        "legal_rate_ge_0_9": {
+          "n": 10079,
+          "rate": 0.9821,
+          "ci_low": 0.9795,
+          "ci_high": 0.9847
+        }
+      }
+    },
+    "by_pdf_strategy": {
+      "numbering": {
+        "n": 8266,
+        "legal_rate": {
+          "n": 8266,
+          "mean": 0.9917,
+          "ci_low": 0.9907,
+          "ci_high": 0.9926,
+          "median": 1.0,
+          "std": 0.0457
+        },
+        "cross_agreement": {
+          "n": 8215,
+          "mean": 0.837,
+          "ci_low": 0.8309,
+          "ci_high": 0.8428,
+          "median": 0.955,
+          "std": 0.2687
+        }
+      },
+      "font_fallback": {
+        "n": 100,
+        "legal_rate": {
+          "n": 100,
+          "mean": 0.58,
+          "ci_low": 0.512,
+          "ci_high": 0.644,
+          "median": 0.7,
+          "std": 0.3397
+        },
+        "cross_agreement": {
+          "n": 71,
+          "mean": 0.3986,
+          "ci_low": 0.3501,
+          "ci_high": 0.4415,
+          "median": 0.503,
+          "std": 0.2007
+        }
+      },
+      "bookmark": {
+        "n": 67,
+        "legal_rate": {
+          "n": 67,
+          "mean": 0.4373,
+          "ci_low": 0.3641,
+          "ci_high": 0.5179,
+          "median": 0.4,
+          "std": 0.3245
+        },
+        "cross_agreement": {
+          "n": 54,
+          "mean": 0.2705,
+          "ci_low": 0.2153,
+          "ci_high": 0.3276,
+          "median": 0.2785,
+          "std": 0.2133
+        }
+      }
+    },
+    "coverage": {
+      "md_complete": {
+        "n": 36899,
+        "rate": 0.9231,
+        "ci_low": 0.9203,
+        "ci_high": 0.9258
+      },
+      "pdf_repaired": {
+        "n": 36899,
+        "rate": 0.0655,
+        "ci_low": 0.063,
+        "ci_high": 0.0679
+      },
+      "needs_review": {
+        "n": 36899,
+        "rate": 0.0207,
+        "ci_low": 0.0193,
+        "ci_high": 0.0222
+      },
+      "unrepairable": {
+        "n": 36899,
+        "rate": 0.0049,
+        "ci_low": 0.0042,
+        "ci_high": 0.0056
+      },
+      "legal_ge_0_9": {
+        "n": 36899,
+        "rate": 0.9825,
+        "ci_low": 0.9812,
+        "ci_high": 0.9838
+      }
+    }
+  },
+  "caveats": [
+    "金标准人工标注（301份底稿）尚未完成，无法给出独立于全部管线的 P/R/F1",
+    "目录页对齐率已废除（与提取结果同源，循环论证）",
+    "横截面共识集仅用于离群检测，不是真值",
+    "confidence 为启发式赋值，未经标注数据校准",
+    "阶段3全量A/B提前终止于批次29（5,764份PDF），未跑完34,044份"
+  ]
+}

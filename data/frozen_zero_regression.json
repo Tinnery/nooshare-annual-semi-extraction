@@ -1,0 +1,50 @@
+{
+  "hit_set_reproducibility": {
+    "basis": "行级命中集合，与步骤3 sha_of_list 一致；重复 slot 不去重",
+    "n_duplicate_slots_in_replay": 1319,
+    "n_hit_rows": 35047,
+    "n_unique_hit_slots": 33728,
+    "passed": true,
+    "recomputed_sha256": "5f3dc35af85180cc002af7c90bd8a11b3c2d3a57be7ec85e0c972deaec4bdeff",
+    "registered_line": "round1_hit_set n=35047 sha256=5f3dc35af85180cc002af7c90bd8a11b3c2d3a57be7ec85e0c972deaec4bdeff"
+  },
+  "metadata": {
+    "generated_at": "2026-11-14T04:38:40.956816+00:00",
+    "library_sha256": "f81f579a7ca41338e298f037fb9166831c27ff18752ddd648235ae1daea96e3d",
+    "library_version": "1.0.0",
+    "md_root": "C:\\dev\\nooshare-annual-semi-extraction\\data\\md_cache\\published",
+    "purpose": "M3/E4 零回归：加载冻结库后旧命中结论逐字节不变",
+    "random_seed": 20261114,
+    "replay_set": "data/h1_full.jsonl / data/frozen_replay_round1.jsonl (只读)",
+    "sample_per_layer": 12
+  },
+  "overall_passed": true,
+  "sampling": {
+    "n_buckets": 38,
+    "n_chosen": 364,
+    "n_missing_md": 0,
+    "n_tested": 364,
+    "verdict_distribution_in_sample": {
+      "freeze_hit_exact": 8,
+      "freeze_hit_signature": 96,
+      "known_failure": 1,
+      "residual": 259
+    }
+  },
+  "verdict_reproducibility": {
+    "distinct_library_sha": [
+      "f81f579a7ca41338e298f037fb9166831c27ff18752ddd648235ae1daea96e3d"
+    ],
+    "mismatches": [],
+    "n_checked": 364,
+    "n_mismatch": 0,
+    "passed": true
+  },
+  "zero_regression": {
+    "baseline_sha256": "6aff5fd4d763f629350764ec26fbd4a7087b60eba49ebfbfd361c35ac7a20fa5",
+    "diff_count": 0,
+    "diffs": [],
+    "passed": true,
+    "with_frozen_library_sha256": "6aff5fd4d763f629350764ec26fbd4a7087b60eba49ebfbfd361c35ac7a20fa5"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "total_files": 1000,
+    "processed_ok": 0,
+    "processed_fail": 1000,
+    "unique_combos_total": 0,
+    "unique_combos_filtered": 0,
+    "min_count_threshold": 2
+  },
+  "combos": []
+}

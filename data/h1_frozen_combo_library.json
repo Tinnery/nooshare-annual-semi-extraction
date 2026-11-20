@@ -1,0 +1,6703 @@
+{
+  "combinations": [
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC01",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 10002,
+      "exact_key": "备查文件目录|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 2749,
+      "near_miss": [
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 1.0,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 29,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义........................................................................................................",
+            "公司简介和主要财务指标....................................................................................................",
+            "管理层讨论与分析..............................................................................................................",
+            "公司治理..............................................................................................................................",
+            "环境和社会责任..................................................................................................................",
+            "重要事项..............................................................................................................................",
+            "股份变动及股东情况..........................................................................................................",
+            "优先股相关情况..................................................................................................................",
+            "债券相关情况......................................................................................................................",
+            "财务报告.............................................................................................................................."
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(114字符)，疑似拼接",
+            "第3项标题过长(111字符)，疑似拼接",
+            "第4项标题过长(118字符)，疑似拼接",
+            "第5项标题过长(130字符)，疑似拼接",
+            "第6项标题过长(121字符)，疑似拼接",
+            "第7项标题过长(130字符)，疑似拼接",
+            "第8项标题过长(115字符)，疑似拼接",
+            "第9项标题过长(121字符)，疑似拼接",
+            "第10项标题过长(124字符)，疑似拼接",
+            "第11项标题过长(130字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义.......................",
+            "第3项无法映射: 公司简介和主要财务指标......................",
+            "第4项无法映射: 管理层讨论与分析........................."
+          ],
+          "similarity": 1.0,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC02",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 9026,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 1890,
+      "near_miss": [
+        {
+          "count": 21,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告审计报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第11项无法映射: 财务报告审计报告..."
+          ],
+          "similarity": 0.974,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 32,
+          "headings": [
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 10,
+          "rejection_reasons": [
+            "完整率低(0.0%)"
+          ],
+          "similarity": 0.966,
+          "status": "incomplete",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 incomplete，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC03",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 1428,
+      "exact_key": "重要提示|释义在本报告书中|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义在本报告书中",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [
+        {
+          "heading": "释义在本报告书中",
+          "pos": 2,
+          "reason": "含正文/表单残留文本"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 939,
+      "near_miss": [
+        {
+          "count": 1428,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 27,
+          "headings": [
+            "备查文件目录",
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第3项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.959,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "governance",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC04",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 701,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境、社会责任和其他公司治理|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境、社会责任和其他公司治理",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 319,
+      "near_miss": [
+        {
+          "count": 701,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第6项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 101,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "公司债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第6项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 0.988,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2022-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC05",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 432,
+      "exact_key": "备查文件目录|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 425,
+      "near_miss": [
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.988,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 29,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义........................................................................................................",
+            "公司简介和主要财务指标....................................................................................................",
+            "管理层讨论与分析..............................................................................................................",
+            "公司治理..............................................................................................................................",
+            "环境和社会责任..................................................................................................................",
+            "重要事项..............................................................................................................................",
+            "股份变动及股东情况..........................................................................................................",
+            "优先股相关情况..................................................................................................................",
+            "债券相关情况......................................................................................................................",
+            "财务报告.............................................................................................................................."
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(114字符)，疑似拼接",
+            "第3项标题过长(111字符)，疑似拼接",
+            "第4项标题过长(118字符)，疑似拼接",
+            "第5项标题过长(130字符)，疑似拼接",
+            "第6项标题过长(121字符)，疑似拼接",
+            "第7项标题过长(130字符)，疑似拼接",
+            "第8项标题过长(115字符)，疑似拼接",
+            "第9项标题过长(121字符)，疑似拼接",
+            "第10项标题过长(124字符)，疑似拼接",
+            "第11项标题过长(130字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义.......................",
+            "第3项无法映射: 公司简介和主要财务指标......................",
+            "第4项无法映射: 管理层讨论与分析........................."
+          ],
+          "similarity": 0.988,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC06",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 106,
+      "exact_key": "重要提示|备查文件目录|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "备查文件目录",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 62,
+      "near_miss": [
+        {
+          "count": 16,
+          "headings": [
+            "重要提示",
+            "备查文件目录",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第3项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.965,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 14,
+          "headings": [
+            "重要提示",
+            "备查文件目录",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第7项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 0.948,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC07",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 105,
+      "exact_key": "备查文件目录|重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 64,
+      "near_miss": [
+        {
+          "count": 27,
+          "headings": [
+            "备查文件目录",
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第3项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.965,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.959,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "governance",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC08",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 101,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境、社会责任和其他公司治理|重要事项|股份变动及股东情况|优先股相关情况|公司债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境、社会责任和其他公司治理",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "公司债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 101,
+      "near_miss": [
+        {
+          "count": 101,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "公司债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第6项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 701,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第6项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 0.988,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2021"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial",
+        null
+      ],
+      "combo_id": "FC09",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 98,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告|证券公司信息披露",
+      "fingerprint": {
+        "extras": [
+          "证券公司信息披露"
+        ],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[\"证券公司信息披露\"]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告",
+        "证券公司信息披露"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 24,
+      "near_miss": [
+        {
+          "count": 98,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告",
+            "证券公司信息披露"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第12项无法映射: 证券公司信息披露..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 23,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告",
+            "证券公司信息披露"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中...",
+            "第12项无法映射: 证券公司信息披露..."
+          ],
+          "similarity": 0.966,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC10",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 96,
+      "exact_key": "重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 10,
+      "n_issuers": 76,
+      "near_miss": [
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.958,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 29,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义........................................................................................................",
+            "公司简介和主要财务指标....................................................................................................",
+            "管理层讨论与分析..............................................................................................................",
+            "公司治理..............................................................................................................................",
+            "环境和社会责任..................................................................................................................",
+            "重要事项..............................................................................................................................",
+            "股份变动及股东情况..........................................................................................................",
+            "优先股相关情况..................................................................................................................",
+            "债券相关情况......................................................................................................................",
+            "财务报告.............................................................................................................................."
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(114字符)，疑似拼接",
+            "第3项标题过长(111字符)，疑似拼接",
+            "第4项标题过长(118字符)，疑似拼接",
+            "第5项标题过长(130字符)，疑似拼接",
+            "第6项标题过长(121字符)，疑似拼接",
+            "第7项标题过长(130字符)，疑似拼接",
+            "第8项标题过长(115字符)，疑似拼接",
+            "第9项标题过长(121字符)，疑似拼接",
+            "第10项标题过长(124字符)，疑似拼接",
+            "第11项标题过长(130字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义.......................",
+            "第3项无法映射: 公司简介和主要财务指标......................",
+            "第4项无法映射: 管理层讨论与分析........................."
+          ],
+          "similarity": 0.958,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC11",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 59,
+      "exact_key": "释义|备查文件目录|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "释义",
+        "备查文件目录",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 52,
+      "near_miss": [
+        {
+          "count": 55,
+          "headings": [
+            "释 义",
+            "备查文件目录",
+            "重要提示、目录和释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第1项无法映射: 释 义..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.983,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2022-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC12",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 59,
+      "exact_key": "备查文件目录|释义|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "释义",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 51,
+      "near_miss": [
+        {
+          "count": 43,
+          "headings": [
+            "备查文件目录",
+            "释 义",
+            "重要提示、目录和释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第2项无法映射: 释 义..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.983,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2022-2024"
+    },
+    {
+      "canonical_cats": [
+        null,
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC13",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 55,
+      "exact_key": "释义|备查文件目录|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "释 义",
+        "备查文件目录",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [
+        {
+          "heading": "释 义",
+          "pos": 1,
+          "reason": "标题内部含空格（如「释 义」）"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 44,
+      "near_miss": [
+        {
+          "count": 55,
+          "headings": [
+            "释 义",
+            "备查文件目录",
+            "重要提示、目录和释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第1项无法映射: 释 义..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.983,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC14",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 45,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 10,
+      "n_issuers": 26,
+      "near_miss": [
+        {
+          "count": 21,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告审计报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第11项无法映射: 财务报告审计报告..."
+          ],
+          "similarity": 0.919,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 1428,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.907,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        null,
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC15",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 43,
+      "exact_key": "备查文件目录|释义|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "释 义",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [
+        {
+          "heading": "释 义",
+          "pos": 2,
+          "reason": "标题内部含空格（如「释 义」）"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 38,
+      "near_miss": [
+        {
+          "count": 43,
+          "headings": [
+            "备查文件目录",
+            "释 义",
+            "重要提示、目录和释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第2项无法映射: 释 义..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.983,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "bonds",
+        "preferred",
+        "financial"
+      ],
+      "combo_id": "FC16",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 41,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|债券相关情况|优先股相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "债券相关情况",
+        "优先股相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 35,
+      "near_miss": [
+        {
+          "count": 21,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告审计报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第11项无法映射: 财务报告审计报告..."
+          ],
+          "similarity": 0.91,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 1428,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.899,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "financial"
+      ],
+      "combo_id": "FC17",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 36,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 9,
+      "n_issuers": 27,
+      "near_miss": [
+        {
+          "count": 22,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况"
+          ],
+          "n_headings": 8,
+          "rejection_reasons": [
+            "完整率低(0.0%)"
+          ],
+          "similarity": 0.957,
+          "status": "incomplete",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 incomplete，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 13,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "财务报告"
+          ],
+          "n_headings": 8,
+          "rejection_reasons": [
+            "完整率低(0.0%)"
+          ],
+          "similarity": 0.92,
+          "status": "incomplete",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 incomplete，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC18",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 35,
+      "exact_key": "备查文件目录|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况报告期公司不存在优先股|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况报告期公司不存在优先股",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [
+        {
+          "heading": "优先股相关情况报告期公司不存在优先股",
+          "pos": 9,
+          "reason": "含正文/表单残留文本"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 23,
+      "near_miss": [
+        {
+          "count": 35,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况报告期公司不存在优先股",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第9项无法映射: 优先股相关情况报告期公司不存在优先股..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 69,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况□适用?不适用报告期公司不存在优先股",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第9项无法映射: 优先股相关情况□适用?不适用报告期公司不存在优先股..."
+          ],
+          "similarity": 0.965,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC19",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 27,
+      "exact_key": "备查文件目录|重要提示|释义在本报告书中|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示",
+        "释义在本报告书中",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [
+        {
+          "heading": "释义在本报告书中",
+          "pos": 3,
+          "reason": "含正文/表单残留文本"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 26,
+      "near_miss": [
+        {
+          "count": 27,
+          "headings": [
+            "备查文件目录",
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第3项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 1428,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.959,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "preferred",
+        "bonds",
+        "shares",
+        "financial"
+      ],
+      "combo_id": "FC20",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 24,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|优先股相关情况|债券相关情况|股份变动及股东情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "优先股相关情况",
+        "债券相关情况",
+        "股份变动及股东情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 21,
+      "near_miss": [
+        {
+          "count": 22,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况"
+          ],
+          "n_headings": 8,
+          "rejection_reasons": [
+            "完整率低(0.0%)"
+          ],
+          "similarity": 0.848,
+          "status": "incomplete",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 incomplete，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 21,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告审计报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第11项无法映射: 财务报告审计报告..."
+          ],
+          "similarity": 0.846,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2023"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial",
+        "notice"
+      ],
+      "combo_id": "FC21",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 23,
+      "exact_key": "重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告|备查文件目录",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告",
+        "备查文件目录"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 20,
+      "near_miss": [
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.919,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 29,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义........................................................................................................",
+            "公司简介和主要财务指标....................................................................................................",
+            "管理层讨论与分析..............................................................................................................",
+            "公司治理..............................................................................................................................",
+            "环境和社会责任..................................................................................................................",
+            "重要事项..............................................................................................................................",
+            "股份变动及股东情况..........................................................................................................",
+            "优先股相关情况..................................................................................................................",
+            "债券相关情况......................................................................................................................",
+            "财务报告.............................................................................................................................."
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(114字符)，疑似拼接",
+            "第3项标题过长(111字符)，疑似拼接",
+            "第4项标题过长(118字符)，疑似拼接",
+            "第5项标题过长(130字符)，疑似拼接",
+            "第6项标题过长(121字符)，疑似拼接",
+            "第7项标题过长(130字符)，疑似拼接",
+            "第8项标题过长(115字符)，疑似拼接",
+            "第9项标题过长(121字符)，疑似拼接",
+            "第10项标题过长(124字符)，疑似拼接",
+            "第11项标题过长(130字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义.......................",
+            "第3项无法映射: 公司简介和主要财务指标......................",
+            "第4项无法映射: 管理层讨论与分析........................."
+          ],
+          "similarity": 0.919,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2023"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial",
+        null
+      ],
+      "combo_id": "FC22",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 23,
+      "exact_key": "重要提示|释义在本报告书中|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告|证券公司信息披露",
+      "fingerprint": {
+        "extras": [
+          "证券公司信息披露"
+        ],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[\"证券公司信息披露\"]}",
+      "headings": [
+        "重要提示",
+        "释义在本报告书中",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告",
+        "证券公司信息披露"
+      ],
+      "impurities": [
+        {
+          "heading": "释义在本报告书中",
+          "pos": 2,
+          "reason": "含正文/表单残留文本"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 16,
+      "near_miss": [
+        {
+          "count": 23,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告",
+            "证券公司信息披露"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中...",
+            "第12项无法映射: 证券公司信息披露..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 98,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告",
+            "证券公司信息披露"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第12项无法映射: 证券公司信息披露..."
+          ],
+          "similarity": 0.966,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC23",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 21,
+      "exact_key": "重要提示|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告审计报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告审计报告"
+      ],
+      "impurities": [
+        {
+          "heading": "财务报告审计报告",
+          "pos": 11,
+          "reason": "含正文/表单残留文本"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 17,
+      "near_miss": [
+        {
+          "count": 21,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告审计报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第11项无法映射: 财务报告审计报告..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 32,
+          "headings": [
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 10,
+          "rejection_reasons": [
+            "完整率低(0.0%)"
+          ],
+          "similarity": 0.94,
+          "status": "incomplete",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 incomplete，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "financial"
+      ],
+      "combo_id": "FC24",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 17,
+      "exact_key": "备查文件目录|重要提示、目录和释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示、目录和释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 9,
+      "n_issuers": 10,
+      "near_miss": [
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.904,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 29,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义........................................................................................................",
+            "公司简介和主要财务指标....................................................................................................",
+            "管理层讨论与分析..............................................................................................................",
+            "公司治理..............................................................................................................................",
+            "环境和社会责任..................................................................................................................",
+            "重要事项..............................................................................................................................",
+            "股份变动及股东情况..........................................................................................................",
+            "优先股相关情况..................................................................................................................",
+            "债券相关情况......................................................................................................................",
+            "财务报告.............................................................................................................................."
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(114字符)，疑似拼接",
+            "第3项标题过长(111字符)，疑似拼接",
+            "第4项标题过长(118字符)，疑似拼接",
+            "第5项标题过长(130字符)，疑似拼接",
+            "第6项标题过长(121字符)，疑似拼接",
+            "第7项标题过长(130字符)，疑似拼接",
+            "第8项标题过长(115字符)，疑似拼接",
+            "第9项标题过长(121字符)，疑似拼接",
+            "第10项标题过长(124字符)，疑似拼接",
+            "第11项标题过长(130字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义.......................",
+            "第3项无法映射: 公司简介和主要财务指标......................",
+            "第4项无法映射: 管理层讨论与分析........................."
+          ],
+          "similarity": 0.904,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC25",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 16,
+      "exact_key": "重要提示|备查文件目录|释义在本报告书中|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境与社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "备查文件目录",
+        "释义在本报告书中",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境与社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [
+        {
+          "heading": "释义在本报告书中",
+          "pos": 3,
+          "reason": "含正文/表单残留文本"
+        }
+      ],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 13,
+      "near_miss": [
+        {
+          "count": 16,
+          "headings": [
+            "重要提示",
+            "备查文件目录",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第3项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 1428,
+          "headings": [
+            "重要提示",
+            "释义在本报告书中",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境与社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项无法映射: 释义在本报告书中..."
+          ],
+          "similarity": 0.959,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "esg",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC26",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 14,
+      "exact_key": "备查文件目录|重要提示、目录|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境和社会责任|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "备查文件目录",
+        "重要提示、目录",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境和社会责任",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 11,
+      "n_issuers": 4,
+      "near_miss": [
+        {
+          "count": 14,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项无法映射: 重要提示、目录..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 41,
+          "headings": [
+            "备查文件目录",
+            "重要提示、目录和释义......................................................................",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境和社会责任",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第2项标题过长(80字符)，疑似拼接",
+            "第2项无法映射: 重要提示、目录和释义......................."
+          ],
+          "similarity": 0.982,
+          "status": "noise",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 noise，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        2,
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2021-2024"
+    },
+    {
+      "canonical_cats": [
+        "notice",
+        "notice",
+        "notice",
+        "company_profile",
+        "mda",
+        "governance",
+        "governance",
+        "matters",
+        "shares",
+        "preferred",
+        "bonds",
+        "financial"
+      ],
+      "combo_id": "FC27",
+      "complete_rate": 1.0,
+      "confirmed_by": {
+        "confirmed_at": "2026-03-13",
+        "confirmed_by": "agent:automated-combo-audit-v1.0",
+        "human_confirmed": false,
+        "human_review_required": true,
+        "method": "rule_based_audit",
+        "note": "确认主体是规则脚本审核，不是人类逐条标注；按 M1/M2 要求，人工确认闭环前不得声称「已确认」。",
+        "source_artifact": "data/h1_combo_audit.json (Top100 审核清单)",
+        "source_status": "valid"
+      },
+      "count": 14,
+      "exact_key": "重要提示|备查文件目录|释义|公司简介和主要财务指标|管理层讨论与分析|公司治理|环境、社会责任和其他公司治理|重要事项|股份变动及股东情况|优先股相关情况|债券相关情况|财务报告",
+      "fingerprint": {
+        "extras": [],
+        "sections": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "fingerprint_key": "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}",
+      "headings": [
+        "重要提示",
+        "备查文件目录",
+        "释义",
+        "公司简介和主要财务指标",
+        "管理层讨论与分析",
+        "公司治理",
+        "环境、社会责任和其他公司治理",
+        "重要事项",
+        "股份变动及股东情况",
+        "优先股相关情况",
+        "债券相关情况",
+        "财务报告"
+      ],
+      "impurities": [],
+      "legal_basis": {
+        "authority": "证监会公告〔2021〕15号（年报第2号）/〔2021〕16号（半年报第3号）正文十节",
+        "chapters_source": "annual_semi_extraction/spec/legal_chapters.json",
+        "note": "第一节允许别名；第8/9节为 conditional（发行优先股/债券才须披露）；「备查文件目录」不属法定正文十节，仅作前后置节",
+        "registry_source": "annual_semi_extraction/spec/regulatory_versions.json",
+        "versions": [
+          {
+            "document_no": "证监会公告〔2021〕15号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no2_2021_15.pdf",
+            "original_sha256": "b727419bdab8b137224cea1c9c8b7d20e8a8f1e3714c6ef2e3a6242cd4767615",
+            "scope": "年报",
+            "standard": "第2号"
+          },
+          {
+            "document_no": "证监会公告〔2021〕16号",
+            "effective_from": "2021-06-28",
+            "matched_sections": [
+              {
+                "marker": "第一节",
+                "name": "重要提示、目录和释义",
+                "required": "always"
+              },
+              {
+                "marker": "第二节",
+                "name": "公司简介和主要财务指标",
+                "required": "always"
+              },
+              {
+                "marker": "第三节",
+                "name": "管理层讨论与分析",
+                "required": "always"
+              },
+              {
+                "marker": "第四节",
+                "name": "公司治理",
+                "required": "always"
+              },
+              {
+                "marker": "第五节",
+                "name": "环境和社会责任",
+                "required": "always"
+              },
+              {
+                "marker": "第六节",
+                "name": "重要事项",
+                "required": "always"
+              },
+              {
+                "marker": "第七节",
+                "name": "股份变动及股东情况",
+                "required": "always"
+              },
+              {
+                "marker": "第八节",
+                "name": "优先股相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第九节",
+                "name": "债券相关情况",
+                "required": "conditional"
+              },
+              {
+                "marker": "第十节",
+                "name": "财务报告",
+                "required": "always"
+              }
+            ],
+            "original_file": "regulatory_texts/no3_2021_16.pdf",
+            "original_sha256": "c9062018ae37c57f7b396c3a61cd217c4f0455abaa7d5f0ab6fe109d7a2688f3",
+            "scope": "半年报",
+            "standard": "第3号"
+          }
+        ]
+      },
+      "n_headings": 12,
+      "n_issuers": 10,
+      "near_miss": [
+        {
+          "count": 14,
+          "headings": [
+            "重要提示",
+            "备查文件目录",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 12,
+          "rejection_reasons": [
+            "第7项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 1.0,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        },
+        {
+          "count": 701,
+          "headings": [
+            "重要提示",
+            "释义",
+            "公司简介和主要财务指标",
+            "管理层讨论与分析",
+            "公司治理",
+            "环境、社会责任和其他公司治理",
+            "重要事项",
+            "股份变动及股东情况",
+            "优先股相关情况",
+            "债券相关情况",
+            "财务报告"
+          ],
+          "n_headings": 11,
+          "rejection_reasons": [
+            "第6项无法映射: 环境、社会责任和其他公司治理..."
+          ],
+          "similarity": 0.96,
+          "status": "warning",
+          "why_it_is_a_near_miss": "结构与本组合高度相似，但被审核判为 warning，说明仅凭文本相似度不能作为正确性裁判"
+        }
+      ],
+      "periods": [
+        4
+      ],
+      "source_status": "valid",
+      "year_range": "2022-2024"
+    }
+  ],
+  "fingerprint_index": {
+    "{\"sections\":[1,2,3,4,5,6,7,10],\"extras\":[]}": [
+      "FC17",
+      "FC24"
+    ],
+    "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[\"证券公司信息披露\"]}": [
+      "FC09",
+      "FC22"
+    ],
+    "{\"sections\":[1,2,3,4,5,6,7,8,9,10],\"extras\":[]}": [
+      "FC01",
+      "FC02",
+      "FC03",
+      "FC04",
+      "FC05",
+      "FC06",
+      "FC07",
+      "FC08",
+      "FC10",
+      "FC11",
+      "FC12",
+      "FC13",
+      "FC15",
+      "FC16",
+      "FC18",
+      "FC19",
+      "FC20",
+      "FC21",
+      "FC23",
+      "FC25",
+      "FC26",
+      "FC27"
+    ],
+    "{\"sections\":[1,2,3,4,5,6,7,9,10],\"extras\":[]}": [
+      "FC14"
+    ]
+  },
+  "metadata": {
+    "authority": "deliverables/01-requirement.md (v2) E1; 本库为判定程序，变更须走 MINOR/MAJOR",
+    "decision_rule": "exact_key 精确命中 → freeze_hit_exact; 否则 fingerprint_key 命中 → freeze_hit_signature; 否则 → residual（落残差，进入第二轮积累）",
+    "description": "经规则审核确认的一级标题组合冻结库，供 h1_extractor 加载作为判定依据",
+    "frozen_at": "2026-11-14T04:30:26.545169+00:00",
+    "important_caveats": [
+      "confirmed_by.human_confirmed = false：27 条均为规则脚本审核，无人类逐条确认记录",
+      "冻结库 27 条来自旧版提取器，canonical_cats 与当前 v2_reg_anchored 不兼容；判定改用法规十节指纹，可跨版本对齐",
+      "部分组合仍含粘连噪声，已逐条记入 impurities，未假装干净",
+      "「备查文件目录」不是法定正文十节，仅作前后置节处理"
+    ],
+    "n_combos": 27,
+    "n_unique_fingerprints": 4,
+    "name": "h1_frozen_combo_library",
+    "source_sha256": {
+      "h1_clean_combo_template.json": "4e7d78019161a7ba10968bb85172f3f2c720d2861b2f2038ea38a554d852155f",
+      "h1_combo_audit.json": "66a851f86d049961aa56b436c08fd9ddba35ad408888f251208bf443be704457",
+      "legal_chapters.json": "6ed45254219cf9867bf18cc7edf3602db2547d11f404667fb86fa06cdd601a6f",
+      "regulatory_versions.json": "0fba0f30808bea310aaccf61fea4a3130455ae296fa0335debd675a3c29584d6"
+    },
+    "version": "1.0.0"
+  }
+}

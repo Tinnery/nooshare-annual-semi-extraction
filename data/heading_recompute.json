@@ -1,0 +1,490 @@
+{
+  "n_reports": 12016,
+  "legal_name_set_size": 59,
+  "morphology_distribution": [
+    [
+      "CLEAN",
+      122241
+    ],
+    [
+      "NONSTRUCTURAL",
+      36706
+    ],
+    [
+      "UNRESOLVED",
+      35134
+    ],
+    [
+      "GLUED_BODY",
+      2952
+    ],
+    [
+      "TOC_TAIL",
+      2097
+    ],
+    [
+      "EMPTY_NAME",
+      740
+    ],
+    [
+      "TOC_ROW",
+      664
+    ],
+    [
+      "CHECKBOX",
+      350
+    ]
+  ],
+  "before": {
+    "fp_numbered": {
+      "n_unique": 1252,
+      "singletons": 967,
+      "doubletons": 92,
+      "chao1_est": 6274.16,
+      "unseen_est": 5022.16,
+      "simpson_eff": 9.27,
+      "top1_share": 0.2474
+    },
+    "fp_canonical": {
+      "n_unique": 640,
+      "singletons": 384,
+      "doubletons": 71,
+      "chao1_est": 1661.33,
+      "unseen_est": 1021.33,
+      "simpson_eff": 8.18,
+      "top1_share": 0.2427
+    },
+    "ordinal_not_contiguous": 2137,
+    "core_section_missing": 1428
+  },
+  "after": {
+    "fp_numbered_clean": {
+      "n_unique": 510,
+      "singletons": 326,
+      "doubletons": 62,
+      "chao1_est": 1350.87,
+      "unseen_est": 840.87,
+      "simpson_eff": 3.92,
+      "top1_share": 0.4482
+    },
+    "fp_canonical_clean": {
+      "n_unique": 339,
+      "singletons": 184,
+      "doubletons": 43,
+      "chao1_est": 721.64,
+      "unseen_est": 382.64,
+      "simpson_eff": 2.95,
+      "top1_share": 0.5268
+    },
+    "ordinal_not_contiguous_proxy": 239,
+    "core_section_missing": 1778
+  },
+  "dual_path": {
+    "threshold": 0.3,
+    "n_measurable": 744,
+    "n_consistent": 516,
+    "n_divergent": 228,
+    "n_one_path_only": 11272,
+    "examples": [
+      {
+        "slot_key": "000010_2021_2",
+        "jaccard": 0.818,
+        "toc": [
+          "notice",
+          "company_profile"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "bonds",
+          "documents",
+          "esg",
+          "financial",
+          "governance",
+          "matters",
+          "mda",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000011_2021_2",
+        "jaccard": 0.455,
+        "toc": [
+          "company_profile",
+          "mda",
+          "esg",
+          "matters",
+          "preferred",
+          "bonds"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "documents",
+          "financial",
+          "governance",
+          "notice",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000011_2021_4",
+        "jaccard": 0.455,
+        "toc": [
+          "company_profile",
+          "mda",
+          "esg",
+          "matters",
+          "preferred",
+          "bonds"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "documents",
+          "financial",
+          "governance",
+          "notice",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000012_2021_2",
+        "jaccard": 0.909,
+        "toc": [
+          "notice",
+          "mda"
+        ],
+        "body": [
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [
+          "notice"
+        ],
+        "only_body": [
+          "bonds",
+          "company_profile",
+          "documents",
+          "esg",
+          "financial",
+          "governance",
+          "matters",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000012_2021_4",
+        "jaccard": 0.909,
+        "toc": [
+          "notice",
+          "mda"
+        ],
+        "body": [
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [
+          "notice"
+        ],
+        "only_body": [
+          "bonds",
+          "company_profile",
+          "documents",
+          "esg",
+          "financial",
+          "governance",
+          "matters",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000020_2021_4",
+        "jaccard": 0.818,
+        "toc": [
+          "notice",
+          "company_profile"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "bonds",
+          "documents",
+          "esg",
+          "financial",
+          "governance",
+          "matters",
+          "mda",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000023_2021_2",
+        "jaccard": 0.636,
+        "toc": [
+          "notice",
+          "company_profile",
+          "bonds",
+          "financial"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "documents",
+          "esg",
+          "governance",
+          "matters",
+          "mda",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000040_2021_2",
+        "jaccard": 0.727,
+        "toc": [
+          "notice",
+          "bonds",
+          "financial"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "company_profile",
+          "documents",
+          "esg",
+          "governance",
+          "matters",
+          "mda",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000046_2022_2",
+        "jaccard": 0.909,
+        "toc": [
+          "notice",
+          "mda"
+        ],
+        "body": [
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [
+          "notice"
+        ],
+        "only_body": [
+          "bonds",
+          "company_profile",
+          "documents",
+          "esg",
+          "financial",
+          "governance",
+          "matters",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000069_2021_4",
+        "jaccard": 0.364,
+        "toc": [
+          "notice",
+          "company_profile",
+          "mda",
+          "esg",
+          "shares",
+          "preferred",
+          "bonds"
+        ],
+        "body": [
+          "notice",
+          "governance",
+          "financial",
+          "documents",
+          "company_profile",
+          "mda",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "documents",
+          "financial",
+          "governance",
+          "matters"
+        ]
+      },
+      {
+        "slot_key": "000151_2022_2",
+        "jaccard": 0.909,
+        "toc": [
+          "notice"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "bonds",
+          "company_profile",
+          "documents",
+          "esg",
+          "financial",
+          "governance",
+          "matters",
+          "mda",
+          "preferred",
+          "shares"
+        ]
+      },
+      {
+        "slot_key": "000301_2021_2",
+        "jaccard": 0.364,
+        "toc": [
+          "notice",
+          "mda",
+          "governance",
+          "matters",
+          "shares",
+          "bonds",
+          "financial"
+        ],
+        "body": [
+          "notice",
+          "documents",
+          "company_profile",
+          "mda",
+          "governance",
+          "esg",
+          "matters",
+          "shares",
+          "preferred",
+          "bonds",
+          "financial"
+        ],
+        "only_toc": [],
+        "only_body": [
+          "company_profile",
+          "documents",
+          "esg",
+          "preferred"
+        ]
+      }
+    ]
+  }
+}

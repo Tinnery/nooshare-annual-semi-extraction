@@ -1,0 +1,1301 @@
+{
+  "metadata": {
+    "version": "3.0",
+    "description": "一级标题标准模板库（按规范类别聚合，agent + 人工共同维护）",
+    "last_updated": "2026-03-13",
+    "source": "annual_semi.h1_heading_detail JOIN h1_report_summary (nooshare_dev@pg.pro.neuralj.com)",
+    "notes": "基于 38,350 份报告的实际提取结果，按 canonical_cat 聚合所有变体"
+  },
+  "categories": [
+    {
+      "canonical_cat": "notice",
+      "standard_name": "释义",
+      "description": "重要提示、目录和释义",
+      "total_freq": 37838,
+      "n_unique_variants": 46,
+      "variants": [
+        {
+          "raw_name": "重要提示",
+          "freq": 17384,
+          "n_issuers": 2345,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义",
+          "freq": 11942,
+          "n_issuers": 2852,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录",
+          "freq": 18,
+          "n_issuers": 4,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示和释义",
+          "freq": 18,
+          "n_issuers": 9,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录及释义",
+          "freq": 15,
+          "n_issuers": 3,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义公司董事局、监事会及董事、监事、高级管理人员保证半年度报告内容的真实、准确、完整",
+          "freq": 7,
+          "n_issuers": 6,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义重要提示",
+          "freq": 7,
+          "n_issuers": 3,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示及释义",
+          "freq": 6,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义公司董事局、监事会及董事、监事、高级管理人员保证年度报告内容的真实、准确、完整",
+          "freq": 5,
+          "n_issuers": 4,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "重要提示、目录、释义",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义.",
+          "freq": 4,
+          "n_issuers": 4,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录与释义",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义CNPC Capital",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义公司董事局、监事局及董事、监事、高级管理人员保证半年度报告内容的真实、准确、完整",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义公司董事局、监事局及董事、监事、高级管理人员保证年度报告内容的真实、准确、完整",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "2024 重要提示",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "重要提示和释义/2第二节",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "重要提示、目录和释义..",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "重要提示和目录",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "重要提示一、",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2024-2024"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "company_profile",
+      "standard_name": "公司简介和主要财务指标",
+      "description": "公司基本情况",
+      "total_freq": 36463,
+      "n_unique_variants": 56,
+      "variants": [
+        {
+          "raw_name": "公司简介和主要财务指标",
+          "freq": 35791,
+          "n_issuers": 5141,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介",
+          "freq": 89,
+          "n_issuers": 22,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司基本情况",
+          "freq": 31,
+          "n_issuers": 11,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "会计数据和财务指标摘要",
+          "freq": 27,
+          "n_issuers": 8,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "财务摘要",
+          "freq": 21,
+          "n_issuers": 6,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "会计数据和财务指标",
+          "freq": 15,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介及业务发展中化国际（控股）股份有限公司2021年年度报告",
+          "freq": 8,
+          "n_issuers": 1,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "公司基本情况简介",
+          "freq": 8,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介及业务发展中化国际（控股）股份有限公司2022年年度报告",
+          "freq": 7,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "公司简介和主要财务指标上海新南洋昂立教育科技股份有限公司（曾用名",
+          "freq": 6,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介和主要财务指标..",
+          "freq": 6,
+          "n_issuers": 4,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "主要会计数据和财务指标摘要",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介及主要财务指标",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "本行简介",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司基本信息",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介和主要财务指标1",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司简介和主要财务指标.",
+          "freq": 4,
+          "n_issuers": 4,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "2 公司基本情况及主要财务指标",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "2.1 公司基本情况",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "公司简介和主要财务指标一、公司信息",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2023-2024"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "mda",
+      "standard_name": "管理层讨论与分析",
+      "description": "经营情况讨论与分析",
+      "total_freq": 36507,
+      "n_unique_variants": 82,
+      "variants": [
+        {
+          "raw_name": "管理层讨论与分析",
+          "freq": 35870,
+          "n_issuers": 5156,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "董事会报告",
+          "freq": 68,
+          "n_issuers": 21,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "董事会报告和重要事项",
+          "freq": 23,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "管理层讨论与分析（董事会报告）",
+          "freq": 17,
+          "n_issuers": 6,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "经营情况讨论与分析",
+          "freq": 16,
+          "n_issuers": 9,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "董事会报告（含管理层讨论与分析）",
+          "freq": 8,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "管理层讨论与分析.",
+          "freq": 5,
+          "n_issuers": 5,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "经营管理研讨与分析",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "董事会报告第一节",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "管理层讨论与分析报告期内",
+          "freq": 3,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "管理层讨论与分析..",
+          "freq": 3,
+          "n_issuers": 2,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "董事会报告（管理层讨论与分析）",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "“管理层讨论与分析”之“十一、公司未来发展的展望”中详细描述了公司经营中可能存在的风险",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "3 管理层讨论与分析",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "8 董事会报告",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "按照境内证券监管规则编制的经营情况讨论与分析",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "按照香港证券规则编制的管理层讨论与分析",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "管理层分析与讨论",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "管理层讨论与分析报告期内公司所属行业及主营业务情况说明",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "“管理层讨论与分析”",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2021-2021"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "governance",
+      "standard_name": "公司治理",
+      "description": "公司治理结构",
+      "total_freq": 37662,
+      "n_unique_variants": 105,
+      "variants": [
+        {
+          "raw_name": "公司治理",
+          "freq": 36668,
+          "n_issuers": 5167,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "董事长致辞",
+          "freq": 129,
+          "n_issuers": 46,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "监事会报告",
+          "freq": 53,
+          "n_issuers": 21,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司治理运作",
+          "freq": 44,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "公司治理、内部控制和投资者保护",
+          "freq": 38,
+          "n_issuers": 38,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "公司治理报告",
+          "freq": 31,
+          "n_issuers": 4,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司治理、环境和社会",
+          "freq": 19,
+          "n_issuers": 17,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "公司治理及企业管治报告",
+          "freq": 17,
+          "n_issuers": 5,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "投资者关系",
+          "freq": 16,
+          "n_issuers": 5,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "董事长致辞尊敬的各位股东",
+          "freq": 14,
+          "n_issuers": 12,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司治理（企业管治报告）",
+          "freq": 13,
+          "n_issuers": 5,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "企业管治守则",
+          "freq": 9,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "公司治理.",
+          "freq": 7,
+          "n_issuers": 6,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "公司治理概述",
+          "freq": 6,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "公司治理1",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司治理架构",
+          "freq": 5,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "上市公司治理专项行动自查问题整改情况",
+          "freq": 4,
+          "n_issuers": 3,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "公司治理..",
+          "freq": 4,
+          "n_issuers": 4,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "监事会报告报告期内",
+          "freq": 4,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司治理的基本状况",
+          "freq": 4,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "esg",
+      "standard_name": "环境和社会责任",
+      "description": "环境与社会责任",
+      "total_freq": 36538,
+      "n_unique_variants": 72,
+      "variants": [
+        {
+          "raw_name": "环境和社会责任",
+          "freq": 19310,
+          "n_issuers": 2898,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "环境与社会责任",
+          "freq": 14463,
+          "n_issuers": 3103,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "环境、社会责任和其他公司治理",
+          "freq": 2264,
+          "n_issuers": 567,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "社会责任",
+          "freq": 11,
+          "n_issuers": 4,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "环境、社会与治理（ESG）",
+          "freq": 7,
+          "n_issuers": 3,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "环保和社会责任",
+          "freq": 6,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "环境和社会责任.",
+          "freq": 4,
+          "n_issuers": 4,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "环境与社会责任一、",
+          "freq": 4,
+          "n_issuers": 3,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "社会责任情况",
+          "freq": 4,
+          "n_issuers": 2,
+          "year_range": "2022-2023"
+        },
+        {
+          "raw_name": "社会责任与消费者权益保护委员会",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "9 环境和社会责任",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2023"
+        },
+        {
+          "raw_name": "ESG 治理架构",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "ESG管治、环境和社会责任",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": " 社会责任与消费者权益保护委员会",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "环境与社会责任..",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "是否单独披露社会责任报告、可持续发展报告或 ESG 报告",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "ESG全面风险管理",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "社会责任和其他公司治理",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "温室气体排放情况环境、社会责任和其他公司治理",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "环境、社会和治理（ESG）",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "matters",
+      "standard_name": "重要事项",
+      "description": "重大事项",
+      "total_freq": 37230,
+      "n_unique_variants": 85,
+      "variants": [
+        {
+          "raw_name": "重要事项",
+          "freq": 36603,
+          "n_issuers": 5166,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "关联交易",
+          "freq": 16,
+          "n_issuers": 5,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "关联交易及关联交易管理制度的执行情况",
+          "freq": 13,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "重大关联交易",
+          "freq": 9,
+          "n_issuers": 5,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "关联交易情况",
+          "freq": 9,
+          "n_issuers": 3,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "关联交易控制委员会",
+          "freq": 8,
+          "n_issuers": 5,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "重大关联交易事项",
+          "freq": 8,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "4.1\t与邮政集团及其控制的企业、邮政集团合营及联营企业之间的关联交易（续）",
+          "freq": 6,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "非授信类关联交易",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "重要事项..",
+          "freq": 5,
+          "n_issuers": 5,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "主要股东的关联方及关联交易情况",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "重要事项1",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "与邮政集团及其关联人之间的关联交易上限执行情况",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "与日常经营相关的关联交易",
+          "freq": 5,
+          "n_issuers": 3,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "十 关联交易 (续)",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "关联交易管理",
+          "freq": 5,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "5 关联交易情况",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "与中国银联股份有限公司之间的关联交易上限执行情况",
+          "freq": 4,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "3 其他需要披露的重要事项",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "关联交易控制与消费者权益保护委员会",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "shares",
+      "standard_name": "股份变动及股东情况",
+      "description": "股本变动及股东情况",
+      "total_freq": 36950,
+      "n_unique_variants": 35,
+      "variants": [
+        {
+          "raw_name": "股份变动及股东情况",
+          "freq": 36387,
+          "n_issuers": 5141,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "普通股股份变动及股东情况",
+          "freq": 105,
+          "n_issuers": 19,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "股本变动及股东情况",
+          "freq": 48,
+          "n_issuers": 7,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "普通股股本变动及股东情况",
+          "freq": 5,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "7 股份变动及股东情况",
+          "freq": 3,
+          "n_issuers": 2,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "优先股股本变动及股东情况",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "股本变动及股东情况1",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "股份变动及股东情况FOUNDERSECURITIES",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2023"
+        },
+        {
+          "raw_name": "股份变动及股东情况..",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "股份变动及股东情况报告期末普通股股东总数",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "股份变动及主要股东持股情况",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "股份变动及股东情况84",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "股份变动及股东情况 Shares and Shareholders Information",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "股份变动及股东情况一、股本变动情况",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "股份变动及股东情况上述股东涉及委托/受托表决权、放弃表决权情况的说明",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "股份变动及股东情况中国大唐集团有限公司",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "股份变动及股东情况前10名股东中存在回购专户的特别说明（如有）（参见注11）",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "股份变动及股东情况特别说明（如有）（参见注11）",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "股份变动及股东情况第八节",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "股份变动及股东情况（续）",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "preferred",
+      "standard_name": "优先股相关情况",
+      "description": "优先股情况",
+      "total_freq": 36019,
+      "n_unique_variants": 26,
+      "variants": [
+        {
+          "raw_name": "优先股相关情况",
+          "freq": 35233,
+          "n_issuers": 5117,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "优先股相关情况报告期公司不存在优先股",
+          "freq": 88,
+          "n_issuers": 37,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "优先股相关情况报告期本行不存在优先股",
+          "freq": 6,
+          "n_issuers": 1,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "优先股相关情况..",
+          "freq": 4,
+          "n_issuers": 3,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "优先股相关情况不适用",
+          "freq": 4,
+          "n_issuers": 3,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "优先股相关情况.",
+          "freq": 3,
+          "n_issuers": 3,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "优先股相关情况公司未发行优先股",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "优先股相关情况优先股相关情况",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "优先股相关情况报告期内",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "7.6 优先股相关情况",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "优先股相关情况本报告期公司不存在优先股",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "优先股相优先股相关情况",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "优先股相关情况1",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "优先股相关情况92",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "优先股相关情况FOUNDERSECURITIES",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "优先股相关情况一、",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "优先股相关情况不适用报告期公司不存在优先股",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "股份变动及股东情况110第八节优先股相关情况120第九节债券相关情况122第十节财务报告128",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "优先股相关情况报告期内及报告期末",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "优先股相关情况第九节",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "bonds",
+      "standard_name": "债券相关情况",
+      "description": "公司债券情况",
+      "total_freq": 36281,
+      "n_unique_variants": 36,
+      "variants": [
+        {
+          "raw_name": "债券相关情况",
+          "freq": 34311,
+          "n_issuers": 5126,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "公司债券相关情况",
+          "freq": 288,
+          "n_issuers": 197,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "债券相关情况不适用",
+          "freq": 17,
+          "n_issuers": 8,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "可转换公司债券相关情况",
+          "freq": 16,
+          "n_issuers": 6,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "债券相关情况企业债券、公司债券和非金融企业债务融资工具",
+          "freq": 12,
+          "n_issuers": 8,
+          "year_range": "2022-2023"
+        },
+        {
+          "raw_name": "债券相关情况.",
+          "freq": 8,
+          "n_issuers": 8,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "债券相关情况报告期公司不存在债券相关情况",
+          "freq": 7,
+          "n_issuers": 2,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "债券相债券相关情况",
+          "freq": 5,
+          "n_issuers": 3,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "债券相关情况..",
+          "freq": 4,
+          "n_issuers": 3,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "债券相关情况 BONDS",
+          "freq": 3,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "债券相关情况公司债券（含企业债券）和非金融企业债务融资工具",
+          "freq": 3,
+          "n_issuers": 3,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "债券相关情况报告期公司不存在债券",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2022-2023"
+        },
+        {
+          "raw_name": "债券相关情况债券名称",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2022"
+        },
+        {
+          "raw_name": "公司公司债券相关情况",
+          "freq": 2,
+          "n_issuers": 1,
+          "year_range": "2021-2021"
+        },
+        {
+          "raw_name": "债券相关情况报告期内",
+          "freq": 2,
+          "n_issuers": 2,
+          "year_range": "2021-2023"
+        },
+        {
+          "raw_name": "债券相关情况94",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "债券相关情况 BOND-RELATED INFORMATION",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "债券相关情况FOUNDERSECURITIES",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "债券相关情况R适用",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "债券相关情况一、公司债券（含企业债券）和非金融企业债务融资工具",
+          "freq": 1,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        }
+      ]
+    },
+    {
+      "canonical_cat": "financial",
+      "standard_name": "财务报告",
+      "description": "财务报表及附注",
+      "total_freq": 40116,
+      "n_unique_variants": 224,
+      "variants": [
+        {
+          "raw_name": "财务报告",
+          "freq": 36222,
+          "n_issuers": 5156,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "财务报表附注",
+          "freq": 1107,
+          "n_issuers": 14,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "中国建设银行股份有限公司财务报表附注(除特别注明外，以人民币百万元列示)",
+          "freq": 443,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        },
+        {
+          "raw_name": "财务会计报告",
+          "freq": 157,
+          "n_issuers": 112,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "八\t 财务报表项目附注（续）",
+          "freq": 148,
+          "n_issuers": 1,
+          "year_range": "2023-2024"
+        },
+        {
+          "raw_name": "紫金矿业集团股份有限公司财务报表附注（续）2023 年度",
+          "freq": 117,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "2022年度财务报表附注（续）",
+          "freq": 108,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "中国工商银行股份有限公司财务报表附注（续）（除特别注明外，金额单位均为人民币百万元）",
+          "freq": 105,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "方正证券股份有限公司财务报表附注",
+          "freq": 93,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "中国银河证券股份有限公司财务报表附注（续）2024年度",
+          "freq": 86,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "截至2024年6月30日止6个月期间财务报表附注（续）",
+          "freq": 78,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "七 财务报表主要项目附注 (续)",
+          "freq": 77,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "六\t 财务报表项目附注（续）",
+          "freq": 69,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "中期简要财务报表附注",
+          "freq": 67,
+          "n_issuers": 1,
+          "year_range": "2022-2023"
+        },
+        {
+          "raw_name": "紫金矿业集团股份有限公司财务报表附注（续）2024 年度",
+          "freq": 65,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "六 财务报表项目附注（续）",
+          "freq": 62,
+          "n_issuers": 1,
+          "year_range": "2023-2023"
+        },
+        {
+          "raw_name": "八 财务报表项目附注（续）",
+          "freq": 61,
+          "n_issuers": 1,
+          "year_range": "2022-2022"
+        },
+        {
+          "raw_name": "紫金矿业集团股份有限公司财务报表附注（续）2024年度",
+          "freq": 61,
+          "n_issuers": 1,
+          "year_range": "2024-2024"
+        },
+        {
+          "raw_name": "财务报告审计报告",
+          "freq": 47,
+          "n_issuers": 35,
+          "year_range": "2021-2024"
+        },
+        {
+          "raw_name": "财务报表分析",
+          "freq": 38,
+          "n_issuers": 1,
+          "year_range": "2022-2024"
+        }
+      ]
+    }
+  ]
+}
