@@ -13,5 +13,12 @@
 """
 
 from .extractor import extract_h2, extract_h2_batch
+from .pattern_loader import H2PatternLibrary, get_h2_library, normalize_for_match
 
-__all__ = ["extract_h2", "extract_h2_batch"]
+__all__ = [
+    "extract_h2",
+    "extract_h2_batch",
+    "H2PatternLibrary",
+    "get_h2_library",
+    "normalize_for_match",
+]

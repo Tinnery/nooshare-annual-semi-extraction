@@ -17,6 +17,8 @@ import re
 from pathlib import Path
 from typing import Optional
 
+from .pattern_loader import H2PatternLibrary, get_h2_library
+
 # "第二节"的正则匹配（支持多种变体）
 # 匹配：第二节、第2节、第 二 节、第 2 节 等
 RE_SECTION_2 = re.compile(
@@ -71,7 +73,49 @@ def sha256_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
-def extract_h2(md_path: Path) -> dict | None:
+# Markdown 标题行（区间内候选）；「第X节」章节标记不算二级标题候选
+RE_MD_HEADING = re.compile(r"^(#{1,6})\s+([^#].*)$")
+RE_SECTION_MARKER = re.compile(r"^第\s*[一二三四五六七八九十0-9]+\s*节")
+
+
+def identify_sub_headings(
+    lines: list[str],
+    start_line: int,
+    end_line: int,
+    library: H2PatternLibrary | None = None,
+) -> list[dict]:
+    """在 [start_line, end_line) 行区间内识别标题行并对照模板库标记。
+
+    区间为 extract_h2 定位的章节内容（1-based，含 start 不含 end）。
+    每个候选：{line_no, raw, markdown_level, matched, match}
+    match 为库记录（heading_normalized / heading_raw / heading_level /
+    count / stability_score / relation / candidate_normalized）或 None。
+    模板库不可用时全部 matched=False（降级不阻断抽取）。
+    """
+    lib = library if library is not None else get_h2_library()
+    results = []
+    for lineno in range(start_line, end_line):
+        if lineno - 1 >= len(lines):
+            break
+        line = lines[lineno - 1]
+        m = RE_MD_HEADING.match(line.strip())
+        if not m:
+            continue
+        raw = m.group(2).strip()
+        if not raw or RE_SECTION_MARKER.match(raw):
+            continue
+        hit = lib.lookup(raw)
+        results.append({
+            "line_no": lineno,
+            "raw": raw,
+            "markdown_level": len(m.group(1)),
+            "matched": hit is not None,
+            "match": hit,
+        })
+    return results
+
+
+def extract_h2(md_path: Path, library: H2PatternLibrary | None = None) -> dict | None:
     """从单个 MD 文件中抽取 H2（第二节）内容。
 
     Args:
@@ -95,7 +139,10 @@ def extract_h2(md_path: Path) -> dict | None:
             "n_h2_lines": 75,
             "n_h2_bytes": 4444,
             "next_section_marker": "第三节",
-            "extraction_method": "section_boundary"
+            "extraction_method": "section_boundary",
+            "h2_sub_headings": [...],   # 二级标题识别结果（含模板库命中）
+            "n_sub_headings": 0,
+            "n_sub_matched": 0
         }
         如果未找到第二节，返回 None。
     """
@@ -176,6 +223,11 @@ def extract_h2(md_path: Path) -> dict | None:
     h2_content = "".join(h2_lines)
     h2_content_sha256 = sha256_text(h2_content)
 
+    # 二级标题识别：区间内 Markdown 标题行对照 h2_pattern_library 标记
+    lib = library if library is not None else get_h2_library()
+    sub_headings = identify_sub_headings(lines, h2_start_line, h2_end_line, lib)
+    n_sub_matched = sum(1 for sh in sub_headings if sh["matched"])
+
     return {
         "slot_key": slot_key,
         "path": str(md_path),
@@ -193,6 +245,9 @@ def extract_h2(md_path: Path) -> dict | None:
         "n_h2_bytes": len(h2_content.encode("utf-8")),
         "next_section_marker": next_section_marker,
         "extraction_method": "section_boundary",
+        "h2_sub_headings": sub_headings,
+        "n_sub_headings": len(sub_headings),
+        "n_sub_matched": n_sub_matched,
     }
 
 
