@@ -30,45 +30,47 @@ rm -rf "$STAGE_DIR"
 mkdir -m 700 -p "$STAGE_DIR"
 rm -f "$SQL_FILE" "$CONTROL_LOG" "$EXPORT_ERR" "$EXPORT_OUT"
 
-# All stages use one psql process and one PostgreSQL session. Each result set is
-# redirected to a private temporary file; no row content is sent to the Actions log.
+# All stages use one psql process, one PostgreSQL session, and one repeatable-read snapshot.
+# Result sets stay in runner.temp and are deleted when this script exits.
 cat > "$SQL_FILE" <<SQL
-\\set ON_ERROR_STOP on
-\\echo STAGE=summary
-\\o $STAGE_DIR/summary.csv
+\set ON_ERROR_STOP on
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
+\echo STAGE=summary
+\o $STAGE_DIR/summary.csv
 SELECT current_setting('server_version') AS server_version,
        count(*) AS row_count,
        sum(pg_column_size(t)) AS payload_bytes,
        max(pg_column_size(t)) AS max_row_bytes
 FROM annual_semi.h1_pattern_library AS t;
-\\o
-\\echo STAGE=key_sample
-\\o $STAGE_DIR/key_sample.csv
+\o
+\echo STAGE=key_sample
+\o $STAGE_DIR/key_sample.csv
 SELECT pattern_hash
 FROM annual_semi.h1_pattern_library
 ORDER BY pattern_hash
 LIMIT 1;
-\\o
-\\echo STAGE=full_row_sample
-\\o $STAGE_DIR/full_row_sample.csv
+\o
+\echo STAGE=full_row_sample
+\o $STAGE_DIR/full_row_sample.csv
 SELECT *
 FROM annual_semi.h1_pattern_library
 ORDER BY pattern_hash
 LIMIT 1;
-\\o
-\\echo STAGE=ten_rows
-\\o $STAGE_DIR/ten_rows.csv
+\o
+\echo STAGE=ten_rows
+\o $STAGE_DIR/ten_rows.csv
 SELECT *
 FROM annual_semi.h1_pattern_library
 ORDER BY pattern_hash
 LIMIT 10;
-\\o
-\\echo STAGE=full_export
-\\o $EXPORT_OUT
+\o
+\echo STAGE=full_export
+\o $EXPORT_OUT
 SELECT *
 FROM annual_semi.h1_pattern_library
 ORDER BY pattern_hash;
-\\o
+\o
+COMMIT;
 SQL
 chmod 600 "$SQL_FILE"
 
@@ -90,25 +92,25 @@ def read_rows(path: pathlib.Path):
         reader = csv.DictReader(stream)
         return reader.fieldnames or [], list(reader)
 
-summary_fields, summary_rows = read_rows(stage_dir / "summary.csv")
-key_fields, key_rows = read_rows(stage_dir / "key_sample.csv")
-row_fields, row_rows = read_rows(stage_dir / "full_row_sample.csv")
-ten_fields, ten_rows = read_rows(stage_dir / "ten_rows.csv")
+summary_fields, summary_rows = read_rows(stage_dir / 'summary.csv')
+key_fields, key_rows = read_rows(stage_dir / 'key_sample.csv')
+row_fields, row_rows = read_rows(stage_dir / 'full_row_sample.csv')
+ten_fields, ten_rows = read_rows(stage_dir / 'ten_rows.csv')
 full_fields, full_rows = read_rows(export_path)
 
 if len(summary_rows) != 1 or len(key_rows) != 1 or len(row_rows) != 1:
     raise SystemExit("PG_RESULT_VALIDATION_FAILED")
-if len(ten_rows) != 10 or len(full_rows) != 52:
+if len(ten_rows) != 10 or len(full_rows) != int(summary_rows[0]['row_count']):
     raise SystemExit("PG_RESULT_VALIDATION_FAILED")
-if not {"server_version", "row_count", "payload_bytes", "max_row_bytes"}.issubset(summary_fields):
+if not full_rows:
+    raise SystemExit("PG_RESULT_EMPTY")
+if not {'server_version', 'row_count', 'payload_bytes', 'max_row_bytes'}.issubset(summary_fields):
     raise SystemExit("PG_RESULT_SCHEMA_FAILED")
-expected = {"pattern_hash", "pattern", "count", "headings"}
+expected = {'pattern_hash', 'pattern', 'count', 'headings'}
 if not expected.issubset(full_fields) or not expected.issubset(row_fields):
     raise SystemExit("PG_RESULT_SCHEMA_FAILED")
 
 summary = summary_rows[0]
-if int(summary["row_count"]) != len(full_rows):
-    raise SystemExit("PG_RESULT_COUNT_MISMATCH")
 if not export_path.is_file() or export_path.stat().st_size <= 0:
     raise SystemExit("PG_RESULT_EMPTY")
 
