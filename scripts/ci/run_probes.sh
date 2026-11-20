@@ -44,6 +44,21 @@ bash scripts/ci/probe_pg.sh || overall=1
 # 3) RustFS 探针
 python3 scripts/ci/probe_s3.py || overall=1
 
+# 4) 独立重建隧道；iwen 数据读取必须占用新隧道的首个 PG 会话。
+bash scripts/ci/teardown.sh || overall=1
+if bash scripts/ci/build_stunnel.sh; then
+  if nc -z 127.0.0.1 "${PG_LOCAL_PORT:-15432}" 2>/dev/null; then
+    bash scripts/ci/export_iwen_limit_up.sh || overall=1
+  else
+    echo "PG_IWEN_EXPORT=FAIL code=PG_IWEN_TUNNEL_NOT_LISTENING"
+    overall=1
+  fi
+else
+  echo "PG_IWEN_EXPORT=FAIL code=PG_IWEN_TUNNEL_REBUILD"
+  overall=1
+fi
+bash scripts/ci/teardown.sh || overall=1
+
 # 4) 泄露证伪（始终检查审计日志）
 bash scripts/ci/leak_check.sh "$AUDIT" || overall=1
 
