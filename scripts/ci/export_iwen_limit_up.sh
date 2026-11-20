@@ -486,17 +486,16 @@ zip_bytes = zip_path.read_bytes()
 zip_hash = hashlib.sha256(zip_bytes).hexdigest()
 
 public_key_pem = b"""-----BEGIN PUBLIC KEY-----
-MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAu+yU75mYEt28/VJu46Nb
-6j7LCFOcaQpsabVWdq6JCh6NJpkxS4HHcXO/vIuwlT3awDy8X0zT/7vObgqaFk09
-+MBRpRhXbSM4GLb8YiROXiE1zQ71gTizx0hJiFIi1WwqN0txgs5sN9zXBg7WPqgX
-o7KkTqrJosq2S0UCelSCvYtM2wE8Z22UY83HEiPgmyzTLYhQusbKpPwH9qbTP882
-hCrXwf+P1ZzFWf7uCUiP9anGVsQSPd8uXpd54pWv3OOqxisRXOuQ1QZ4WMRVdCTr
-idzqMktlfdTEpS41vofR3UvatSKbQelSAEi67w9sJZnNLfVi683DjucO7Buv4Rrt
-T4YF2RNk1aVwxe7eikt+REMZXyHKWgpt3DgN6m3jr2Gw7IpXq0dEQQ7m35ZG+RqO
-ChGOZ65z8xSDW8vVGGLLZ4e2GY8wXt/hd639xMGfY0xh44TBZ9lucM5SlFnqXF7Y
-/NeFFnBly+TX/dyejjzUQw6MQ9AZq3OfIOHWB5dIvXrdAgMBAAE=
------END PUBLIC KEY-----
-"""
+MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAirFQHGOSzkPY0wrtJ/A+
+Z7js7/9Jzr1YQUxV1e2P325zamACkn0v4ZSyC0PNsGCRZyNcr1QCl2w752aBwlEH
+GgdRBkX38FmzN9jd6Z6E6wHChH2uqSmUHG2gE8Mc/v2nan0N7QL8Dm9oLUrk7fDy
+L9eDjjDbbxJzUdu5tEt/m9NbKPKz9yPQm9HnBp0TylF34AIR//xLlpUl6TfKI8ZB
+dlwt0IyJ3cFlXfYzVklhumJVU45ru6B5Ml0ZN2iCkOH8/O9dlJ4ZJYDMTHmbt7FB
+2CyGC4RU9ZhBOJnrgTlQVH3Cu4NEesk7sbLdrm1xQTWsvsPoh6qZSgJxPq3ExZcS
+k1vb6174xQXWLlnq+M6i7KV74VZK3q032NbE9VMAi4sIyfmcl/lip1nBv7xGbSIL
+NzJ/Xi3v0vnKVqNLvku4gOd3MCkE6ek1yqo2ZYreUw378wdkLcpXzJjU9nNNgHPB
+rbCQseXICgGCGWotnQiE5+N6AuRmRwz5Qxru+ICqV2vJAgMBAAE=
+-----END PUBLIC KEY-----"""
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
