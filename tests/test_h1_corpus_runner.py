@@ -149,6 +149,12 @@ if any("h1_corpus_load_pg.py" in arg for arg in args) and "--emit-sql" in args:
     print("SQL_EMIT=PASS")
     raise SystemExit(0)
 
+if any("h1_corpus_load_pg.py" in arg for arg in args) and "--emit-csv" in args:
+    output = Path(option("--emit-csv"))
+    output.write_text("BEGIN;\nCOMMIT;\n", encoding="utf-8")
+    print("CSV_EMIT=PASS")
+    raise SystemExit(0)
+
 if any("summarize_h1_corpus.py" in arg for arg in args):
     expected = args[args.index("--expected") + 1]
     assert expected == "19", expected
