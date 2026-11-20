@@ -33,6 +33,44 @@ if [ "$rc" -eq 0 ]; then
   if [[ "$version" =~ ^[0-9]+\.[0-9]+ ]] && [[ "$cnt" =~ ^[0-9]+$ ]] && [ "$cnt" -gt 0 ]; then
     echo "PG_PROBE=PASS version=$version patterns=$cnt" | tee -a "$AUDIT"
     result=0
+
+    # Export the complete pattern library through the same verified, read-only
+    # ci_probe role. Keep row data out of Actions logs; upload it as a short-lived
+    # private-repository artifact after this tunnel lifecycle has completed.
+    EXPORT_OUT="${RUNNER_TEMP:-/tmp}/h1_pattern_library.csv"
+    EXPORT_ERR="${RUNNER_TEMP:-/tmp}/h1_pattern_library_export_err.txt"
+    rm -f "$EXPORT_OUT" "$EXPORT_ERR"
+    if PGPASSWORD="$PG_PASSWORD" psql \
+        -X --csv -v ON_ERROR_STOP=1 \
+        -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
+        -c "SELECT * FROM annual_semi.h1_pattern_library ORDER BY pattern_hash;" \
+        > "$EXPORT_OUT" 2> "$EXPORT_ERR"; then
+      chmod 600 "$EXPORT_OUT"
+      if python3 - "$EXPORT_OUT" "$cnt" <<'PY'
+import csv
+import hashlib
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+expected = int(sys.argv[2])
+with path.open("r", encoding="utf-8", newline="") as stream:
+    rows = sum(1 for _ in csv.DictReader(stream))
+if rows != expected:
+    print(f"PG_PATTERN_LIBRARY_EXPORT=FAIL code=ROW_COUNT_MISMATCH expected={expected} actual={rows}")
+    raise SystemExit(1)
+digest = hashlib.sha256(path.read_bytes()).hexdigest()
+print(f"PG_PATTERN_LIBRARY_EXPORT=PASS rows={rows} bytes={path.stat().st_size} sha256={digest}")
+PY
+      then
+        :
+      else
+        result=1
+      fi
+    else
+      echo "PG_PATTERN_LIBRARY_EXPORT=FAIL code=QUERY_FAILED" | tee -a "$AUDIT"
+      result=1
+    fi
   else
     echo "PG_PROBE=FAIL code=PG_ASSERT" | tee -a "$AUDIT"
   fi
@@ -71,6 +109,6 @@ else
 fi
 
 # 立即清洗临时文件（含查询结果，虽非敏感但保持整洁）
-shred -u "$OUT" "$ERR" 2>/dev/null || rm -f "$OUT" "$ERR"
+shred -u "$OUT" "$ERR" "$EXPORT_ERR" 2>/dev/null || rm -f "$OUT" "$ERR" "$EXPORT_ERR"
 
 exit "$result"
