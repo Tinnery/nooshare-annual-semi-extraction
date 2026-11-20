@@ -18,7 +18,7 @@ ENCRYPTED_OUT="$WORK_DIR/h1_pattern_library.encrypted.json"
 
 cleanup() {
   rm -rf "$STAGE_DIR"
-  rm -f "$SQL_FILE" "$CONTROL_LOG" "$EXPORT_ERR" "$EXPORT_OUT" "$ENCRYPTED_OUT"
+  rm -f "$SQL_FILE" "$CONTROL_LOG" "$EXPORT_ERR" "$EXPORT_OUT"
 }
 trap cleanup EXIT
 
