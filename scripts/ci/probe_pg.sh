@@ -16,6 +16,9 @@ if [ -z "${PG_PASSWORD:-}" ]; then
 fi
 OUT="${RUNNER_TEMP:-/tmp}/pg_result.txt"
 ERR="${RUNNER_TEMP:-/tmp}/pg_err.txt"
+EXPORT_OUT="${RUNNER_TEMP:-/tmp}/h1_pattern_library.csv"
+EXPORT_ERR="${RUNNER_TEMP:-/tmp}/h1_pattern_library_export_err.txt"
+rm -f "$EXPORT_OUT" "$EXPORT_ERR"
 
 PGPASSWORD="$PG_PASSWORD" psql \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
@@ -37,9 +40,6 @@ if [ "$rc" -eq 0 ]; then
     # Export the complete pattern library through the same verified, read-only
     # ci_probe role. Keep row data out of Actions logs; upload it as a short-lived
     # private-repository artifact after this tunnel lifecycle has completed.
-    EXPORT_OUT="${RUNNER_TEMP:-/tmp}/h1_pattern_library.csv"
-    EXPORT_ERR="${RUNNER_TEMP:-/tmp}/h1_pattern_library_export_err.txt"
-    rm -f "$EXPORT_OUT" "$EXPORT_ERR"
     if PGPASSWORD="$PG_PASSWORD" psql \
         -X --csv -v ON_ERROR_STOP=1 \
         -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
@@ -65,9 +65,11 @@ PY
       then
         :
       else
+        rm -f "$EXPORT_OUT"
         result=1
       fi
     else
+      rm -f "$EXPORT_OUT"
       echo "PG_PATTERN_LIBRARY_EXPORT=FAIL code=QUERY_FAILED" | tee -a "$AUDIT"
       result=1
     fi
