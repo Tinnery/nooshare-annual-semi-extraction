@@ -202,3 +202,56 @@ jobs:
           h1-quality-summary.json
           h1-corpus-summary.json
         retention-days: 7
+
+  # H2 语料批量抽取：从 RustFS annual-semi 桶下载已发布的 MD 文件，
+  # 执行 H2（第二节）内容抽取，产出 JSONL 结果。与 H1 解耦，独立运行。
+  h2-corpus:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h2-sample]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: ci-probe
+    needs: infra-probe
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies (locked)
+      run: uv sync --locked
+
+    - name: Validate H2 runner scripts
+      run: |
+        bash -n scripts/ci/run_h2_corpus.sh
+        uv run python -m py_compile annual_semi_extraction/h2/__init__.py annual_semi_extraction/h2/extractor.py annual_semi_extraction/cli.py
+
+    - name: Install stunnel
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install -y -qq stunnel4 netcat-openbsd
+
+    - name: Tunnel + corpus download + H2 extraction
+      env:
+        STUNNEL_HOST: ${{ secrets.STUNNEL_HOST }}
+        STUNNEL_PSK: ${{ secrets.STUNNEL_PSK }}
+        RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY }}
+        RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
+        RUSTFS_BUCKET: annual-semi
+        H2_CORPUS_LIMIT: ${{ (github.event_name == 'workflow_dispatch' && inputs.corpus_limit) || '10' }}
+      run: bash scripts/ci/run_h2_corpus.sh
+
+    - name: Upload H2 artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: h2-corpus-sample
+        path: |
+          corpus-data/input-manifest.jsonl
+          corpus-data/batch-summary.json
+          h2-extraction.jsonl
+          h2-extraction-failures.jsonl
+          h2-corpus-summary.json
+        retention-days: 7

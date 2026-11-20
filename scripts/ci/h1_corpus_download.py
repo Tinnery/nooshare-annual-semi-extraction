@@ -21,8 +21,10 @@ import sys
 import json
 import hashlib
 import re
+import random
 from pathlib import Path
 from typing import Optional
+from collections import defaultdict
 
 try:
     import boto3
@@ -135,7 +137,7 @@ def main():
 
     # 1) 枚举 published/ 下符合年报/半年报槽位格式的 MD 文件
     audit("CORPUS_ENUMERATE start")
-    keys_to_download: list[str] = []
+    all_valid_keys: list[str] = []
     object_metadata: dict[str, dict] = {}
     n_ignored_malformed = 0
     try:
@@ -151,19 +153,65 @@ def main():
                 if extract_slot_key(key) is None:
                     n_ignored_malformed += 1
                     continue
-                keys_to_download.append(key)
+                all_valid_keys.append(key)
                 object_metadata[key] = {
                     "size": int(obj.get("Size", 0)),
                     "etag": obj.get("ETag"),
                     "last_modified": obj.get("LastModified"),
                 }
-                if limit > 0 and len(keys_to_download) >= limit:
-                    break
-            if limit > 0 and len(keys_to_download) >= limit:
-                break
     except Exception as e:
         audit(f"CORPUS_ENUMERATE=FAIL code={classify_exception(e)}")
         sys.exit(1)
+
+    # 2) 采样策略：分层随机采样，确保样本具有代表性
+    # 分层维度：年份（按 5 年分组）× 报告期类型（年报/半年报）
+    # 这样确保样本覆盖不同时期、不同类型的报告，避免早期报告集中
+    if limit > 0 and len(all_valid_keys) > limit:
+        audit(f"CORPUS_SAMPLING start total={len(all_valid_keys)} limit={limit}")
+        
+        # 按年份和报告期类型分组
+        strata = defaultdict(list)
+        for key in all_valid_keys:
+            slot_key = extract_slot_key(key)
+            if slot_key:
+                code, year_s, period = slot_key.split("_")
+                year = int(year_s)
+                # 按 5 年分组（2000-2004, 2005-2009, ...）
+                year_group = (year // 5) * 5
+                stratum_key = f"{year_group}_{period}"
+                strata[stratum_key].append(key)
+        
+        # 计算每个分层应分配的样本数（按比例分配）
+        total_population = len(all_valid_keys)
+        strata_samples = {}
+        for stratum_key, stratum_keys in strata.items():
+            # 按比例分配，至少 1 个样本
+            proportion = len(stratum_keys) / total_population
+            allocated = max(1, int(limit * proportion))
+            strata_samples[stratum_key] = (stratum_keys, allocated)
+        
+        # 从每个分层中随机抽样
+        keys_to_download = []
+        for stratum_key, (stratum_keys, allocated) in strata_samples.items():
+            # 如果分层内样本数少于分配数，全部取用
+            if len(stratum_keys) <= allocated:
+                keys_to_download.extend(stratum_keys)
+            else:
+                # 随机抽样
+                sampled = random.sample(stratum_keys, allocated)
+                keys_to_download.extend(sampled)
+        
+        # 如果总样本数超过 limit，随机裁剪（保持分层比例）
+        if len(keys_to_download) > limit:
+            keys_to_download = random.sample(keys_to_download, limit)
+        
+        # 排序以保持确定性（按 S3 key 字典序）
+        keys_to_download.sort()
+        
+        audit(f"CORPUS_SAMPLING done n_strata={len(strata)} sampled={len(keys_to_download)}")
+    else:
+        # 无限制或样本数足够，直接使用全部
+        keys_to_download = all_valid_keys
 
     n_enumerated = len(keys_to_download)
     audit(f"CORPUS_ENUMERATE done n={n_enumerated} ignored_malformed={n_ignored_malformed}")

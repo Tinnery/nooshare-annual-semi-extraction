@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nooshare-annual-semi-extraction"
-version = "0.2.0"
-description = "Structural content extraction and regulatory compliance validation (E1) from listed-company annual/semi-annual reports."
+version = "0.3.0"
+description = "Structural content extraction and regulatory compliance validation (E1) from listed-company annual/semi-annual reports. Includes H1 pattern matching and H2 (Section 2) content extraction."
 requires-python = ">=3.11"
 dependencies = [
     "typer>=0.12.0",            # CLI

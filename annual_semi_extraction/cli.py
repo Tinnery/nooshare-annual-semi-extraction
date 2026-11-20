@@ -1,8 +1,9 @@
 """CLI 入口。
 
-四个命令：
+五个命令：
 - h1-extract: 批量抽取 H1 一级章节标题
 - h1-extract-single: 单文件 H1 抽取
+- h2-extract: 批量抽取 H2（第二节）内容
 - e1-spec: E1 法规章节合规判定
 - version: 版本信息
 """
@@ -16,6 +17,7 @@ import typer
 
 from annual_semi_extraction.config import LOG_LEVEL
 from annual_semi_extraction.h1.extractor import extract, extract_batch
+from annual_semi_extraction.h2.extractor import extract_h2, extract_h2_batch
 from annual_semi_extraction.e1.judge import E1Judge
 from annual_semi_extraction.spec.loader import SpecLoader
 
@@ -107,6 +109,62 @@ def h1_extract_single(
         typer.echo("无有效 H1 标题", err=True)
         raise typer.Exit(code=1)
     typer.echo(json.dumps(rec, ensure_ascii=False, indent=2))
+
+
+@app.command()
+def h2_extract(
+    input_dir: Path = typer.Option(
+        ...,
+        "--input-dir", "-i",
+        help="输入目录（包含 MD 文件的目录，将递归扫描）",
+        exists=True,
+        file_okay=False,
+        dir_okay=True,
+    ),
+    output: Path = typer.Option(
+        "h2_extraction.jsonl",
+        "--output", "-o",
+        help="输出 JSONL 文件路径",
+    ),
+    failures: Path = typer.Option(
+        "h2_extraction_failures.jsonl",
+        "--failures", "-f",
+        help="失败/未找到记录输出路径",
+    ),
+    limit: int = typer.Option(
+        0,
+        "--limit", "-l",
+        help="限制处理文件数（0=不限制，调试用）",
+    ),
+    offset: int = typer.Option(
+        0,
+        "--offset",
+        help="跳过前 N 个文件（断点续传用）",
+    ),
+    append: bool = typer.Option(
+        False,
+        "--append", "-a",
+        help="追加模式（不覆盖已有文件）",
+    ),
+):
+    """H2（第二节）内容批量抽取：扫描 input_dir 下所有 MD 文件，抽取第二节内容并写入 JSONL。
+
+    输入：本地 MD 文件目录（递归扫描）
+    输出：每行一个 JSON 对象，包含 slot_key、h2_title、h2_content、行号范围等字段。
+    """
+    logger.info(f"H2 抽取: input={input_dir}, output={output}")
+    result = extract_h2_batch(input_dir, output, failures,
+                              limit=limit, offset=offset,
+                              append=append)
+    n_ok = result["n_ok"]
+    n_files = result["n_files"]
+    n_not_found = result["n_not_found"]
+    logger.info(
+        f"完成: {n_ok}/{n_files} 份找到第二节, "
+        f"未找到: {n_not_found}, "
+        f"异常: {result['n_errors']}"
+    )
+    typer.echo(f"-> {output}")
 
 
 @app.command()
