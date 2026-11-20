@@ -197,6 +197,151 @@ SELECT count(*) AS rows,
 FROM iwen.limit_up;
 \\o
 
+
+\o $OUT_DIR/annual_semi_output_coverage.csv
+WITH report_slots AS (
+  SELECT stock_code || '_' || report_year::text || '_' || period::text AS slot_key
+  FROM annual_semi.reconciled_report
+),
+h1_slots AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_corpus_results
+),
+fused_slots AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_fused_result
+),
+pdf_slots AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_pdf_result
+),
+summary_slots AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_report_summary
+),
+detail_slots AS (
+  SELECT slot_key, count(*) AS detail_rows
+  FROM annual_semi.h1_heading_detail
+  GROUP BY slot_key
+)
+SELECT
+  (SELECT count(*) FROM report_slots) AS reconciled_report_slots,
+  (SELECT count(*) FROM h1_slots) AS h1_corpus_slots,
+  (SELECT count(*) FROM fused_slots) AS h1_fused_slots,
+  (SELECT count(*) FROM pdf_slots) AS h1_pdf_slots,
+  (SELECT count(*) FROM summary_slots) AS h1_summary_slots,
+  (SELECT count(*) FROM detail_slots) AS h1_heading_detail_slots,
+  (SELECT coalesce(sum(detail_rows), 0) FROM detail_slots) AS h1_heading_detail_rows,
+  (SELECT count(*) FROM report_slots r JOIN h1_slots x USING (slot_key)) AS reconciled_with_h1,
+  (SELECT count(*) FROM report_slots r JOIN fused_slots x USING (slot_key)) AS reconciled_with_fused,
+  (SELECT count(*) FROM report_slots r JOIN pdf_slots x USING (slot_key)) AS reconciled_with_pdf,
+  (SELECT count(*) FROM report_slots r JOIN summary_slots x USING (slot_key)) AS reconciled_with_summary,
+  (SELECT count(*) FROM report_slots r JOIN detail_slots x USING (slot_key)) AS reconciled_with_heading_details;
+\o
+
+\o $OUT_DIR/annual_semi_output_table_counts.csv
+SELECT 'reconciled_report' AS relation, count(*) AS rows, count(*) AS distinct_slots FROM annual_semi.reconciled_report
+UNION ALL
+SELECT 'h1_corpus_results', count(*), count(DISTINCT slot_key) FROM annual_semi.h1_corpus_results
+UNION ALL
+SELECT 'h1_fused_result', count(*), count(DISTINCT slot_key) FROM annual_semi.h1_fused_result
+UNION ALL
+SELECT 'h1_report_summary', count(*), count(DISTINCT slot_key) FROM annual_semi.h1_report_summary
+UNION ALL
+SELECT 'h1_pdf_result', count(*), count(DISTINCT slot_key) FROM annual_semi.h1_pdf_result
+UNION ALL
+SELECT 'h1_heading_detail', count(*), count(DISTINCT slot_key) FROM annual_semi.h1_heading_detail
+UNION ALL
+SELECT 'h1_pattern_library', count(*), count(*) FROM annual_semi.h1_pattern_library
+UNION ALL
+SELECT 'h2_pattern_library', count(*), count(*) FROM annual_semi.h2_pattern_library
+ORDER BY relation;
+\o
+
+\o $OUT_DIR/matrix_market_data_ranges.csv
+SELECT 'tong.stock_daily' AS relation,
+       count(*) AS rows,
+       count(DISTINCT symbol) AS securities,
+       min(date)::text AS min_date,
+       max(date)::text AS max_date
+FROM tong.stock_daily
+UNION ALL
+SELECT 'public.hfq_daily',
+       count(*),
+       count(DISTINCT symbol),
+       min(date)::text,
+       max(date)::text
+FROM public.hfq_daily
+UNION ALL
+SELECT 'indicators.daily_base_aligned',
+       count(*),
+       count(DISTINCT code),
+       min(date)::text,
+       max(date)::text
+FROM indicators.daily_base_aligned
+UNION ALL
+SELECT 'ju.trading_day',
+       count(*),
+       count(*) FILTER (WHERE is_trading_day IS TRUE),
+       min(trade_date)::text,
+       max(trade_date)::text
+FROM ju.trading_day
+UNION ALL
+SELECT 'finance.income_statement',
+       count(*),
+       count(DISTINCT code),
+       min(report_date)::text,
+       max(report_date)::text
+FROM finance.income_statement
+ORDER BY relation;
+\o
+
+\o $OUT_DIR/public_pit_quality.csv
+SELECT 'canonical_symbol' AS relation,
+       count(*) AS rows,
+       count(DISTINCT canonical_id) AS distinct_ids,
+       count(*) FILTER (WHERE delist_date IS NOT NULL) AS delisted,
+       NULL::bigint AS missing_publication_dates
+FROM public.canonical_symbol
+UNION ALL
+SELECT 'corporate_action_event',
+       count(*),
+       count(DISTINCT event_id),
+       count(*) FILTER (WHERE event_type IN ('st_mark', 'st_remove')),
+       count(*) FILTER (WHERE pub_date IS NULL)
+FROM public.corporate_action_event
+UNION ALL
+SELECT 'finance.income_statement',
+       count(*),
+       count(DISTINCT code || ':' || report_date::text),
+       NULL::bigint,
+       count(*) FILTER (WHERE pub_date IS NULL)
+FROM finance.income_statement
+ORDER BY relation;
+\o
+
+\o $OUT_DIR/iwen_limit_up_field_semantics.csv
+SELECT count(*) AS rows,
+       count(*) FILTER (WHERE latest_price IS NULL) AS latest_price_nulls,
+       count(*) FILTER (WHERE latest_price = 0) AS latest_price_zeros,
+       count(*) FILTER (WHERE change_pct IS NULL) AS change_pct_nulls,
+       count(*) FILTER (WHERE change_pct < 0) AS change_pct_negative,
+       count(*) FILTER (WHERE change_pct = 0) AS change_pct_zero,
+       count(*) FILTER (WHERE change_pct > 0) AS change_pct_positive,
+       count(*) FILTER (WHERE continuous_days IS NULL) AS continuous_days_nulls,
+       count(*) FILTER (WHERE continuous_days = 0) AS continuous_days_zeros,
+       count(*) FILTER (WHERE limit_up_open_count IS NULL) AS open_count_nulls,
+       count(*) FILTER (WHERE limit_up_open_count = 0) AS open_count_zeros,
+       count(*) FILTER (WHERE limit_up_reason IS NULL OR btrim(limit_up_reason) = '') AS reason_missing,
+       count(*) FILTER (WHERE limit_up_status IS DISTINCT FROM '涨停') AS status_not_limit_up
+FROM iwen.limit_up;
+\o
+
+\o $OUT_DIR/annual_semi_event_lifecycle_summary.csv
+SELECT event_type, count(*) AS events,
+       min(occurred_at) AS first_seen,
+       max(occurred_at) AS last_seen
+FROM annual_semi.file_lifecycle
+GROUP BY event_type
+ORDER BY event_type;
+\o
+
 COMMIT;
 SQL
 chmod 600 "$SQL_FILE"
@@ -266,17 +411,17 @@ try:
         ),
     )
 
-    probes = [
-        ("annual-semi", "published/", 30),
-        ("tong-data", "", 30),
-    ]
-    for bucket, prefix, limit in probes:
+    bucket_response = s3.list_buckets()
+    bucket_names = sorted(b.get("Name", "") for b in bucket_response.get("Buckets", []) if b.get("Name"))
+    rustfs_inventory["bucket_names"] = bucket_names
+    for bucket in bucket_names:
+        prefix = "published/" if bucket == "annual-semi" else ""
         entry = {"bucket": bucket, "prefix": prefix, "status": "unknown", "objects": []}
         try:
             response = s3.list_objects_v2(
                 Bucket=bucket,
                 Prefix=prefix,
-                MaxKeys=limit,
+                MaxKeys=30,
             )
             entry["status"] = "available"
             entry["is_truncated"] = bool(response.get("IsTruncated", False))
