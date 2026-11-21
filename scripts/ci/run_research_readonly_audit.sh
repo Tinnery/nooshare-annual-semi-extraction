@@ -11,8 +11,7 @@ PG_OUT="$WORK_DIR/research-pro-readonly-audit-psql.log"
 PG_ERR="$WORK_DIR/research-pro-readonly-audit-error.log"
 ZIP_OUT="$WORK_DIR/research-pro-readonly-audit.zip"
 ENCRYPTED_OUT="$WORK_DIR/research-pro-readonly-audit.encrypted.json"
-PG_PORT="$PG_LOCAL_PORT"
-test -n "$PG_PORT" || PG_PORT=15432
+PG_PORT=15432
 
 cleanup() {
   bash scripts/ci/teardown.sh >/dev/null 2>&1 || true
