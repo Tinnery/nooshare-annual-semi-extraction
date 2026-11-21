@@ -6,8 +6,8 @@ from botocore.config import Config
 
 # RustFS 配置
 ENDPOINT_URL = "https://s3.rustfs.pro.neuralj.com"
-ACCESS_KEY = "charlie"
-SECRET_KEY = "sheeta-rustfs"
+ACCESS_KEY = os.environ.get("RUSTFS_ACCESS_KEY", "")
+SECRET_KEY = os.environ.get("RUSTFS_SECRET_KEY", "")
 BUCKET = "annual-semi"
 
 # 2021-2024 年报(P4)和半年报(P2)样本

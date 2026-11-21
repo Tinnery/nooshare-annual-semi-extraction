@@ -28,8 +28,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 # 在 RustFS 本机运行时可设 RUSTFS_ENDPOINT=http://127.0.0.1:9000 直连明文端口，
 # 绕过 TLS 握手；默认仍走域名 HTTPS。
 ENDPOINT_URL = os.environ.get("RUSTFS_ENDPOINT", "https://s3.rustfs.pro.neuralj.com")
-ACCESS_KEY = "charlie"
-SECRET_KEY = "sheeta-rustfs"
+ACCESS_KEY = os.environ.get("RUSTFS_ACCESS_KEY", "")
+SECRET_KEY = os.environ.get("RUSTFS_SECRET_KEY", "")
 BUCKET = "annual-semi"
 REGION = "us-east-1"
 SERVICE = "s3"
@@ -39,8 +39,8 @@ _server_time_offset: Optional[datetime.timedelta] = None
 
 # 不验证 SSL 的 context（与 boto3 verify=False 一致）
 _SSL_CTX = ssl.create_default_context()
-_SSL_CTX.check_hostname = False
-_SSL_CTX.verify_mode = ssl.CERT_NONE
+# _SSL_CTX.check_hostname = False  # REMOVED: TLS verification enabled
+# _SSL_CTX.verify_mode = ssl.CERT_NONE  # REMOVED: TLS verification enabled
 
 
 def _new_connection(timeout: int = 30):

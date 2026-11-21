@@ -21,8 +21,8 @@ from h1_pdf_core import extract_pdf
 
 # rustfs 配置
 S3_ENDPOINT = 'https://s3.rustfs.pro.neuralj.com'
-S3_KEY = 'charlie'
-S3_SECRET = 'sheeta-rustfs'
+S3_KEY = os.environ.get("RUSTFS_ACCESS_KEY", "")
+S3_SECRET = os.environ.get("RUSTFS_SECRET_KEY", "")
 S3_BUCKET = 'annual-semi'
 
 # PG 配置

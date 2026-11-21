@@ -1,4 +1,4 @@
-"""构造并实测「降级链判别对」。
+import os\n"""构造并实测「降级链判别对」。
 
 数据来源（全部在 01 §四授权边界内）：
 - `annual_semi.reconciled_report` 的 `selection_rule IN (backup_l1,l2,l3)` 槽位
@@ -27,8 +27,8 @@ sys.path.insert(0, str(Path(__file__).parent))
 from heading_corpus import extract_one  # noqa: E402
 
 ENDPOINT_URL = "https://s3.rustfs.pro.neuralj.com"
-ACCESS_KEY = "charlie"
-SECRET_KEY = "sheeta-rustfs"
+ACCESS_KEY = os.environ.get("RUSTFS_ACCESS_KEY", "")
+SECRET_KEY = os.environ.get("RUSTFS_SECRET_KEY", "")
 BUCKET = "annual-semi"
 CACHE = Path("data/md_cache/pairs")
 THRESHOLD = 0.3  # 上游 D-3 冻结

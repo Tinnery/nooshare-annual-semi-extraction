@@ -1,4 +1,4 @@
-"""补齐 2021-2024 全部 winner MD 到本地缓存（纯下载，不做任何判定）。
+import os\n"""补齐 2021-2024 全部 winner MD 到本地缓存（纯下载，不做任何判定）。
 
 全量提取是「候选生成」，不违反 01 §五.3（该条禁的是用全量当验证）。
 复用单个 boto3 client，避免每文件重建连接（旧脚本 16 分钟只下 12k 的主因）。
@@ -38,7 +38,7 @@ def main() -> None:
 
     client = boto3.client(
         "s3", endpoint_url="https://s3.rustfs.pro.neuralj.com",
-        aws_access_key_id="charlie", aws_secret_access_key="sheeta-rustfs",
+        aws_access_key_id=os.environ.get("RUSTFS_ACCESS_KEY", ""), aws_secret_access_key=os.environ.get("RUSTFS_SECRET_KEY", ""),
         verify=False,
         config=Config(signature_version="s3v4", s3={"addressing_style": "path"},
                       max_pool_connections=32),

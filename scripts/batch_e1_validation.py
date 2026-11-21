@@ -1,4 +1,4 @@
-"""批量 E1 验证脚本。
+import os\n"""批量 E1 验证脚本。
 
 对 2021-2024 年全部年报/半年报运行 E1 章节完备性判定。
 """
@@ -81,8 +81,8 @@ def download_md_from_rustfs(md_path: str, local_dir: Path) -> Optional[Path]:
     
     # RustFS 配置
     ENDPOINT_URL = "https://s3.rustfs.pro.neuralj.com"
-    ACCESS_KEY = "charlie"
-    SECRET_KEY = "sheeta-rustfs"
+    ACCESS_KEY = os.environ.get("RUSTFS_ACCESS_KEY", "")
+    SECRET_KEY = os.environ.get("RUSTFS_SECRET_KEY", "")
     BUCKET = "annual-semi"
     
     # 构建本地路径

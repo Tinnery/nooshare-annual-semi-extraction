@@ -29,8 +29,8 @@ BATCH = int(os.environ.get('H1_BATCH', '200'))
 REPORT_MD = 'data/pdf_validation_report_2.md' if SCOPE == 'longtail' else 'data/pdf_validation_report_3.md'
 REPORT_JSON = 'data/stage2_metrics.json' if SCOPE == 'longtail' else 'data/stage3_metrics.json'
 
-RUSTFS = {'endpoint': 'https://s3.rustfs.pro.neuralj.com', 'key': 'charlie',
-          'secret': 'sheeta-rustfs', 'bucket': 'annual-semi'}
+RUSTFS = {'endpoint': 'https://s3.rustfs.pro.neuralj.com', 'key': os.environ.get("RUSTFS_ACCESS_KEY", ""),
+          'secret': os.environ.get("RUSTFS_SECRET_KEY", ""), 'bucket': 'annual-semi'}
 
 DDL = [
     """CREATE TABLE IF NOT EXISTS annual_semi.pdf_acquisition(
