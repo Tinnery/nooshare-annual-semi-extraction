@@ -262,22 +262,34 @@ WITH report_slots AS (
          report_year, period
   FROM annual_semi.reconciled_report
 ),
-outputs AS (
-  SELECT 'h1_corpus_results'::text AS product, slot_key FROM annual_semi.h1_corpus_results
-  UNION ALL SELECT 'h1_fused_result', slot_key FROM annual_semi.h1_fused_result
-  UNION ALL SELECT 'h1_report_summary', slot_key FROM annual_semi.h1_report_summary
-  UNION ALL SELECT 'h1_pdf_result', slot_key FROM annual_semi.h1_pdf_result
-  UNION ALL SELECT 'h1_heading_detail', slot_key FROM annual_semi.h1_heading_detail GROUP BY slot_key
+h1_corpus AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_corpus_results
+),
+h1_fused AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_fused_result
+),
+h1_summary AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_report_summary
+),
+h1_pdf AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_pdf_result
+),
+h1_detail AS (
+  SELECT DISTINCT slot_key FROM annual_semi.h1_heading_detail
 )
 SELECT r.report_year, r.period,
        count(*) AS reconciled_slots,
-       count(*) FILTER (WHERE o.product = 'h1_corpus_results') AS corpus_slots,
-       count(*) FILTER (WHERE o.product = 'h1_fused_result') AS fused_slots,
-       count(*) FILTER (WHERE o.product = 'h1_report_summary') AS summary_slots,
-       count(*) FILTER (WHERE o.product = 'h1_pdf_result') AS pdf_slots,
-       count(*) FILTER (WHERE o.product = 'h1_heading_detail') AS heading_detail_slots
+       count(hc.slot_key) AS corpus_slots,
+       count(hf.slot_key) AS fused_slots,
+       count(hs.slot_key) AS summary_slots,
+       count(hp.slot_key) AS pdf_slots,
+       count(hd.slot_key) AS heading_detail_slots
 FROM report_slots r
-LEFT JOIN outputs o USING (slot_key)
+LEFT JOIN h1_corpus hc USING (slot_key)
+LEFT JOIN h1_fused hf USING (slot_key)
+LEFT JOIN h1_summary hs USING (slot_key)
+LEFT JOIN h1_pdf hp USING (slot_key)
+LEFT JOIN h1_detail hd USING (slot_key)
 GROUP BY r.report_year, r.period
 ORDER BY r.report_year, r.period;
 \o
