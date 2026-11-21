@@ -249,7 +249,7 @@ FROM annual_semi.h1_heading_detail h
 WHERE h.slot_key = (
   SELECT slot_key
   FROM annual_semi.h1_heading_detail
-  ORDER BY report_year DESC, slot_key
+  ORDER BY slot_key DESC
   LIMIT 1
 )
 ORDER BY h.ordinal
