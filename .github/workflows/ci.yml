@@ -80,6 +80,7 @@ jobs:
   # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
   # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
   infra-probe:
+    if: github.event_name != 'pull_request' || !contains(github.event.pull_request.title, '[research-readonly-audit]')
     concurrency:
       group: nooshare-ci-probe-${{ github.repository }}
       cancel-in-progress: false
@@ -126,6 +127,50 @@ jobs:
     - name: Remove encrypted export from runner
       if: always()
       run: rm -f "${{ runner.temp }}/h1_pattern_library.encrypted.json"
+
+  # One-shot audit for Research: PG read-only snapshot + RustFS GET only.
+  # The normal infra-probe (which writes/deletes a canary) is disabled for this PR marker.
+  research-readonly-audit:
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[research-readonly-audit]')
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    environment: ci-probe
+    timeout-minutes: 20
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install stunnel, psql, boto3 and cryptography
+      run: |
+        sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true update -qq
+        sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true install -y -qq stunnel4 postgresql-client netcat-openbsd
+        python3 -m pip install --quiet --retries 5 --timeout 30 boto3 cryptography
+
+    - name: Validate read-only audit script
+      run: bash -n scripts/ci/run_research_readonly_audit.sh
+
+    - name: Pro read-only PG/RustFS audit (single tunnel lifecycle)
+      env:
+        STUNNEL_HOST: ${{ secrets.STUNNEL_HOST }}
+        STUNNEL_PSK: ${{ secrets.STUNNEL_PSK }}
+        PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
+        RUSTFS_ACCESS_KEY: ${{ secrets.RUSTFS_ACCESS_KEY }}
+        RUSTFS_SECRET_KEY: ${{ secrets.RUSTFS_SECRET_KEY }}
+      run: bash scripts/ci/run_research_readonly_audit.sh
+
+    - name: Upload encrypted Research audit
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: research-pro-readonly-audit-encrypted
+        path: ${{ runner.temp }}/research-pro-readonly-audit.encrypted.json
+        if-no-files-found: ignore
+        retention-days: 1
+
+    - name: Remove encrypted audit from runner
+      if: always()
+      run: rm -f "${{ runner.temp }}/research-pro-readonly-audit.encrypted.json"
 
   # H1 语料批量生产：从 RustFS annual-semi 桶下载已发布的 MD 文件，
   # 执行 H1 标题抽取，产出 JSONL 结果。与 infra-probe 解耦：
