@@ -221,6 +221,67 @@ SELECT count(*) AS rows,
 FROM iwen.limit_up;
 \o
 
+
+\o $OUT_DIR/annual_semi_extraction_columns.csv
+SELECT table_name, ordinal_position, column_name, data_type, is_nullable
+FROM information_schema.columns
+WHERE table_schema = 'annual_semi'
+  AND table_name IN (
+    'reconciled_report','h1_corpus_results','h1_fused_result',
+    'h1_report_summary','h1_heading_detail','h1_pdf_result',
+    'file_current_state'
+  )
+ORDER BY table_name, ordinal_position;
+\o
+
+\o $OUT_DIR/annual_semi_h1_fused_examples.csv
+SELECT to_jsonb(f)::text AS row_json
+FROM annual_semi.h1_fused_result f
+JOIN annual_semi.reconciled_report r
+  ON r.stock_code || '_' || r.report_year::text || '_' || r.period::text = f.slot_key
+ORDER BY r.report_year DESC, r.period DESC, r.stock_code
+LIMIT 3;
+\o
+
+\o $OUT_DIR/annual_semi_heading_detail_examples.csv
+SELECT to_jsonb(h)::text AS row_json
+FROM annual_semi.h1_heading_detail h
+WHERE h.slot_key = (
+  SELECT slot_key
+  FROM annual_semi.h1_heading_detail
+  ORDER BY report_year DESC, slot_key
+  LIMIT 1
+)
+ORDER BY h.ordinal
+LIMIT 20;
+\o
+
+\o $OUT_DIR/annual_semi_output_coverage_by_period.csv
+WITH report_slots AS (
+  SELECT stock_code || '_' || report_year::text || '_' || period::text AS slot_key,
+         report_year, period
+  FROM annual_semi.reconciled_report
+),
+outputs AS (
+  SELECT 'h1_corpus_results'::text AS product, slot_key FROM annual_semi.h1_corpus_results
+  UNION ALL SELECT 'h1_fused_result', slot_key FROM annual_semi.h1_fused_result
+  UNION ALL SELECT 'h1_report_summary', slot_key FROM annual_semi.h1_report_summary
+  UNION ALL SELECT 'h1_pdf_result', slot_key FROM annual_semi.h1_pdf_result
+  UNION ALL SELECT 'h1_heading_detail', slot_key FROM annual_semi.h1_heading_detail GROUP BY slot_key
+)
+SELECT r.report_year, r.period,
+       count(*) AS reconciled_slots,
+       count(*) FILTER (WHERE o.product = 'h1_corpus_results') AS corpus_slots,
+       count(*) FILTER (WHERE o.product = 'h1_fused_result') AS fused_slots,
+       count(*) FILTER (WHERE o.product = 'h1_report_summary') AS summary_slots,
+       count(*) FILTER (WHERE o.product = 'h1_pdf_result') AS pdf_slots,
+       count(*) FILTER (WHERE o.product = 'h1_heading_detail') AS heading_detail_slots
+FROM report_slots r
+LEFT JOIN outputs o USING (slot_key)
+GROUP BY r.report_year, r.period
+ORDER BY r.report_year, r.period;
+\o
+
 COMMIT;
 SQL
 chmod 600 "$SQL_FILE"
