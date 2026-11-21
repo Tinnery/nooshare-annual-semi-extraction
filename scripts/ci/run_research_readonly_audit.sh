@@ -370,15 +370,13 @@ with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as ar
 zip_bytes = zip_path.read_bytes()
 
 public_key_pem = b"""-----BEGIN PUBLIC KEY-----
-MIIBojANBgkqhkiG9w0BAQEFAAOCAYEAsdLfMQCS0G86N1k5+j5a
-K2Jte79c4NVcoLh4BTAqbri9So+WM0i5cLecaq3kx3NA2SC6lkB7ZK+zacl9MMXr
-WpRrmr20NXlsgov3FUZPD6PII5jfFY+rtweBDAEw7Q3gcs1f4SY75qakO/YP1wp+
-p7Xq0t0i5CjDBuOBbNG3GONcUGCRjzVkU0T06UbvCZIfc/wqFt4uVHkwGxmdj1ZP
-XVpSUowhpCjQORVCGMemBeQlM2X8U6D1MdxF9yoswgJcv9MWnjcbImwmRl9PUHKa
-JaHTomh/GTzSROw4+tzpfbN33lezqeR4nrellI/YrWWX6D9Co+cFEFCPUMrDJYnV
-WFtFJLlLoKBSk4gcGOY0bpHw2F/zYznvq+udUQX3V95u3Tui/BgEQ4U6cCYnaZ1b
-mafB3WvICyQRIMlnRiKFI6Mdzfz5yyXfK0ezmZgVylwx9eF++E7RUDlBJ3KntZIV
-6BeU6TSNBAoKG/L/wRT/QiDpeOL3IuWQxXNd2nTWPJZ5AgMBAAE=
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtMSE3YICKUIAcB9lnXtw
+BeMnDLQSx26gbFS0ANbhHsVIR4Iwcr9glLtQ5DIFiqTQ0ec7RgRjVcM3EHGVg2Ya
+cf1u7/9Zf15daeTMbmSVN2RoZs53OSYSw1nBRP0NBZeCw79iYaaHPTgFr2lhWmqp
+ljoBMnzD0b39Q74MDci5/aW5vd8QdzYoTCX2y1FYKGFUgCGhrXujououqdRxETtc
+UdR0fyFG4GvjMQsOeUXk/g7CPaZif8pZiUqtbViCfz6PKIaO5GpSHBjckatEExRw
+q7ikiv25vWu2RfpB7AnHdpld5jeWn0od1zPli9cFry49xN2V2FHcSRNVl4SyA5c3
+MwIDAQAB
 -----END PUBLIC KEY-----"""
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import padding
