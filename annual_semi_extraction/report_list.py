@@ -147,7 +147,7 @@ def load_report_list_from_env(start_year: int, *, timeout: int = 120):
         host=os.environ.get("PG_HOST_LOCAL", "127.0.0.1"),
         port=os.environ.get("PG_PORT_LOCAL", "15432"),
         dbname=os.environ.get("PG_NAME", "nooshare_dev"),
-        user=os.environ.get("PG_USER", "ci_probe"),
+        user=os.environ.get("PG_USER", "ci"),
         password=os.environ.get("PG_PASSWORD", ""),
         timeout=timeout,
     )

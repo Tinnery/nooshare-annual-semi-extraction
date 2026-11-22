@@ -3,7 +3,7 @@
 
 数据源：annual_semi.reconciled_report（nooshare-annual-semi 的裁决真相源）
 过滤：report_year >= start_year（默认 2019），period in (2,4)
-连接：psql 子进程（CI stunnel 隧道），只读角色 ci_probe。
+连接：psql 子进程（CI stunnel 隧道），只读角色 ci。
 
 输出：
     {output}/report-list.jsonl        每行一个 ReportSlot

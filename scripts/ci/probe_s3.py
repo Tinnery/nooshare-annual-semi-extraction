@@ -50,7 +50,7 @@ def classify_exception(exc):
 
 access = os.environ.get("RUSTFS_ACCESS_KEY")
 secret = os.environ.get("RUSTFS_SECRET_KEY")
-bucket = os.environ.get("RUSTFS_BUCKET", "nooshare-ci-probe")
+bucket = os.environ.get("RUSTFS_BUCKET", "annual-semi")
 endpoint = os.environ.get("S3_LOCAL_ENDPOINT", "http://127.0.0.1:15500")
 
 if not access or not secret:

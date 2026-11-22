@@ -14,7 +14,7 @@ H1 提取结果加载器：读取 h1-extraction.jsonl，经 psql 写入 PG 数�
     python scripts/ci/h1_corpus_load_pg.py \
         --input h1-extraction.jsonl \
         --host 127.0.0.1 --port 15432 \
-        --db nooshare_dev --user ci_writer
+        --db nooshare_dev --user ci
 """
 import argparse
 import json
@@ -280,7 +280,7 @@ def main():
     parser.add_argument("--host", default="127.0.0.1", help="PG host")
     parser.add_argument("--port", type=int, default=15432, help="PG port")
     parser.add_argument("--db", default="nooshare_dev", help="PG database")
-    parser.add_argument("--user", default="ci_writer", help="PG user")
+    parser.add_argument("--user", default="ci", help="PG user")
     parser.add_argument(
         "--password",
         default=os.environ.get("PG_PASSWORD", ""),

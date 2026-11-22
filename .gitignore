@@ -26,3 +26,7 @@ build/
 
 # 工作台本地记忆
 .workbuddy/
+
+# Secret JSON files (example files are safe to commit)
+.github/secrets/*.json
+!.github/secrets/*.example.json

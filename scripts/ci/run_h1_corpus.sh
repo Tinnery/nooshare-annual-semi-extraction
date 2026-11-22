@@ -134,7 +134,7 @@ if [ "$overall" -eq 0 ] && [ -n "${PG_PASSWORD:-}" ] && [ -f h1-extraction.jsonl
       # 实测探针会消耗 router 重建后唯一的可用连接槽，导致紧随的写入连接被关闭。
       # SQL 生成放在隧道重建前（不连 PG），重建后第一次 PG 连接直接用于写入。
       SQL_FILE="$WORK_DIR/h1_corpus_load.sql"
-      if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+      if PGPASSWORD="$PG_PASSWORD" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci \
           -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
         pg_loaded="$n_extracted"
         pg_status="PASS"

@@ -87,7 +87,7 @@ annual_semi_extraction/
 
 **PG 写入架构**：
 - 表结构由 `scripts/ci/sql/h1_corpus_results.sql` 预建（DEV 库一次性 DDL，幂等）
-- CI 以 `ci_writer` 专用角色写入（仅 SELECT/INSERT/UPDATE 该表）；`ci_probe` 保持只读探针职责
+- CI 以 `ci` 统一角色读写（仅 SELECT/INSERT/UPDATE 该表）
 - 加载流程：`h1_corpus_load_pg.py --emit-sql` 生成 UPSERT SQL（纯本地，不连 PG），shell 原生 `psql -f` 执行
 - **不用 psycopg2**：其内置 libpq 在 stunnel+PSK 隧道上报 `server closed the connection`，系统 psql 正常
 - **隧道连接槽约束**：S3 下载会占满 SNI router 对同一 PSK identity 的连接槽。写入前重建隧道，且重建后**第一次 PG 连接直接用于写入**——不能先做探针（探针会消耗唯一可用连接槽，导致紧随的写入连接被关闭）

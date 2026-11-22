@@ -225,7 +225,7 @@ PY
   for pg_attempt in $(seq 1 "$PG_BATCH_MAX_ATTEMPTS"); do
     pg_batch_attempts=$pg_attempt
     if PGPASSWORD="${PG_PASSWORD:-}" PGAPPNAME="$PG_APPNAME" \
-        psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer \
+        psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci \
         -d nooshare_dev -v ON_ERROR_STOP=1 -f "$SQL_FILE" \
         >/dev/null 2>"$WORK_DIR/pg_load_err.txt"; then
       echo "PG_BATCH_LOAD=PASS index=$batch_no rows=$batch_extracted attempt=$pg_attempt"
@@ -378,7 +378,7 @@ if [ "${H1_VERIFY_PG_CORPUS:-0}" = "1" ]; then
   else
     echo "PG_RECONCILIATION=start expected_rows=$EXPECTED_TOTAL"
     query="SELECT COUNT(*)::bigint, COUNT(DISTINCT slot_key)::bigint, COUNT(*) FILTER (WHERE source_sha256 IS NULL)::bigint, COUNT(*) FILTER (WHERE source_sha256 !~ '^[0-9a-f]{64}$')::bigint FROM annual_semi.h1_corpus_results;"
-    pg_counts="$(PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci_writer -d nooshare_dev -A -t -F ',' -v ON_ERROR_STOP=1 -c "$query" 2>"$WORK_DIR/pg_reconciliation_err.txt")"
+    pg_counts="$(PGPASSWORD="${PG_PASSWORD:-}" psql -h 127.0.0.1 -p "$PG_LOCAL" -U ci -d nooshare_dev -A -t -F ',' -v ON_ERROR_STOP=1 -c "$query" 2>"$WORK_DIR/pg_reconciliation_err.txt")"
     pg_rc=$?
     if [ "$pg_rc" -ne 0 ]; then
       pg_reconcile_status="FAIL"

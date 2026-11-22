@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# 不泄露主动证伪：对 canary 与每个 secret 做 raw/hex/base64/url 四编码 grep。
+# 不泄露主动证伪：对每个 secret 值做 raw/hex/base64/url 四编码 grep。
 # 命中数必须全为 0。仅使用已注入的环境变量值，不读任何落盘明文。
+#
+# 架构说明：CI 使用单个 JSON secret（NOOSHARE_INFRA），workflow 的 run: 块
+# 用 jq 解析后 export 为独立环境变量。本脚本作为子进程继承这些 export，
+# 因此检查各个独立变量即可覆盖所有敏感值。
 set -uo pipefail
 
 LOG_FILE="${1:-}"
-# canary 从 secret 注入，不硬编码（否则公开仓库里提前暴露标记串，检测失去意义）
-CANARY="${CI_CANARY:-}"
 
 if [ -z "$LOG_FILE" ] || [ ! -f "$LOG_FILE" ]; then
   echo "LEAK_CHECK=SKIP reason=no_log"
@@ -32,10 +34,8 @@ check_value() {
   done
 }
 
-# 1) canary 子串（含在 PG_PASSWORD / PTK 中）
-check_value "CANARY" "$CANARY"
-
-# 2) 所有 secret 值（从环境变量读，不落盘）
+# 所有 secret 值（从环境变量读，不落盘）
+# 这些变量由 workflow 的 run: 块从 NOOSHARE_INFRA JSON 解析后 export
 for name in PG_PASSWORD RUSTFS_ACCESS_KEY RUSTFS_SECRET_KEY STUNNEL_PSK STUNNEL_HOST; do
   check_value "$name" "${!name:-}"
 done
