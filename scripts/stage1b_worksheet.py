@@ -1,8 +1,10 @@
+import os as _runtime_os
+_runtime_os.makedirs(".runtime", exist_ok=True)
 """阶段1b: 金标准标注底稿生成 + 目录页对齐率(自动外部锚点)
 
 从阶段1a结果分层抽300份, 生成三源并排标注底稿CSV (PDF提取/MD通道/目录页),
 并自动计算目录页对齐率 —— 不依赖人工的外部客观指标。
-输出: data/stage1b_worksheet.csv, data/stage1b_label_guide.md, data/stage1b_auto_metrics.json
+输出: data/stage1b_worksheet.csv, .runtime/stage1b_label_guide.md, data/stage1b_auto_metrics.json
 """
 import csv
 import json
@@ -94,7 +96,7 @@ def main():
 ## 验收
 P >= 95% 且 R >= 95% (以标注金标准为唯一权威), 通过后 PDF 通道才有接管资格。
 """
-    with open('data/stage1b_label_guide.md', 'w', encoding='utf-8') as f:
+    with open('.runtime/stage1b_label_guide.md', 'w', encoding='utf-8') as f:
         f.write(guide)
 
     # --- 自动外部锚点: 目录页对齐率 (全量 stage1a 提取成功样本) ---

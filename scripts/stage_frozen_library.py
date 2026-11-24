@@ -210,7 +210,7 @@ def main():
             'name': 'h1_frozen_combo_library',
             'version': '1.0.0',
             'frozen_at': datetime.now(timezone.utc).isoformat(),
-            'authority': 'deliverables/01-requirement.md (v2) E1; 本库为判定程序，变更须走 MINOR/MAJOR',
+            'authority': 'nooshare-design/implementation-docs/nooshare-annual-semi-extraction/deliverables/01-requirement.md (v2) E1; 本库为判定程序，变更须走 MINOR/MAJOR',
             'description': '经规则审核确认的一级标题组合冻结库，供 h1_extractor 加载作为判定依据',
             'n_combos': len(combos),
             'n_unique_fingerprints': len(fps),

@@ -1,3 +1,5 @@
+import os as _runtime_os
+_runtime_os.makedirs(".runtime", exist_ok=True)
 """H1 提取器校验报告生成器 —— 对照客观标准评估提取质量。
 
 客观标准：
@@ -333,7 +335,7 @@ def main() -> None:
                     help="数据来源：jsonl 文件或 PostgreSQL")
     ap.add_argument("--jsonl", default="data/h1_full.jsonl",
                     help="JSONL 文件路径（当 --source=jsonl 时使用）")
-    ap.add_argument("--output", default="deliverables/h1_validation_report.md",
+    ap.add_argument("--output", default=".runtime/h1_validation_report.md",
                     help="报告输出路径")
     args = ap.parse_args()
     

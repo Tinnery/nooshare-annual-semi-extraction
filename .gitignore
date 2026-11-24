@@ -24,6 +24,9 @@ build/
 .idea/
 .DS_Store
 
+# 本地运行产物（正式文字材料在 nooshare-design）
+.runtime/
+
 # 工作台本地记忆
 .workbuddy/
 

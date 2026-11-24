@@ -315,7 +315,7 @@ def main():
     output_data = {
         "registry": "nooshare-annual-semi-extraction/chapter-structures",
         "registry_version": 1,
-        "authority": "deliverables/01-requirement.md (v2) §二 E1",
+        "authority": "nooshare-design/implementation-docs/nooshare-annual-semi-extraction/deliverables/01-requirement.md (v2) §二 E1",
         "source": "从 annual_semi_extraction/spec/regulatory_texts/*.pdf 提取",
         "note": "纯事实提取，不涉及 reg_version 自变量裁决。用于 E1 判定程序的'应然章节清单'。",
         "structures": results,

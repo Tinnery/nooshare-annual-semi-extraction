@@ -1,3 +1,5 @@
+import os as _runtime_os
+_runtime_os.makedirs(".runtime", exist_ok=True)
 """stage2_bulk.py — PDF 批量获取+提取+入库（阶段2长尾 / 阶段3全量 共用, 可断点续传）
 
 流程: PG目标清单 → 巨潮解析直链 → 下载到本地tmp → 12核提取 → 结果写PG → PDF上传rustfs → 清理tmp
@@ -26,7 +28,7 @@ SCOPE = os.environ.get('H1_SCOPE', 'longtail')
 TMP = os.environ.get('H1_PDF_TMP', '/source/annual-semi/pdf-tmp')
 ORG_CACHE = 'data/cninfo_orgid_cache.json'
 BATCH = int(os.environ.get('H1_BATCH', '200'))
-REPORT_MD = 'data/pdf_validation_report_2.md' if SCOPE == 'longtail' else 'data/pdf_validation_report_3.md'
+REPORT_MD = '.runtime/pdf_validation_report_2.md' if SCOPE == 'longtail' else '.runtime/pdf_validation_report_3.md'
 REPORT_JSON = 'data/stage2_metrics.json' if SCOPE == 'longtail' else 'data/stage3_metrics.json'
 
 RUSTFS = {'endpoint': 'https://s3.rustfs.pro.neuralj.com', 'key': os.environ.get("RUSTFS_ACCESS_KEY", ""),

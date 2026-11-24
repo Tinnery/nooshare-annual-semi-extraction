@@ -1,3 +1,5 @@
+import os as _runtime_os
+_runtime_os.makedirs(".runtime", exist_ok=True)
 """阶段1a: 500份扩量回归验证 — 抽样→巨潮解析直链→并行下载→12核提取→门禁评估
 
 门禁: numbering命中率>=80% 且 法定纯度>=88% (不回退于阶段0的89.5%)
@@ -368,7 +370,7 @@ def write_report_md(m):
     ]
     for k, v in m['md_alignment_numbering'].items():
         lines.append(f'| {k} | {v["n_samples"]} | {v["md_total"]} | {v["md_matched"]} | {v["align_rate"]:.1%} |')
-    with open('data/pdf_validation_report_1a.md', 'w', encoding='utf-8') as f:
+    with open('.runtime/pdf_validation_report_1a.md', 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines) + '\n')
 
 
