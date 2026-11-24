@@ -14,14 +14,56 @@
 
 ### 文字材料索引（nooshare-design）
 
+全部 42 份材料逐文件列示；权威正文只在 nooshare-design，本仓库不复制。
+
+#### deliverables/ — 需求、提案、规格与交付（22 份）
+
 | 材料 | 权威位置（nooshare-design） |
 |------|------------------------------|
-| 需求权威（R'0-R'9 / E1-E6） | `implementation-docs/nooshare-annual-semi-extraction/deliverables/01-requirement.md` |
-| 需求框架与执行计划 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/02-framing-deep-requirements.md`、`03-framing-execution-plan.md` |
-| 深度重写提案 / 消费者契约 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/04-deep-rewrite-proposal.md`、`05-consumer-contract.md` |
-| 标题模式 / 编号组合 / 校正规范 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/` 下 `08`–`15` 对应文件 |
-| 验证与校正报告 | `implementation-docs/nooshare-annual-semi-extraction/reports/` |
-| 三份记忆笔记（过程档案） | `implementation-docs/nooshare-annual-semi-extraction/memory/` |
+| 冻结需求 v2（R'0-R'9 / E1-E6 唯一权威） | `implementation-docs/nooshare-annual-semi-extraction/deliverables/01-requirement.md` |
+| Framing & Chunks 深度需求重写 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/02-framing-deep-requirements.md` |
+| Framing & Chunks 落地策略与执行手册 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/03-framing-execution-plan.md` |
+| R'0-R'9 深度重写提案（01 的 delta） | `implementation-docs/nooshare-annual-semi-extraction/deliverables/04-deep-rewrite-proposal.md` |
+| 特征矩阵消费者与维护规则契约 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/05-consumer-contract.md` |
+| 一级标题 Pattern 积累法提案 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/06-heading-pattern-accumulation-proposal.md` |
+| 施工手册：更深版本的文档结构识别 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/07-01-施工手册-更深版本的文档结构识别.md` |
+| 最终报告：三源交叉、根因审计与落地结果 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/07-02-最终报告-三源交叉与根因审计.md` |
+| 四项裁决决策单（决策记录，非规格） | `implementation-docs/nooshare-annual-semi-extraction/deliverables/07-gate-decision-sheet.md` |
+| 一级标题 Codebook（测量学根基 v1） | `implementation-docs/nooshare-annual-semi-extraction/deliverables/08-heading-codebook.md` |
+| 会话总结：A 股年报/半年报 H1 标题抽取体系 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/08-SESSION-SUMMARY-技术上下文与状态.md` |
+| 一级标题积累法：全量实证报告与需求重写 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/09-heading-empirical-report.md` |
+| 金标准预标注分析报告 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/09-预标注分析报告.md` |
+| 是否需要识别一级标题：前提审查 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/10-heading-necessity-analysis.md` |
+| 一级标题误识别修正：形态建模 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/11-heading-morphology-correction.md` |
+| 编号组合提取：更深版本 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/12-numbering-combos.md` |
+| H1 全量提取：方法文档与交付清单 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/13-h1-full-extraction.md` |
+| H1 组合修正与融合规格（C0-C6） | `implementation-docs/nooshare-annual-semi-extraction/deliverables/14-h1-combo-correction-spec.md` |
+| H1 组合修正与融合交付报告 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/15-h1-combo-correction-report.md` |
+| 重构交付报告 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/15-refactoring-report.md` |
+| 冻结组合库四步落地报告 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/16-冻结组合库四步落地报告.md` |
+| H1 提取器校验报告 | `implementation-docs/nooshare-annual-semi-extraction/deliverables/h1_validation_report.md` |
+
+#### reports/ — 验证报告（4 份）
+
+| 材料 | 权威位置（nooshare-design） |
+|------|------------------------------|
+| PDF 字体指纹通道验证报告（阶段 0） | `implementation-docs/nooshare-annual-semi-extraction/reports/pdf_validation_report.md` |
+| 阶段 1a 扩量回归验证报告 | `implementation-docs/nooshare-annual-semi-extraction/reports/pdf_validation_report_1a.md` |
+| 阶段 2 长尾修复验证报告 | `implementation-docs/nooshare-annual-semi-extraction/reports/pdf_validation_report_2.md` |
+| 阶段 1b 金标准标注指南 | `implementation-docs/nooshare-annual-semi-extraction/reports/stage1b_label_guide.md` |
+
+#### memory/ — 过程档案（3 份）
+
+| 材料 | 权威位置（nooshare-design） |
+|------|------------------------------|
+| 过程档案 | `implementation-docs/nooshare-annual-semi-extraction/memory/2026-11-13.md` |
+| 过程档案（外部评估意见落地研判） | `implementation-docs/nooshare-annual-semi-extraction/memory/2026-11-14.md` |
+| 过程档案 | `implementation-docs/nooshare-annual-semi-extraction/memory/2026-11-15.md` |
+
+#### 归档 README（1 份）
+
+| 材料 | 权威位置（nooshare-design） |
+|------|------------------------------|
 | README 原文归档 | `implementation-docs/nooshare-annual-semi-extraction/README-full.md` |
 
 通过 `workspace.yaml` 定位 nooshare-design 的 checkout 路径后读取上述文件。
