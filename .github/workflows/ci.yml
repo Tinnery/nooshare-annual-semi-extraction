@@ -90,7 +90,7 @@ jobs:
   # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
   # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
   infra-probe:
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     concurrency:
       group: nooshare-ci-probe-${{ github.repository }}
       cancel-in-progress: false
