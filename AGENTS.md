@@ -90,3 +90,7 @@
 - R'0-R'9 冻结在先，代码在后
 - 每个 R 绑外部锚（监管准则/量化 DB/未来业绩/hash 复现/缺失机制/问询函）
 - 任何 unit 完成后必须跑对应 E 标准，不过不许合入
+
+## 主机约束
+
+本仓库只在 pro 主机开发和运行。禁止 clone 到 Windows 主机（travis-hp）。如果在 Windows 主机上发现本仓库的 checkout，应删除该 checkout 并修正来源（不正确的 clone 操作或 workspace 配置）。
