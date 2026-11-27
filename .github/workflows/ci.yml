@@ -108,8 +108,10 @@ jobs:
         export STUNNEL_HOST="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_host)"
         export STUNNEL_PSK="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_psk)"
         export PG_PASSWORD="$(echo "$NOOSHARE_INFRA" | jq -r .pg_password)"
-        export PG_USER="$(echo "$NOOSHARE_INFRA" | jq -r .pg_user)"
-        export PG_NAME="$(echo "$NOOSHARE_INFRA" | jq -r .pg_db)"
+        # Match the current Workenv DEV authority: database nooshare_dev, role ci.
+        # Do not let stale PG_USER / pg_db values in the shared secret redirect this job.
+        export PG_USER="ci"
+        export PG_NAME="nooshare_dev"
         export RUSTFS_ACCESS_KEY="$(echo "$NOOSHARE_INFRA" | jq -r .rustfs_access_key)"
         export RUSTFS_SECRET_KEY="$(echo "$NOOSHARE_INFRA" | jq -r .rustfs_secret_key)"
         export RUSTFS_BUCKET="$(echo "$NOOSHARE_INFRA" | jq -r .rustfs_bucket)"
