@@ -8,10 +8,12 @@ OUT_DIR="$WORK_DIR/dev-market-data-inventory"
 SQL_FILE="$WORK_DIR/dev-market-data-inventory.sql"
 ZIP_OUT="$WORK_DIR/dev-market-data-inventory.zip"
 ENCRYPTED_OUT="$WORK_DIR/dev-market-data-inventory.encrypted.json"
+STUNNEL_LOG="$WORK_DIR/dev-market-data-stunnel.log"
+PSQL_ERR="$WORK_DIR/dev-market-data-psql.err"
 PG_PORT="${PG_LOCAL_PORT:-15432}"
 PG_HOST="127.0.0.1"
 PG_DB="nooshare_dev"
-PG_USER="ci_probe"
+PG_USER="ci"
 
 cleanup() {
   rm -rf "$OUT_DIR"
@@ -31,7 +33,9 @@ fi
 
 rm -rf "$OUT_DIR"
 mkdir -m 700 -p "$OUT_DIR"
-rm -f "$ENCRYPTED_OUT"
+rm -f "$ENCRYPTED_OUT" "$STUNNEL_LOG" "$PSQL_ERR"
+touch "$STUNNEL_LOG" "$PSQL_ERR"
+chmod 600 "$STUNNEL_LOG" "$PSQL_ERR"
 
 # PG-only tunnel: do not open or probe the RustFS listener for this audit.
 : "\${STUNNEL_HOST:?STUNNEL_HOST secret missing}"
@@ -54,7 +58,8 @@ CONF="$WORK_DIR/ci-stunnel.conf"
 cat > "$CONF" <<EOF
 foreground = yes
 pid =
-debug = 0
+debug = 7
+output = $STUNNEL_LOG
 sslVersionMin = TLSv1.2
 
 [pg]
@@ -369,10 +374,33 @@ COMMIT;
 SQL
 chmod 600 "$SQL_FILE"
 
-PGPASSWORD="$PG_PASSWORD" psql \
-  -X --csv -v ON_ERROR_STOP=1 -P pager=off \
+if ! PGPASSWORD="$PG_PASSWORD" psql \
+  -X --csv -v ON_ERROR_STOP=1 -P pager=off -w \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
-  -f "$SQL_FILE" >/dev/null
+  -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
+  python3 - "$STUNNEL_LOG" "$PSQL_ERR" <<'PY'
+import pathlib
+import re
+import sys
+
+stunnel_log = pathlib.Path(sys.argv[1]).read_text(errors="replace")
+psql_error = pathlib.Path(sys.argv[2]).read_text(errors="replace")
+
+categories = {
+    "PSK_OR_IDENTITY": r"(?i)(PSK|identity).*(not found|unknown|failed|mismatch)|(?:not found|unknown|failed|mismatch).*(PSK|identity)",
+    "TLS_HANDSHAKE": r"(?i)(SSL_connect|SSL_accept|handshake|TLS alert|no shared cipher)",
+    "REMOTE_CONNECT": r"(?i)(connect_blocking|connection refused|network is unreachable|host is unreachable|timed out)",
+    "REMOTE_CLOSE": r"(?i)(connection reset|unexpected eof|connection closed)",
+    "CONFIG_OR_PROCESS": r"(?i)(configuration failed|invalid option|cannot open|permission denied|service .* failed)",
+}
+detected = [name for name, pattern in categories.items() if re.search(pattern, stunnel_log)]
+print("DEV_MARKET_INVENTORY=FAIL code=PG_SESSION_SETUP")
+print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" in psql_error else "PSQL_ERROR=OTHER")
+print("STUNNEL_DIAG=" + (",".join(detected) if detected else "NO_CLASSIFIED_ERROR"))
+print(f"STUNNEL_LOG_BYTES={len(stunnel_log.encode())}")
+PY
+  exit 1
+fi
 
 python3 - "$OUT_DIR" "$ZIP_OUT" "$ENCRYPTED_OUT" <<'PY'
 import base64
