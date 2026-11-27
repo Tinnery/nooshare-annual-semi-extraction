@@ -335,7 +335,19 @@ if ! PGPASSWORD="$PG_PASSWORD" psql \
   -X --csv -v ON_ERROR_STOP=1 \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
   -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
-  # Stop stunnel after the failed client has exited so its final connection state is flushed to disk.
+  # Read-only S3 health GET to separate a common frp/backend outage from a PG-only outage.
+  S3_HEALTH_ERR="$WORK_DIR/dev-market-data-s3-health.err"
+  S3_HEALTH_STATUS="$WORK_DIR/dev-market-data-s3-health.status"
+  if curl --silent --show-error --max-time 5 \
+      -o /dev/null -w '%{http_code}' \
+      http://127.0.0.1:15500/minio/health/live \
+      >"$S3_HEALTH_STATUS" 2>"$S3_HEALTH_ERR"; then
+    echo "S3_HEALTH_HTTP=$(cat "$S3_HEALTH_STATUS")"
+  else
+    echo "S3_HEALTH_HTTP=FAILED"
+    sed -n '1,2p' "$S3_HEALTH_ERR" | sed -E 's#https?://[^ ]+#<endpoint>#g'
+  fi
+  # Stop stunnel after diagnostics so the final PG and S3 session states are flushed.
   bash scripts/ci/teardown.sh >/dev/null 2>&1 || true
   python3 - "$PSQL_ERR" "$STUNNEL_LOG" "$WORK_DIR/ci-stunnel.pid" <<'PY'
 import pathlib
