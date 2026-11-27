@@ -301,6 +301,9 @@ jobs:
   # One-shot, read-only snapshot of DEV market-data metadata; never run the corpus jobs.
   dev-market-data-inventory:
     name: DEV market data inventory (read-only)
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
     if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[dev-market-data-inventory]')
     runs-on: ubuntu-latest
     timeout-minutes: 10
