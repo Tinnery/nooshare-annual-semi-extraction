@@ -80,6 +80,7 @@ jobs:
   # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
   # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
   infra-probe:
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     concurrency:
       group: nooshare-ci-probe-${{ github.repository }}
       cancel-in-progress: false
@@ -295,3 +296,44 @@ jobs:
           h2-extraction-failures.jsonl
           h2-corpus-summary.json
         retention-days: 7
+
+
+  # One-shot, read-only snapshot of DEV market-data metadata; never run the corpus jobs.
+  dev-market-data-inventory:
+    name: DEV market data inventory (read-only)
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[dev-market-data-inventory]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ci-probe
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client and encrypted snapshot dependencies
+        run: |
+          sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true update -qq
+          sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true install -y -qq stunnel4 postgresql-client netcat-openbsd python3-cryptography
+
+      - name: Read DEV catalog and market-data aggregates through PG-only tunnel
+        env:
+          NOOSHARE_INFRA: ${{ secrets.NOOSHARE_INFRA }}
+        run: |
+          set -euo pipefail
+          export STUNNEL_HOST="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_host)"
+          export STUNNEL_PSK="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_psk)"
+          export PG_PASSWORD="$(echo "$NOOSHARE_INFRA" | jq -r .pg_password)"
+          export PG_USER="$(echo "$NOOSHARE_INFRA" | jq -r .pg_user)"
+          export PG_DB="$(echo "$NOOSHARE_INFRA" | jq -r .pg_db)"
+          bash scripts/ci/export_dev_market_inventory.sh
+
+      - name: Upload encrypted DEV inventory
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-market-data-inventory-encrypted
+          path: ${{ runner.temp }}/dev-market-data-inventory.encrypted.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Remove encrypted export from runner
+        if: always()
+        run: rm -f "${{ runner.temp }}/dev-market-data-inventory.encrypted.json"
