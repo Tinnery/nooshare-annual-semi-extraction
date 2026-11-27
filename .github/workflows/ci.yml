@@ -80,7 +80,7 @@ jobs:
   # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
   # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
   infra-probe:
-    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[infra-probe]')
     concurrency:
       group: nooshare-ci-probe-${{ github.repository }}
       cancel-in-progress: false
@@ -239,11 +239,14 @@ jobs:
   # H2 语料批量抽取：从 RustFS annual-semi 桶下载已发布的 MD 文件，
   # 执行 H2（第二节）内容抽取，产出 JSONL 结果。与 H1 解耦，独立运行。
   h2-corpus:
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h2-sample]')
+    if: always() && (github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h2-sample]'))
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 60
     environment: ci-probe
-    needs: infra-probe
+    needs: [infra-probe, h1-corpus]
 
     steps:
     - uses: actions/checkout@v4
@@ -301,10 +304,11 @@ jobs:
   # One-shot, read-only snapshot of DEV market-data metadata; never run the corpus jobs.
   dev-market-data-inventory:
     name: DEV market data inventory (read-only)
+    needs: [infra-probe, h1-corpus, h2-corpus]
     concurrency:
       group: nooshare-ci-probe-${{ github.repository }}
       cancel-in-progress: false
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[dev-market-data-inventory]')
+    if: always() && github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[dev-market-data-inventory]')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: ci-probe
