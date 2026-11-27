@@ -327,6 +327,96 @@ GROUP BY event_type, source_id
 ORDER BY event_type, source_id;
 \\o
 
+\\o $OUT_DIR/factor_event_validation.csv
+WITH events AS (
+  SELECT g.symbol, g.date AS ex_date, g.c1, g.c2, g.c3, g.c4
+  FROM tong.gbbq g
+  WHERE g.category = 1
+),
+joined AS (
+  SELECT e.*,
+         pre.date AS pre_date,
+         pre.close AS pre_close_raw,
+         pre_f.factor_cum AS pre_factor_cum,
+         cur.open AS ex_open_raw,
+         cur.close AS ex_close_raw,
+         cur_f.factor_cum AS ex_factor_cum,
+         (pre.close - COALESCE(e.c1, 0) / 10.0
+                   + COALESCE(e.c2, 0) * COALESCE(e.c4, 0) / 10.0)
+         / NULLIF(1.0 + COALESCE(e.c3, 0) / 10.0
+                        + COALESCE(e.c4, 0) / 10.0, 0) AS theoretical_ex_price
+  FROM events e
+  LEFT JOIN LATERAL (
+    SELECT d.date, d.close
+    FROM tong.stock_daily d
+    WHERE d.symbol = e.symbol AND d.date < e.ex_date
+    ORDER BY d.date DESC
+    LIMIT 1
+  ) pre ON true
+  LEFT JOIN tong.stock_daily cur
+    ON cur.symbol = e.symbol AND cur.date = e.ex_date
+  LEFT JOIN public.hfq_daily pre_f
+    ON pre_f.symbol = e.symbol AND pre_f.date = pre.date
+  LEFT JOIN public.hfq_daily cur_f
+    ON cur_f.symbol = e.symbol AND cur_f.date = e.ex_date
+),
+scored AS (
+  SELECT *,
+         pre_close_raw / NULLIF(theoretical_ex_price, 0) AS expected_factor_step,
+         ex_factor_cum / NULLIF(pre_factor_cum, 0) AS stored_factor_step,
+         abs(ex_open_raw / NULLIF(theoretical_ex_price, 0) - 1.0) AS open_reference_error,
+         abs((ex_factor_cum / NULLIF(pre_factor_cum, 0))
+             / NULLIF(pre_close_raw / NULLIF(theoretical_ex_price, 0), 0) - 1.0)
+           AS factor_relative_error
+  FROM joined
+)
+SELECT count(*)::bigint AS category1_events,
+       count(*) FILTER (WHERE pre_close_raw IS NOT NULL)::bigint AS events_with_previous_raw_close,
+       count(*) FILTER (WHERE ex_open_raw IS NOT NULL)::bigint AS events_with_ex_date_open,
+       count(*) FILTER (WHERE expected_factor_step IS NOT NULL
+                         AND stored_factor_step IS NOT NULL)::bigint AS events_with_factor_comparison,
+       count(*) FILTER (WHERE factor_relative_error > 1e-8)::bigint AS factor_step_mismatch_gt_1e_8,
+       max(factor_relative_error) AS max_factor_relative_error,
+       percentile_cont(0.5) WITHIN GROUP (ORDER BY open_reference_error) AS open_reference_error_p50,
+       percentile_cont(0.9) WITHIN GROUP (ORDER BY open_reference_error) AS open_reference_error_p90,
+       percentile_cont(0.99) WITHIN GROUP (ORDER BY open_reference_error) AS open_reference_error_p99,
+       count(*) FILTER (WHERE open_reference_error <= 0.11)::bigint AS open_within_11pct,
+       count(*) FILTER (WHERE open_reference_error IS NOT NULL)::bigint AS open_reference_comparable,
+       count(*) FILTER (WHERE open_reference_error <= 0.11)::numeric
+         / NULLIF(count(*) FILTER (WHERE open_reference_error IS NOT NULL), 0) AS open_within_11pct_rate
+FROM scored;
+\\o
+
+\\o $OUT_DIR/cross_asset_symbol_collisions.csv
+WITH market_symbols AS (
+  SELECT 'stock'::text AS market_type, symbol FROM tong.stock_daily GROUP BY symbol
+  UNION ALL
+  SELECT 'index'::text AS market_type, symbol FROM tong.index_daily GROUP BY symbol
+  UNION ALL
+  SELECT 'etf'::text AS market_type, symbol FROM tong.etf_daily GROUP BY symbol
+),
+exact_collisions AS (
+  SELECT symbol,
+         string_agg(market_type, ',' ORDER BY market_type) AS market_types,
+         count(*)::bigint AS market_type_count
+  FROM market_symbols
+  GROUP BY symbol
+  HAVING count(*) > 1
+)
+SELECT 'exact_symbol' AS collision_type, symbol, market_types, market_type_count
+FROM exact_collisions
+UNION ALL
+SELECT 'exchange_code' AS collision_type,
+       substring(symbol from 1 for 2) || ':' || substring(symbol from 3 for 6) AS symbol,
+       string_agg(DISTINCT market_type, ',' ORDER BY market_type) AS market_types,
+       count(DISTINCT market_type)::bigint AS market_type_count
+FROM market_symbols
+WHERE length(symbol) >= 8
+GROUP BY substring(symbol from 1 for 2), substring(symbol from 3 for 6)
+HAVING count(DISTINCT market_type) > 1
+ORDER BY collision_type, symbol;
+\\o
+
 \\o $OUT_DIR/canonical_symbol_by_asset.csv
 SELECT COALESCE(asset_class, '<NULL>') AS asset_class,
        COALESCE(exchange, '<NULL>') AS exchange,
