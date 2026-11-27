@@ -11,7 +11,7 @@ ENCRYPTED_OUT="$WORK_DIR/dev-market-data-inventory.encrypted.json"
 PG_PORT="${PG_LOCAL_PORT:-15432}"
 PG_HOST="127.0.0.1"
 PG_DB="nooshare_dev"
-PG_USER="ci"
+PG_USER="ci_probe"
 
 cleanup() {
   rm -rf "$OUT_DIR"
@@ -33,8 +33,54 @@ rm -rf "$OUT_DIR"
 mkdir -m 700 -p "$OUT_DIR"
 rm -f "$ENCRYPTED_OUT"
 
-# Keep tunnel startup, all SQL reads, and teardown inside this one CI step.
-bash scripts/ci/build_stunnel.sh
+# PG-only tunnel: do not open or probe the RustFS listener for this audit.
+: "\${STUNNEL_HOST:?STUNNEL_HOST secret missing}"
+: "\${STUNNEL_PSK:?STUNNEL_PSK secret missing}"
+umask 077
+if [[ "$STUNNEL_HOST" == *:* ]]; then
+  RELAY_HOST="\${STUNNEL_HOST%%:*}"
+  RELAY_PORT="\${STUNNEL_HOST##*:}"
+else
+  RELAY_HOST="$STUNNEL_HOST"
+  RELAY_PORT="\${STUNNEL_PORT:-27002}"
+fi
+PSK_FILE="$WORK_DIR/ci-psk.txt"
+if [[ "$STUNNEL_PSK" == *:* ]]; then
+  printf '%s\n' "$STUNNEL_PSK" > "$PSK_FILE"
+else
+  printf 'k1:%s\n' "$STUNNEL_PSK" > "$PSK_FILE"
+fi
+CONF="$WORK_DIR/ci-stunnel.conf"
+cat > "$CONF" <<EOF
+foreground = yes
+pid =
+debug = 0
+sslVersionMin = TLSv1.2
+
+[pg]
+client = yes
+accept = 127.0.0.1:$PG_PORT
+connect = $RELAY_HOST:$RELAY_PORT
+sni = pg.noos.com
+ciphers = PSK
+PSKsecrets = $PSK_FILE
+EOF
+chmod 600 "$CONF" "$PSK_FILE"
+nohup stunnel "$CONF" </dev/null >/dev/null 2>&1 &
+echo $! > "$WORK_DIR/ci-stunnel.pid"
+ready=0
+for attempt in $(seq 1 30); do
+  if nc -z 127.0.0.1 "$PG_PORT" 2>/dev/null; then
+    ready=1
+    break
+  fi
+  sleep 0.5
+done
+if [[ "$ready" != "1" ]]; then
+  echo "DEV_MARKET_INVENTORY=FAIL code=PG_TUNNEL_NOT_READY"
+  exit 1
+fi
+echo "DEV_MARKET_INVENTORY_TUNNEL=PG_ONLY_READY"
 
 cat > "$SQL_FILE" <<SQL
 \\set ON_ERROR_STOP on
