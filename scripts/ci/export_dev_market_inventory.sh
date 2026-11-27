@@ -38,15 +38,15 @@ touch "$STUNNEL_LOG" "$PSQL_ERR"
 chmod 600 "$STUNNEL_LOG" "$PSQL_ERR"
 
 # PG-only tunnel: do not open or probe the RustFS listener for this audit.
-: "\${STUNNEL_HOST:?STUNNEL_HOST secret missing}"
-: "\${STUNNEL_PSK:?STUNNEL_PSK secret missing}"
+: "${STUNNEL_HOST:?STUNNEL_HOST secret missing}"
+: "${STUNNEL_PSK:?STUNNEL_PSK secret missing}"
 umask 077
 if [[ "$STUNNEL_HOST" == *:* ]]; then
-  RELAY_HOST="\${STUNNEL_HOST%%:*}"
-  RELAY_PORT="\${STUNNEL_HOST##*:}"
+  RELAY_HOST="${STUNNEL_HOST%%:*}"
+  RELAY_PORT="${STUNNEL_HOST##*:}"
 else
   RELAY_HOST="$STUNNEL_HOST"
-  RELAY_PORT="\${STUNNEL_PORT:-27002}"
+  RELAY_PORT="${STUNNEL_PORT:-27002}"
 fi
 PSK_FILE="$WORK_DIR/ci-psk.txt"
 if [[ "$STUNNEL_PSK" == *:* ]]; then
