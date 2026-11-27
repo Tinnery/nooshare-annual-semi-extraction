@@ -8,7 +8,6 @@ OUT_DIR="$WORK_DIR/dev-market-data-inventory"
 SQL_FILE="$WORK_DIR/dev-market-data-inventory.sql"
 ZIP_OUT="$WORK_DIR/dev-market-data-inventory.zip"
 ENCRYPTED_OUT="$WORK_DIR/dev-market-data-inventory.encrypted.json"
-STUNNEL_LOG="$WORK_DIR/dev-market-data-stunnel.log"
 PSQL_ERR="$WORK_DIR/dev-market-data-psql.err"
 PG_PORT="${PG_LOCAL_PORT:-15432}"
 PG_HOST="127.0.0.1"
@@ -33,56 +32,13 @@ fi
 
 rm -rf "$OUT_DIR"
 mkdir -m 700 -p "$OUT_DIR"
-rm -f "$ENCRYPTED_OUT" "$STUNNEL_LOG" "$PSQL_ERR"
-touch "$STUNNEL_LOG" "$PSQL_ERR"
-chmod 600 "$STUNNEL_LOG" "$PSQL_ERR"
+rm -f "$ENCRYPTED_OUT" "$PSQL_ERR"
+touch "$PSQL_ERR"
+chmod 600 "$PSQL_ERR"
 
-# PG-only tunnel: do not open or probe the RustFS listener for this audit.
-: "${STUNNEL_HOST:?STUNNEL_HOST secret missing}"
-: "${STUNNEL_PSK:?STUNNEL_PSK secret missing}"
-umask 077
-if [[ "$STUNNEL_HOST" == *:* ]]; then
-  RELAY_HOST="${STUNNEL_HOST%%:*}"
-  RELAY_PORT="${STUNNEL_HOST##*:}"
-else
-  RELAY_HOST="$STUNNEL_HOST"
-  RELAY_PORT="${STUNNEL_PORT:-27002}"
-fi
-PSK_FILE="$WORK_DIR/ci-psk.txt"
-if [[ "$STUNNEL_PSK" == *:* ]]; then
-  printf '%s\n' "$STUNNEL_PSK" > "$PSK_FILE"
-else
-  printf 'k1:%s\n' "$STUNNEL_PSK" > "$PSK_FILE"
-fi
-CONF="$WORK_DIR/ci-stunnel.conf"
-cat > "$CONF" <<EOF
-foreground = yes
-pid =
-debug = 7
-output = $STUNNEL_LOG
-sslVersionMin = TLSv1.2
-
-[pg]
-client = yes
-accept = 127.0.0.1:$PG_PORT
-connect = $RELAY_HOST:$RELAY_PORT
-sni = pg.noos.com
-ciphers = PSK
-PSKsecrets = $PSK_FILE
-EOF
-chmod 600 "$CONF" "$PSK_FILE"
-nohup stunnel "$CONF" </dev/null >/dev/null 2>&1 &
-STUNNEL_PID=$!
-echo "$STUNNEL_PID" > "$WORK_DIR/ci-stunnel.pid"
-# Do not probe 127.0.0.1:$PG_PORT here. A TCP readiness probe can consume
-# the SNI router's constrained PG slot; the actual read-only psql session
-# must be the first PG connection after tunnel startup.
-sleep 1
-if ! kill -0 "$STUNNEL_PID" 2>/dev/null; then
-  echo "DEV_MARKET_INVENTORY=FAIL code=PG_TUNNEL_PROCESS_EXITED"
-  exit 1
-fi
-echo "DEV_MARKET_INVENTORY_TUNNEL=PG_ONLY_PROCESS_READY"
+# Reuse the repository's proven stunnel bootstrap rather than maintaining a second implementation.
+# It opens local PG/RustFS listeners; this audit issues PostgreSQL reads only and never calls S3.
+bash scripts/ci/build_stunnel.sh
 
 cat > "$SQL_FILE" <<SQL
 \\set ON_ERROR_STOP on
@@ -375,10 +331,10 @@ SQL
 chmod 600 "$SQL_FILE"
 
 if ! PGPASSWORD="$PG_PASSWORD" psql \
-  -X --csv -v ON_ERROR_STOP=1 -P pager=off -w \
+  -X --csv -v ON_ERROR_STOP=1 \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
   -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
-  python3 - "$STUNNEL_LOG" "$PSQL_ERR" <<'PY'
+  python3 - "$WORK_DIR/unused-stunnel-log" "$PSQL_ERR" <<'PY'
 import pathlib
 import re
 import sys
@@ -396,6 +352,9 @@ categories = {
 detected = [name for name, pattern in categories.items() if re.search(pattern, stunnel_log)]
 print("DEV_MARKET_INVENTORY=FAIL code=PG_SESSION_SETUP")
 print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" in psql_error else "PSQL_ERROR=OTHER")
+detail = " ".join(psql_error.split())
+detail = re.sub(r"(?i)(password|token|secret|psk)\\s*[:=]\\s*\\S+", r"\\1=[REDACTED]", detail)
+print("PSQL_DETAIL=" + detail[:400])
 print("STUNNEL_DIAG=" + (",".join(detected) if detected else "NO_CLASSIFIED_ERROR"))
 print(f"STUNNEL_LOG_BYTES={len(stunnel_log.encode())}")
 for line in stunnel_log.splitlines()[-40:]:
