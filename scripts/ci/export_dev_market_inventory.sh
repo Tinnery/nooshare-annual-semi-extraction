@@ -398,6 +398,11 @@ print("DEV_MARKET_INVENTORY=FAIL code=PG_SESSION_SETUP")
 print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" in psql_error else "PSQL_ERROR=OTHER")
 print("STUNNEL_DIAG=" + (",".join(detected) if detected else "NO_CLASSIFIED_ERROR"))
 print(f"STUNNEL_LOG_BYTES={len(stunnel_log.encode())}")
+for line in stunnel_log.splitlines()[-40:]:
+    line = re.sub(r"\\b(?:\\d{1,3}\\.){3}\\d{1,3}(?::\\d+)?\\b", "[IP]", line)
+    line = re.sub(r"\\b[a-fA-F0-9]{64,}\\b", "[HEX_REDACTED]", line)
+    line = re.sub(r"(?i)(PSKsecrets\\s*=).*", r"\\1[REDACTED]", line)
+    print("STUNNEL_EVENT=" + line[:220])
 PY
   exit 1
 fi
