@@ -10,8 +10,8 @@ ZIP_OUT="$WORK_DIR/dev-market-data-inventory.zip"
 ENCRYPTED_OUT="$WORK_DIR/dev-market-data-inventory.encrypted.json"
 PG_PORT="${PG_LOCAL_PORT:-15432}"
 PG_HOST="127.0.0.1"
-PG_DB="${PG_DB:-}"
-PG_USER="${PG_USER:-ci}"
+PG_DB="nooshare_dev"
+PG_USER="ci"
 
 cleanup() {
   rm -rf "$OUT_DIR"
