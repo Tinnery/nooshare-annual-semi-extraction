@@ -258,6 +258,75 @@ HAVING count(*) > 0;
 \\gexec
 \\o
 
+\\o $OUT_DIR/factor_event_samples.csv
+WITH candidate_events AS (
+  SELECT g.symbol, g.date AS ex_date, g.c1, g.c2, g.c3, g.c4
+  FROM tong.gbbq g
+  WHERE g.category = 1
+    AND g.date <= (SELECT max(date) FROM public.hfq_daily)
+    AND (COALESCE(g.c1, 0) <> 0 OR COALESCE(g.c3, 0) <> 0 OR COALESCE(g.c4, 0) <> 0)
+  ORDER BY g.date DESC, g.symbol
+  LIMIT 100
+),
+matched AS (
+  SELECT e.*,
+         pre.date AS pre_date,
+         pre.close AS pre_close_raw,
+         pre.factor_cum AS pre_factor_cum,
+         cur.close AS ex_close_raw,
+         cur.close_hfq AS ex_close_hfq,
+         cur.factor_cum AS ex_factor_cum,
+         (pre.close - COALESCE(e.c1, 0) / 10.0
+                   + COALESCE(e.c2, 0) * COALESCE(e.c4, 0) / 10.0)
+         / NULLIF(1.0 + COALESCE(e.c3, 0) / 10.0
+                        + COALESCE(e.c4, 0) / 10.0, 0) AS theoretical_ex_price
+  FROM candidate_events e
+  LEFT JOIN LATERAL (
+    SELECT p.date, p.close, p.factor_cum
+    FROM public.hfq_daily p
+    WHERE p.symbol = e.symbol AND p.date < e.ex_date
+    ORDER BY p.date DESC
+    LIMIT 1
+  ) pre ON true
+  LEFT JOIN public.hfq_daily cur
+    ON cur.symbol = e.symbol AND cur.date = e.ex_date
+)
+SELECT symbol, ex_date, pre_date, pre_close_raw, ex_close_raw,
+       c1, c2, c3, c4,
+       theoretical_ex_price,
+       pre_close_raw / NULLIF(theoretical_ex_price, 0) AS theoretical_event_factor,
+       ex_factor_cum / NULLIF(pre_factor_cum, 0) AS stored_factor_step,
+       (ex_factor_cum / NULLIF(pre_factor_cum, 0))
+         / NULLIF(pre_close_raw / NULLIF(theoretical_ex_price, 0), 0) - 1
+         AS factor_relative_error,
+       ex_factor_cum,
+       ex_close_hfq,
+       ex_close_raw * ex_factor_cum AS recomputed_hfq_close,
+       ex_close_raw * ex_factor_cum
+         / NULLIF((SELECT f.factor_cum
+                   FROM public.hfq_daily f
+                   WHERE f.symbol = matched.symbol
+                   ORDER BY f.date DESC LIMIT 1), 0) AS current_basis_qfq_close
+FROM matched
+WHERE pre_close_raw IS NOT NULL AND ex_close_raw IS NOT NULL
+ORDER BY ex_date DESC, symbol;
+\\o
+
+\\o $OUT_DIR/corporate_action_pit_coverage.csv
+SELECT event_type,
+       COALESCE(source_id, '<NULL>') AS source_id,
+       count(*)::bigint AS rows,
+       count(*) FILTER (WHERE pub_date IS NOT NULL)::bigint AS rows_with_pub_date,
+       count(*) FILTER (WHERE pub_date IS NULL)::bigint AS rows_without_pub_date,
+       min(effective_date)::text AS min_effective_date,
+       max(effective_date)::text AS max_effective_date,
+       min(observed_at)::text AS first_observed_at,
+       max(observed_at)::text AS last_observed_at
+FROM public.corporate_action_event
+GROUP BY event_type, source_id
+ORDER BY event_type, source_id;
+\\o
+
 \\o $OUT_DIR/canonical_symbol_by_asset.csv
 SELECT COALESCE(asset_class, '<NULL>') AS asset_class,
        COALESCE(exchange, '<NULL>') AS exchange,
