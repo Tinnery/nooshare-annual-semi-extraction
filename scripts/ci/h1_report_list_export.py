@@ -42,6 +42,11 @@ def main() -> None:
         audit("REPORT_LIST=FAIL code=INVALID_START_YEAR")
         sys.exit(1)
 
+    # 只记录目标契约是否匹配，不打印实际用户名、数据库名或凭据。
+    user_is_ci = os.environ.get("PG_USER", "ci") == "ci"
+    database_is_dev = os.environ.get("PG_NAME", "nooshare_dev") == "nooshare_dev"
+    audit(f"REPORT_LIST_TARGET user_is_ci={int(user_is_ci)} database_is_dev={int(database_is_dev)}")
+
     output_dir = os.environ.get("CORPUS_OUTPUT_DIR", "corpus-data")
     out_path = Path(output_dir)
     out_path.mkdir(parents=True, exist_ok=True)
