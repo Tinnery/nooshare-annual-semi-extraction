@@ -321,8 +321,6 @@ jobs:
           export STUNNEL_HOST="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_host)"
           export STUNNEL_PSK="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_psk)"
           export PG_PASSWORD="$(echo "$NOOSHARE_INFRA" | jq -r .pg_password)"
-          export PG_USER="$(echo "$NOOSHARE_INFRA" | jq -r .pg_user)"
-          export PG_DB="$(echo "$NOOSHARE_INFRA" | jq -r .pg_db)"
           bash scripts/ci/export_dev_market_inventory.sh
 
       - name: Upload encrypted DEV inventory
