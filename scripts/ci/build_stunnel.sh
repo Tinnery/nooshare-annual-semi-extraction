@@ -39,7 +39,8 @@ CONF="$WORK_DIR/ci-stunnel.conf"
 cat > "$CONF" <<EOF
 foreground = yes
 pid =
-debug = 0
+debug = 7
+output = ${WORK_DIR}/dev-market-data-stunnel.log
 sslVersionMin = TLSv1.2
 
 ; PostgreSQL —— SNI router 分流到 pro 的 PG 5432
