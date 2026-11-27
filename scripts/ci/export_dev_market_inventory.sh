@@ -427,15 +427,15 @@ archive_bytes = zip_path.read_bytes()
 archive_sha256 = hashlib.sha256(archive_bytes).hexdigest()
 
 public_key_pem = b"""-----BEGIN PUBLIC KEY-----
-MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA5+uVWwZLnTlObFi+NASw
-z678oPHN+pBg0dGTtPolrl9Y5tVVxJxbzx37rlUydTh7FnM57wlC+OYnwmXtjRZS
-pyLJnFVOK8U30EQkE9BOCaTZtvMvXoTaNPBv3hh9hN9GUhtDkCiLZrdqYK8PH5tI
-6OTYSR2Cl4MundVwRMOu9a65wr547Ujg11n8h4dHDl9msHKQy1RIRIghiwvX/plV
-DXwqnaACeQ3zHXlEZbjcvcaoeRIuJ1tlniRzgaBxHCSCoGCnPHdgRkHdnVfE/hae
-tb2SZ5+ZcTQ1lv7W/Ot4YV8VI5E9HNyOs4sbAFg/qn7Fuz2joUDf6/BpTn9v7uY7
-uV/BVMX1wvnDX7R0O5/9A0goYm24fqQvW++xKPazg5jBpoan0wbm0x4JmA+11ws0
-Zr64ZFpp/tNo0y3ogM7bx+HtuMMI+XD9pQdr/fHrP/n4St8QNcsUlZ8E7sG52mYh
-iUKhZH9GoXs64ZHF19ertIw2F1MHmy/Z99N7Y+1sEU7dAgMBAAE=
+MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAr2dr+2j1i0o+QPWbBfb2
+k6JH9Ahc6P6O09ohWeDXl67Daa6knQrc74VNgaji11IY6dBEAPX506Tr+PFc3vyT
+q6A5bRA2QRdu3Wp86JNvwJIcn+CGhnvKLH0WjyI25/udlCrC+POaUmCBSXrSZq/u
+mSNp4VdGWMRXoxMTt1MTqWocU/SykZ24dHWXMgzP/FzWSoHZwwKVSWjWrtelDWUV
+2OKhJk/iwJZ1nutol/0tAiB4mq5QxSo2/fJpJIwIISiJp1IWkEFQUz7OlbocLfzR
+JJxO4yuJ1CgagJllkzy5Qc1U7Bf1JeVUCVqETRxMAlOVsiRGi4j6w1CaOx9vQ3Ck
+5/UvCYeq2MaDM/8LAaLJZC5eGdNxZHLlYTwgkHFGBeUciEfsGcPt0Jxjk1cXEb8+
+VmLMOwO+lCk8BGT1KRIEjb6wrhv1CrKelw6W7ov1Gv5J6vfWG5fzEYN3xInb0k7E
+m2y9B82wgLRQ0ZFOlA+THf1+G5ejRtS/lbYufS7b0KO/AgMBAAE=
 -----END PUBLIC KEY-----"""
 public_key = serialization.load_pem_public_key(public_key_pem)
 
