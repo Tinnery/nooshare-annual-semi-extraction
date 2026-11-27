@@ -1,0 +1,797 @@
+#!/usr/bin/env bash
+# One-shot DEV market-data inventory. PostgreSQL transaction is explicitly READ ONLY.
+# The resulting metadata-only archive is encrypted for this conversation and removed from the runner.
+set -euo pipefail
+
+WORK_DIR="${RUNNER_TEMP:-/tmp}"
+OUT_DIR="$WORK_DIR/dev-market-data-inventory"
+SQL_FILE="$WORK_DIR/dev-market-data-inventory.sql"
+ZIP_OUT="$WORK_DIR/dev-market-data-inventory.zip"
+ENCRYPTED_OUT="$WORK_DIR/dev-market-data-inventory.encrypted.json"
+PSQL_ERR="$WORK_DIR/dev-market-data-psql.err"
+STUNNEL_LOG="$WORK_DIR/dev-market-data-stunnel.log"
+PG_PORT="${PG_LOCAL_PORT:-15432}"
+PG_HOST="127.0.0.1"
+PG_DB="nooshare_dev"
+PG_USER="ci"
+
+cleanup() {
+  rm -rf "$OUT_DIR"
+  rm -f "$SQL_FILE" "$ZIP_OUT"
+  bash scripts/ci/teardown.sh >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
+if [[ "$PG_DB" != "nooshare_dev" ]]; then
+  echo "DEV_MARKET_INVENTORY=FAIL code=DATABASE_TARGET_MISMATCH"
+  exit 1
+fi
+if [[ -z "${PG_PASSWORD:-}" || -z "${STUNNEL_HOST:-}" || -z "${STUNNEL_PSK:-}" ]]; then
+  echo "DEV_MARKET_INVENTORY=FAIL code=REQUIRED_SECRET_MISSING"
+  exit 1
+fi
+
+rm -rf "$OUT_DIR"
+mkdir -m 700 -p "$OUT_DIR"
+rm -f "$ENCRYPTED_OUT" "$PSQL_ERR" "$STUNNEL_LOG"
+touch "$PSQL_ERR" "$STUNNEL_LOG"
+chmod 600 "$PSQL_ERR" "$STUNNEL_LOG"
+
+# Reuse the repository's proven stunnel bootstrap rather than maintaining a second implementation.
+# It opens local PG/RustFS listeners; this audit issues PostgreSQL reads only and never calls S3.
+bash scripts/ci/build_stunnel.sh
+
+cat > "$SQL_FILE" <<SQL
+\\set ON_ERROR_STOP on
+\\pset pager off
+SET statement_timeout = '240s';
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
+
+\\o $OUT_DIR/server.csv
+SELECT current_database() AS database_name,
+       current_user AS connected_role,
+       current_setting('server_version') AS server_version,
+       transaction_timestamp() AS snapshot_at;
+\\o
+
+\\o $OUT_DIR/schemas.csv
+SELECT n.nspname AS schema_name,
+       pg_get_userbyid(n.nspowner) AS owner_name,
+       has_schema_privilege(current_user, n.oid, 'USAGE') AS can_usage,
+       has_schema_privilege(current_user, n.oid, 'CREATE') AS can_create
+FROM pg_catalog.pg_namespace n
+WHERE n.nspname = ANY (ARRAY[
+  'iwen', 'ju', 'tong', 'finance', 'capital', 'raw', 'meta',
+  'annual_semi', 'public', 'indicators', 'strategy', 'research'
+])
+ORDER BY n.nspname;
+\\o
+
+\\o $OUT_DIR/relations.csv
+SELECT n.nspname AS schema_name,
+       c.relname AS relation_name,
+       CASE c.relkind
+         WHEN 'r' THEN 'table'
+         WHEN 'p' THEN 'partitioned_table'
+         WHEN 'v' THEN 'view'
+         WHEN 'm' THEN 'materialized_view'
+         WHEN 'f' THEN 'foreign_table'
+         ELSE c.relkind::text
+       END AS relation_kind,
+       pg_get_userbyid(c.relowner) AS owner_name,
+       c.reltuples::bigint AS estimated_rows,
+       pg_relation_size(c.oid)::bigint AS main_fork_bytes,
+       pg_total_relation_size(c.oid)::bigint AS total_bytes,
+       c.relpersistence AS persistence
+FROM pg_catalog.pg_class c
+JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = ANY (ARRAY[
+  'iwen', 'ju', 'tong', 'finance', 'capital', 'raw', 'meta',
+  'annual_semi', 'public', 'indicators', 'strategy', 'research'
+])
+  AND c.relkind IN ('r', 'p', 'v', 'm', 'f')
+ORDER BY n.nspname, c.relname;
+\\o
+
+\\o $OUT_DIR/columns.csv
+SELECT n.nspname AS schema_name,
+       c.relname AS relation_name,
+       a.attnum AS ordinal_position,
+       a.attname AS column_name,
+       format_type(a.atttypid, a.atttypmod) AS data_type,
+       NOT a.attnotnull AS is_nullable,
+       pg_get_expr(ad.adbin, ad.adrelid) AS default_expression
+FROM pg_catalog.pg_class c
+JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
+LEFT JOIN pg_catalog.pg_attrdef ad
+       ON ad.adrelid = c.oid AND ad.adnum = a.attnum
+WHERE n.nspname = ANY (ARRAY[
+  'iwen', 'ju', 'tong', 'finance', 'capital', 'raw', 'meta',
+  'annual_semi', 'public', 'indicators', 'strategy', 'research'
+])
+  AND c.relkind IN ('r', 'p', 'v', 'm', 'f')
+  AND a.attnum > 0
+  AND NOT a.attisdropped
+ORDER BY n.nspname, c.relname, a.attnum;
+\\o
+
+\\o $OUT_DIR/constraints.csv
+SELECT n.nspname AS schema_name,
+       c.relname AS relation_name,
+       con.conname AS constraint_name,
+       con.contype AS constraint_type,
+       pg_get_constraintdef(con.oid, true) AS definition
+FROM pg_catalog.pg_constraint con
+JOIN pg_catalog.pg_class c ON c.oid = con.conrelid
+JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = ANY (ARRAY[
+  'iwen', 'ju', 'tong', 'finance', 'capital', 'raw', 'meta',
+  'annual_semi', 'public', 'indicators', 'strategy', 'research'
+])
+ORDER BY n.nspname, c.relname, con.conname;
+\\o
+
+\\o $OUT_DIR/indexes.csv
+SELECT n.nspname AS schema_name,
+       t.relname AS relation_name,
+       i.relname AS index_name,
+       ix.indisprimary AS is_primary,
+       ix.indisunique AS is_unique,
+       pg_get_indexdef(i.oid) AS definition
+FROM pg_catalog.pg_index ix
+JOIN pg_catalog.pg_class t ON t.oid = ix.indrelid
+JOIN pg_catalog.pg_class i ON i.oid = ix.indexrelid
+JOIN pg_catalog.pg_namespace n ON n.oid = t.relnamespace
+WHERE n.nspname = ANY (ARRAY[
+  'iwen', 'ju', 'tong', 'finance', 'capital', 'raw', 'meta',
+  'annual_semi', 'public', 'indicators', 'strategy', 'research'
+])
+ORDER BY n.nspname, t.relname, i.relname;
+\\o
+
+\\o $OUT_DIR/relation_access.csv
+SELECT n.nspname AS schema_name,
+       c.relname AS relation_name,
+       has_table_privilege(current_user, c.oid, 'SELECT') AS can_select,
+       has_table_privilege(current_user, c.oid, 'INSERT') AS can_insert,
+       has_table_privilege(current_user, c.oid, 'UPDATE') AS can_update,
+       has_table_privilege(current_user, c.oid, 'DELETE') AS can_delete,
+       has_table_privilege(current_user, c.oid, 'TRUNCATE') AS can_truncate
+FROM pg_catalog.pg_class c
+JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = ANY (ARRAY[
+  'iwen', 'ju', 'tong', 'finance', 'capital', 'raw', 'meta',
+  'annual_semi', 'public', 'indicators', 'strategy', 'research'
+])
+  AND c.relkind IN ('r', 'p', 'v', 'm', 'f')
+ORDER BY n.nspname, c.relname;
+\\o
+
+\\o $OUT_DIR/market_data_ranges.csv
+SELECT format(
+  'SELECT %L AS relation, count(*)::bigint AS row_count, ' ||
+  'count(DISTINCT %I)::bigint AS distinct_instruments, ' ||
+  'min(%I)::text AS min_date, max(%I)::text AS max_date, ' ||
+  'pg_total_relation_size(%L::regclass)::bigint AS total_bytes ' ||
+  'FROM %I.%I',
+  schema_name || '.' || relation_name,
+  identity_column,
+  date_column,
+  date_column,
+  schema_name || '.' || relation_name,
+  schema_name,
+  relation_name
+)
+FROM (VALUES
+  ('tong', 'stock_daily', 'symbol', 'date'),
+  ('tong', 'index_daily', 'symbol', 'date'),
+  ('tong', 'etf_daily', 'symbol', 'date'),
+  ('tong', 'gbbq', 'symbol', 'date'),
+  ('public', 'hfq_daily', 'symbol', 'date'),
+  ('public', 'canonical_symbol', 'symbol', 'list_date'),
+  ('public', 'trading_calendar', 'market', 'cal_date'),
+  ('indicators', 'daily_base_aligned', 'code', 'date')
+) AS targets(schema_name, relation_name, identity_column, date_column)
+WHERE to_regclass(format('%I.%I', schema_name, relation_name)) IS NOT NULL
+ORDER BY schema_name, relation_name;
+\\gexec
+\\o
+
+\\o $OUT_DIR/hfq_daily_field_fill.csv
+SELECT format(
+  'SELECT count(*)::bigint AS total_rows%s FROM public.hfq_daily',
+  COALESCE(
+    string_agg(
+      format(
+        ', count(*) FILTER (WHERE %I IS NOT NULL)::bigint AS present_%I, ' ||
+        'count(*) FILTER (WHERE %I IS NULL)::bigint AS null_%I',
+        column_name, column_name, column_name, column_name
+      ),
+      ''
+      ORDER BY ordinal_position
+    ),
+    ''
+  )
+)
+FROM information_schema.columns
+WHERE table_schema = 'public'
+  AND table_name = 'hfq_daily'
+  AND column_name = ANY (ARRAY[
+    'open', 'high', 'low', 'close',
+    'open_hfq', 'high_hfq', 'low_hfq', 'close_hfq',
+    'volume', 'amount', 'factor_cum', 'hfq_return'
+  ])
+HAVING count(*) > 0;
+\\gexec
+\\o
+
+\\o $OUT_DIR/hfq_raw_consistency.csv
+SELECT format(
+  'SELECT count(DISTINCT (h.symbol, h.date))::bigint AS hfq_keys, ' ||
+  'count(DISTINCT (r.symbol, r.date)) FILTER (WHERE r.symbol IS NOT NULL)::bigint AS matched_raw_keys, ' ||
+  'count(DISTINCT (h.symbol, h.date)) FILTER (WHERE r.symbol IS NULL)::bigint AS missing_raw_keys%s ' ||
+  'FROM public.hfq_daily h LEFT JOIN tong.stock_daily r ' ||
+  'ON r.symbol = h.symbol AND r.date = h.date',
+  COALESCE(
+    string_agg(
+      format(
+        ', count(DISTINCT (h.symbol, h.date)) FILTER (WHERE h.%I IS DISTINCT FROM r.%I)::bigint AS mismatch_%I',
+        c.column_name, c.column_name, c.column_name
+      ),
+      ''
+      ORDER BY c.ordinal_position
+    ),
+    ''
+  )
+)
+FROM information_schema.columns c
+JOIN information_schema.columns r
+  ON r.table_schema = 'tong'
+ AND r.table_name = 'stock_daily'
+ AND r.column_name = c.column_name
+WHERE c.table_schema = 'public'
+  AND c.table_name = 'hfq_daily'
+  AND c.column_name = ANY (ARRAY['open', 'high', 'low', 'close', 'volume', 'amount'])
+  AND to_regclass('tong.stock_daily') IS NOT NULL
+HAVING count(*) > 0;
+\\gexec
+\\o
+
+\\o $OUT_DIR/factor_event_samples.csv
+WITH candidate_events AS (
+  SELECT g.symbol, g.date AS ex_date, g.c1, g.c2, g.c3, g.c4
+  FROM tong.gbbq g
+  WHERE g.category = 1
+    AND g.date <= (SELECT max(date) FROM public.hfq_daily)
+    AND (COALESCE(g.c1, 0) <> 0 OR COALESCE(g.c3, 0) <> 0 OR COALESCE(g.c4, 0) <> 0)
+  ORDER BY g.date DESC, g.symbol
+  LIMIT 100
+),
+matched AS (
+  SELECT e.*,
+         pre.date AS pre_date,
+         pre.close AS pre_close_raw,
+         pre.factor_cum AS pre_factor_cum,
+         cur.close AS ex_close_raw,
+         cur.close_hfq AS ex_close_hfq,
+         cur.factor_cum AS ex_factor_cum,
+         (pre.close - COALESCE(e.c1, 0) / 10.0
+                   + COALESCE(e.c2, 0) * COALESCE(e.c4, 0) / 10.0)
+         / NULLIF(1.0 + COALESCE(e.c3, 0) / 10.0
+                        + COALESCE(e.c4, 0) / 10.0, 0) AS theoretical_ex_price
+  FROM candidate_events e
+  LEFT JOIN LATERAL (
+    SELECT p.date, p.close, p.factor_cum
+    FROM public.hfq_daily p
+    WHERE p.symbol = e.symbol AND p.date < e.ex_date
+    ORDER BY p.date DESC
+    LIMIT 1
+  ) pre ON true
+  LEFT JOIN public.hfq_daily cur
+    ON cur.symbol = e.symbol AND cur.date = e.ex_date
+)
+SELECT symbol, ex_date, pre_date, pre_close_raw, ex_close_raw,
+       c1, c2, c3, c4,
+       theoretical_ex_price,
+       pre_close_raw / NULLIF(theoretical_ex_price, 0) AS theoretical_event_factor,
+       ex_factor_cum / NULLIF(pre_factor_cum, 0) AS stored_factor_step,
+       (ex_factor_cum / NULLIF(pre_factor_cum, 0))
+         / NULLIF(pre_close_raw / NULLIF(theoretical_ex_price, 0), 0) - 1
+         AS factor_relative_error,
+       ex_factor_cum,
+       ex_close_hfq,
+       ex_close_raw * ex_factor_cum AS recomputed_hfq_close,
+       ex_close_raw * ex_factor_cum
+         / NULLIF((SELECT f.factor_cum
+                   FROM public.hfq_daily f
+                   WHERE f.symbol = matched.symbol
+                   ORDER BY f.date DESC LIMIT 1), 0) AS current_basis_qfq_close
+FROM matched
+WHERE pre_close_raw IS NOT NULL AND ex_close_raw IS NOT NULL
+ORDER BY ex_date DESC, symbol;
+\\o
+
+\\o $OUT_DIR/corporate_action_pit_coverage.csv
+SELECT event_type,
+       COALESCE(source_id, '<NULL>') AS source_id,
+       count(*)::bigint AS rows,
+       count(*) FILTER (WHERE pub_date IS NOT NULL)::bigint AS rows_with_pub_date,
+       count(*) FILTER (WHERE pub_date IS NULL)::bigint AS rows_without_pub_date,
+       min(effective_date)::text AS min_effective_date,
+       max(effective_date)::text AS max_effective_date,
+       min(observed_at)::text AS first_observed_at,
+       max(observed_at)::text AS last_observed_at
+FROM public.corporate_action_event
+GROUP BY event_type, source_id
+ORDER BY event_type, source_id;
+\\o
+
+\\o $OUT_DIR/factor_event_validation.csv
+WITH events AS (
+  SELECT g.symbol, g.date AS ex_date, g.c1, g.c2, g.c3, g.c4
+  FROM tong.gbbq g
+  WHERE g.category = 1
+),
+joined AS (
+  SELECT e.*,
+         pre.date AS pre_date,
+         pre.close AS pre_close_raw,
+         pre_f.factor_cum AS pre_factor_cum,
+         cur.open AS ex_open_raw,
+         cur.close AS ex_close_raw,
+         cur_f.factor_cum AS ex_factor_cum,
+         (pre.close - COALESCE(e.c1, 0) / 10.0
+                   + COALESCE(e.c2, 0) * COALESCE(e.c4, 0) / 10.0)
+         / NULLIF(1.0 + COALESCE(e.c3, 0) / 10.0
+                        + COALESCE(e.c4, 0) / 10.0, 0) AS theoretical_ex_price
+  FROM events e
+  LEFT JOIN LATERAL (
+    SELECT d.date, d.close
+    FROM tong.stock_daily d
+    WHERE d.symbol = e.symbol AND d.date < e.ex_date
+    ORDER BY d.date DESC
+    LIMIT 1
+  ) pre ON true
+  LEFT JOIN tong.stock_daily cur
+    ON cur.symbol = e.symbol AND cur.date = e.ex_date
+  LEFT JOIN public.hfq_daily pre_f
+    ON pre_f.symbol = e.symbol AND pre_f.date = pre.date
+  LEFT JOIN public.hfq_daily cur_f
+    ON cur_f.symbol = e.symbol AND cur_f.date = e.ex_date
+),
+scored AS (
+  SELECT *,
+         pre_close_raw / NULLIF(theoretical_ex_price, 0) AS expected_factor_step,
+         ex_factor_cum / NULLIF(pre_factor_cum, 0) AS stored_factor_step,
+         abs(ex_open_raw / NULLIF(theoretical_ex_price, 0) - 1.0) AS open_reference_error,
+         abs((ex_factor_cum / NULLIF(pre_factor_cum, 0))
+             / NULLIF(pre_close_raw / NULLIF(theoretical_ex_price, 0), 0) - 1.0)
+           AS factor_relative_error
+  FROM joined
+)
+SELECT count(*)::bigint AS category1_events,
+       count(*) FILTER (WHERE pre_close_raw IS NOT NULL)::bigint AS events_with_previous_raw_close,
+       count(*) FILTER (WHERE ex_open_raw IS NOT NULL)::bigint AS events_with_ex_date_open,
+       count(*) FILTER (WHERE expected_factor_step IS NOT NULL
+                         AND stored_factor_step IS NOT NULL)::bigint AS events_with_factor_comparison,
+       count(*) FILTER (WHERE factor_relative_error > 1e-8)::bigint AS factor_step_mismatch_gt_1e_8,
+       max(factor_relative_error) AS max_factor_relative_error,
+       percentile_cont(0.5) WITHIN GROUP (ORDER BY open_reference_error) AS open_reference_error_p50,
+       percentile_cont(0.9) WITHIN GROUP (ORDER BY open_reference_error) AS open_reference_error_p90,
+       percentile_cont(0.99) WITHIN GROUP (ORDER BY open_reference_error) AS open_reference_error_p99,
+       count(*) FILTER (WHERE open_reference_error <= 0.11)::bigint AS open_within_11pct,
+       count(*) FILTER (WHERE open_reference_error IS NOT NULL)::bigint AS open_reference_comparable,
+       count(*) FILTER (WHERE open_reference_error <= 0.11)::numeric
+         / NULLIF(count(*) FILTER (WHERE open_reference_error IS NOT NULL), 0) AS open_within_11pct_rate
+FROM scored;
+\\o
+
+\\o $OUT_DIR/cross_asset_symbol_collisions.csv
+WITH market_symbols AS (
+  SELECT 'stock'::text AS market_type, symbol FROM tong.stock_daily GROUP BY symbol
+  UNION ALL
+  SELECT 'index'::text AS market_type, symbol FROM tong.index_daily GROUP BY symbol
+  UNION ALL
+  SELECT 'etf'::text AS market_type, symbol FROM tong.etf_daily GROUP BY symbol
+),
+exact_collisions AS (
+  SELECT symbol,
+         string_agg(market_type, ',' ORDER BY market_type) AS market_types,
+         count(*)::bigint AS market_type_count
+  FROM market_symbols
+  GROUP BY symbol
+  HAVING count(*) > 1
+)
+SELECT 'exact_symbol' AS collision_type, symbol, market_types, market_type_count
+FROM exact_collisions
+UNION ALL
+SELECT 'exchange_code' AS collision_type,
+       substring(symbol from 1 for 2) || ':' || substring(symbol from 3 for 6) AS symbol,
+       string_agg(DISTINCT market_type, ',' ORDER BY market_type) AS market_types,
+       count(DISTINCT market_type)::bigint AS market_type_count
+FROM market_symbols
+WHERE length(symbol) >= 8
+GROUP BY substring(symbol from 1 for 2), substring(symbol from 3 for 6)
+HAVING count(DISTINCT market_type) > 1
+ORDER BY collision_type, symbol;
+\\o
+
+\\o $OUT_DIR/canonical_symbol_by_asset.csv
+SELECT COALESCE(asset_class, '<NULL>') AS asset_class,
+       COALESCE(exchange, '<NULL>') AS exchange,
+       count(*)::bigint AS rows,
+       count(DISTINCT canonical_id)::bigint AS distinct_canonical_ids,
+       count(*) FILTER (WHERE list_date IS NULL)::bigint AS missing_list_date,
+       count(*) FILTER (WHERE delist_date IS NOT NULL)::bigint AS delisted
+FROM public.canonical_symbol
+GROUP BY asset_class, exchange
+ORDER BY asset_class, exchange;
+\\o
+
+\\o $OUT_DIR/canonical_symbol_mapping_coverage.csv
+SELECT format(
+  'SELECT %L AS relation, count(*)::bigint AS distinct_symbols, ' ||
+  'count(*) FILTER (WHERE c.canonical_id IS NOT NULL)::bigint AS mapped_symbols, ' ||
+  'count(*) FILTER (WHERE c.canonical_id IS NULL)::bigint AS unmapped_symbols ' ||
+  'FROM (SELECT DISTINCT symbol FROM %I.%I) s ' ||
+  'LEFT JOIN public.canonical_symbol c ON c.symbol = s.symbol',
+  schema_name || '.' || relation_name,
+  schema_name,
+  relation_name
+)
+FROM (VALUES
+  ('tong', 'stock_daily'),
+  ('tong', 'index_daily'),
+  ('tong', 'etf_daily'),
+  ('public', 'hfq_daily')
+) AS targets(schema_name, relation_name)
+WHERE to_regclass(format('%I.%I', schema_name, relation_name)) IS NOT NULL
+  AND to_regclass('public.canonical_symbol') IS NOT NULL
+ORDER BY schema_name, relation_name;
+\\gexec
+\\o
+
+\\o $OUT_DIR/tong_symbol_meta_by_class.csv
+SELECT class,
+       count(*)::bigint AS rows,
+       count(DISTINCT symbol)::bigint AS distinct_symbols
+FROM tong.symbol_meta
+GROUP BY class
+ORDER BY class;
+\\o
+
+\\o $OUT_DIR/tong_gbbq_by_category.csv
+SELECT category,
+       count(*)::bigint AS rows,
+       count(DISTINCT symbol)::bigint AS distinct_symbols,
+       min(date)::text AS min_date,
+       max(date)::text AS max_date
+FROM tong.gbbq
+GROUP BY category
+ORDER BY category;
+\\o
+
+\\o $OUT_DIR/data_freshness.csv
+SELECT namespace, table_name, max_date, row_count, refreshed_at, status
+FROM public.data_freshness
+WHERE namespace = ANY (ARRAY['tong', 'public', 'indicators', 'ju', 'finance'])
+ORDER BY namespace, table_name;
+\\o
+
+\\o $OUT_DIR/recent_pipeline_runs.csv
+SELECT run_id, status, started_at, completed_at, code_commit, input_hash, output_hash
+FROM public.pipeline_run
+ORDER BY started_at DESC
+LIMIT 20;
+\\o
+
+
+\o $OUT_DIR/bar_quality.csv
+WITH source_rows AS (
+  SELECT 'tong.stock_daily'::text AS relation, symbol, date, source,
+         volume::numeric AS volume, amount::numeric AS amount
+  FROM tong.stock_daily
+  UNION ALL
+  SELECT 'tong.index_daily', symbol, date, source,
+         volume::numeric, amount::numeric
+  FROM tong.index_daily
+  UNION ALL
+  SELECT 'tong.etf_daily', symbol, date, source,
+         volume::numeric, amount::numeric
+  FROM tong.etf_daily
+),
+source_profile AS (
+  SELECT relation,
+         count(*)::bigint AS rows,
+         count(DISTINCT symbol)::bigint AS symbols,
+         count(DISTINCT source)::bigint AS source_versions,
+         count(*) FILTER (WHERE volume IS NULL)::bigint AS null_volume,
+         count(*) FILTER (WHERE volume = 0)::bigint AS zero_volume,
+         count(*) FILTER (WHERE volume < 0)::bigint AS negative_volume,
+         count(*) FILTER (WHERE volume IS NOT NULL AND volume <> trunc(volume))::bigint AS fractional_volume,
+         count(*) FILTER (WHERE amount IS NULL)::bigint AS null_amount,
+         count(*) FILTER (WHERE amount < 0)::bigint AS negative_amount,
+         min(date)::text AS min_date,
+         max(date)::text AS max_date
+  FROM source_rows
+  GROUP BY relation
+),
+duplicate_source_keys AS (
+  SELECT relation, count(*)::bigint AS duplicate_symbol_date_keys
+  FROM (
+    SELECT relation, symbol, date
+    FROM source_rows
+    GROUP BY relation, symbol, date
+    HAVING count(*) > 1
+  ) d
+  GROUP BY relation
+)
+SELECT p.*, COALESCE(d.duplicate_symbol_date_keys, 0) AS duplicate_symbol_date_keys
+FROM source_profile p
+LEFT JOIN duplicate_source_keys d USING (relation)
+ORDER BY relation;
+\o
+
+\o $OUT_DIR/hfq_null_attribution.csv
+SELECT count(*)::bigint AS rows,
+       count(*) FILTER (WHERE open_hfq IS NULL AND open IS NOT NULL)::bigint AS open_hfq_null_raw_present,
+       count(*) FILTER (WHERE high_hfq IS NULL AND high IS NOT NULL)::bigint AS high_hfq_null_raw_present,
+       count(*) FILTER (WHERE low_hfq IS NULL AND low IS NOT NULL)::bigint AS low_hfq_null_raw_present,
+       count(*) FILTER (WHERE close_hfq IS NULL AND close IS NOT NULL)::bigint AS close_hfq_null_raw_present,
+       count(*) FILTER (WHERE close_hfq IS NULL AND close IS NULL)::bigint AS close_both_null,
+       count(*) FILTER (WHERE factor_cum IS NULL)::bigint AS null_factor,
+       count(*) FILTER (WHERE factor_cum <= 0)::bigint AS nonpositive_factor,
+       count(*) FILTER (WHERE hfq_return IS NULL)::bigint AS null_hfq_return,
+       count(DISTINCT symbol) FILTER (WHERE close_hfq IS NULL)::bigint AS symbols_with_null_hfq
+FROM public.hfq_daily;
+\o
+
+\o $OUT_DIR/market_union_latest_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+WITH target AS (
+  SELECT GREATEST(
+    (SELECT max(date) FROM public.hfq_daily),
+    (SELECT max(date) FROM tong.index_daily),
+    (SELECT max(date) FROM tong.etf_daily)
+  ) AS d
+)
+SELECT b.symbol, b.date, b.open, b.high, b.low, b.close, b.volume, b.amount, b.asset_class
+FROM (
+  SELECT symbol, date, open, high, low, close, volume, amount, 'stock'::text AS asset_class
+  FROM public.hfq_daily
+  UNION ALL
+  SELECT symbol, date, open, high, low, close, volume, amount, 'index'::text AS asset_class
+  FROM tong.index_daily
+  UNION ALL
+  SELECT symbol, date, open, high, low, close, volume, amount, 'etf'::text AS asset_class
+  FROM tong.etf_daily
+) b
+JOIN target t ON b.date = t.d;
+\o
+
+\o $OUT_DIR/stock_symbol_history_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM public.hfq_daily
+WHERE symbol = 'sh600519' AND date >= 20240101
+ORDER BY date;
+\o
+
+\o $OUT_DIR/stock_cross_section_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM public.hfq_daily
+WHERE date = (SELECT max(date) FROM public.hfq_daily);
+\o
+
+\o $OUT_DIR/index_cross_section_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM tong.index_daily
+WHERE date = (SELECT max(date) FROM tong.index_daily);
+\o
+
+\o $OUT_DIR/etf_cross_section_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM tong.etf_daily
+WHERE date = (SELECT max(date) FROM tong.etf_daily);
+\o
+
+COMMIT;
+SQL
+chmod 600 "$SQL_FILE"
+
+if ! PGSSLMODE=disable PGPASSWORD="$PG_PASSWORD" psql \
+  -X --csv -v ON_ERROR_STOP=1 \
+  -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
+  -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
+  # Read-only S3 health GET to separate a common frp/backend outage from a PG-only outage.
+  S3_HEALTH_ERR="$WORK_DIR/dev-market-data-s3-health.err"
+  S3_HEALTH_STATUS="$WORK_DIR/dev-market-data-s3-health.status"
+  if curl --silent --show-error --max-time 5 \
+      -o /dev/null -w '%{http_code}' \
+      http://127.0.0.1:15500/minio/health/live \
+      >"$S3_HEALTH_STATUS" 2>"$S3_HEALTH_ERR"; then
+    echo "S3_HEALTH_HTTP=$(cat "$S3_HEALTH_STATUS")"
+  else
+    echo "S3_HEALTH_HTTP=FAILED"
+    sed -n '1,2p' "$S3_HEALTH_ERR" | sed -E 's#https?://[^ ]+#<endpoint>#g'
+  fi
+  # Stop stunnel after diagnostics so the final PG and S3 session states are flushed.
+  bash scripts/ci/teardown.sh >/dev/null 2>&1 || true
+  python3 - "$PSQL_ERR" "$STUNNEL_LOG" "$WORK_DIR/ci-stunnel.pid" <<'PY'
+import pathlib
+import re
+import subprocess
+import sys
+
+psql_error = pathlib.Path(sys.argv[1]).read_text(errors="replace")
+stunnel_log = pathlib.Path(sys.argv[2]).read_text(errors="replace")
+pid_file = pathlib.Path(sys.argv[3])
+pid = pid_file.read_text().strip() if pid_file.exists() else ""
+alive = bool(pid) and subprocess.run(
+    ["kill", "-0", pid], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+).returncode == 0
+
+detail = " ".join(psql_error.split())
+detail = re.sub(r"(?i)(password|token|secret|psk)\s*[:=]\s*\S+", r"\1=[REDACTED]", detail)
+print("DEV_MARKET_INVENTORY=FAIL code=PG_SESSION_SETUP")
+print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" in psql_error else "PSQL_ERROR=OTHER")
+print("PSQL_DETAIL=" + detail[:400])
+print("STUNNEL_PROCESS=" + ("ALIVE" if alive else "EXITED"))
+print("STUNNEL_LOG_BYTES=" + str(len(stunnel_log.encode())))
+for line in stunnel_log.splitlines()[-160:]:
+    line = re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?\b", "[IP]", line)
+    line = re.sub(r"\b[a-fA-F0-9]{64,}\b", "[HEX_REDACTED]", line)
+    line = re.sub(r"(?i)(PSKsecrets\s*=).*", r"\1[REDACTED]", line)
+    print("STUNNEL_EVENT=" + line[:240])
+PY
+  exit 1
+fi
+
+
+python3 - "$OUT_DIR" <<'PY'
+import csv
+import json
+import pathlib
+import sys
+
+out = pathlib.Path(sys.argv[1])
+for name in (
+    "market_union_latest_plan.csv",
+    "stock_symbol_history_plan.csv",
+    "stock_cross_section_plan.csv",
+    "index_cross_section_plan.csv",
+    "etf_cross_section_plan.csv",
+):
+    path = out / name
+    with path.open(newline="", encoding="utf-8") as f:
+        row = next(csv.DictReader(f))
+    raw = row.get("QUERY PLAN") or row.get("QUERY_PLAN")
+    data = json.loads(raw)
+    root = data[0]
+    plan = root["Plan"]
+    nodes = []
+    def walk(node):
+        nodes.append(node.get("Node Type", "?"))
+        for child in node.get("Plans", []):
+            walk(child)
+    walk(plan)
+    print(
+        "QUERY_PLAN"
+        f" name={name.removesuffix('_plan.csv')}"
+        f" exec_ms={root.get('Execution Time')}"
+        f" planning_ms={root.get('Planning Time')}"
+        f" rows={plan.get('Actual Rows')}"
+        f" shared_hit={plan.get('Shared Hit Blocks', 0)}"
+        f" shared_read={plan.get('Shared Read Blocks', 0)}"
+        f" temp_read={plan.get('Temp Read Blocks', 0)}"
+        f" temp_written={plan.get('Temp Written Blocks', 0)}"
+        f" nodes={','.join(nodes)}"
+    )
+PY
+
+
+python3 - "$OUT_DIR" "$ZIP_OUT" "$ENCRYPTED_OUT" <<'PY'
+import base64
+import hashlib
+import json
+import os
+import pathlib
+import sys
+import zipfile
+from datetime import datetime, timezone
+
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+out_dir = pathlib.Path(sys.argv[1])
+zip_path = pathlib.Path(sys.argv[2])
+encrypted_path = pathlib.Path(sys.argv[3])
+
+files = sorted(p for p in out_dir.glob("*.csv") if p.is_file())
+if not files:
+    raise SystemExit("DEV_MARKET_INVENTORY=FAIL code=EMPTY_SNAPSHOT")
+
+manifest = {
+    "format": "nooshare-dev-market-data-inventory-v1",
+    "snapshot_at_utc": datetime.now(timezone.utc).isoformat(),
+    "files": [
+        {
+            "name": path.name,
+            "bytes": path.stat().st_size,
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        }
+        for path in files
+    ],
+}
+(out_dir / "manifest.json").write_text(
+    json.dumps(manifest, ensure_ascii=False, indent=2),
+    encoding="utf-8",
+)
+
+with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+    for path in sorted(out_dir.iterdir()):
+        if path.is_file():
+            archive.write(path, arcname=path.name)
+
+archive_bytes = zip_path.read_bytes()
+archive_sha256 = hashlib.sha256(archive_bytes).hexdigest()
+
+public_key_pem = b"""-----BEGIN PUBLIC KEY-----
+MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEA6haJlODGOhnCUdzAEMdn
+gnidOoldumokpYKAd4e+3rlA4x/psovNxh3ozjqW54Ys3Xe6z9b2xnn1eww/WdrI
+yfoxIXcG1KTDq9LHBAJYkD3UK3KtUmNWfsMZN+7EbDMKbnFncmIK6H0sKczN7ZqE
+cmHguP8nNXPjKVstgIeaxGH6YYI89ya18q/cqatTdjwmxr+6O9BiVL6sWzY7IupJ
+9W0ixBSHFJf4SsnZbLeaJV6FyeWSsTSNx0z3O/cJx6L8l1DTAlQN1x/IqpFUEtVW
+S6dx9vhdJQmsWcs0o9MTGpPWJZyDJwOC/wICc9LzUOVcDzjhMgSpXsUyAvRCwERU
+fZTLwpDMRHcElI8R6Pe4x7PxVaxne/DsV1pBrrHeI57P0cl/YmHs2h+6hS6/dImw
+ofVs6tDndtsq7tbpeC3F0dBKKDUt6r/eVNN1o4Duy5JyNH1SzoqXRWRfKGpUGWvk
+qI0l0rx55EMugzFPtT27W7eXrb9NL7ctpLKrbXfDDpglAgMBAAE=
+-----END PUBLIC KEY-----"""
+public_key = serialization.load_pem_public_key(public_key_pem)
+
+data_key = os.urandom(32)
+nonce = os.urandom(12)
+aad = b"nooshare:dev-market-data-inventory:v1"
+ciphertext = AESGCM(data_key).encrypt(nonce, archive_bytes, aad)
+wrapped_key = public_key.encrypt(
+    data_key,
+    padding.OAEP(
+        mgf=padding.MGF1(algorithm=hashes.SHA256()),
+        algorithm=hashes.SHA256(),
+        label=None,
+    ),
+)
+
+envelope = {
+    "format": "nooshare-encrypted-inventory-v1",
+    "key_wrap": "RSA-OAEP-SHA256",
+    "content_encryption": "AES-256-GCM",
+    "aad": base64.b64encode(aad).decode("ascii"),
+    "nonce": base64.b64encode(nonce).decode("ascii"),
+    "wrapped_key": base64.b64encode(wrapped_key).decode("ascii"),
+    "ciphertext": base64.b64encode(ciphertext).decode("ascii"),
+    "archive_sha256": archive_sha256,
+    "archive_bytes": len(archive_bytes),
+    "file_count": len(files) + 1,
+}
+encrypted_path.write_text(
+    json.dumps(envelope, separators=(",", ":")),
+    encoding="utf-8",
+)
+os.chmod(encrypted_path, 0o600)
+print(
+    "DEV_MARKET_INVENTORY=PASS "
+    f"files={len(files) + 1} "
+    f"archive_bytes={len(archive_bytes)} "
+    f"encrypted_bytes={encrypted_path.stat().st_size} "
+    f"archive_sha256={archive_sha256}"
+)
+PY
+
+test -s "$ENCRYPTED_OUT"
+echo "DEV_MARKET_INVENTORY_TARGET=nooshare_dev"

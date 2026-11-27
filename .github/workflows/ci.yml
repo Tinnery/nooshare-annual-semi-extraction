@@ -80,6 +80,7 @@ jobs:
   # 真连基础设施探针：经 stunnel 验证 PG / RustFS 连通性 + 零泄露证伪。
   # 与 test job 解耦：凭据仅在 environment 作用域注入，失败不阻塞普通测试结论。
   infra-probe:
+    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[infra-probe]')
     concurrency:
       group: nooshare-ci-probe-${{ github.repository }}
       cancel-in-progress: false
@@ -107,8 +108,10 @@ jobs:
         export STUNNEL_HOST="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_host)"
         export STUNNEL_PSK="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_psk)"
         export PG_PASSWORD="$(echo "$NOOSHARE_INFRA" | jq -r .pg_password)"
-        export PG_USER="$(echo "$NOOSHARE_INFRA" | jq -r .pg_user)"
-        export PG_NAME="$(echo "$NOOSHARE_INFRA" | jq -r .pg_db)"
+        # Match the current Workenv DEV authority: database nooshare_dev, role ci.
+        # Do not let stale PG_USER / pg_db values in the shared secret redirect this job.
+        export PG_USER="ci"
+        export PG_NAME="nooshare_dev"
         export RUSTFS_ACCESS_KEY="$(echo "$NOOSHARE_INFRA" | jq -r .rustfs_access_key)"
         export RUSTFS_SECRET_KEY="$(echo "$NOOSHARE_INFRA" | jq -r .rustfs_secret_key)"
         export RUSTFS_BUCKET="$(echo "$NOOSHARE_INFRA" | jq -r .rustfs_bucket)"
@@ -238,11 +241,14 @@ jobs:
   # H2 语料批量抽取：从 RustFS annual-semi 桶下载已发布的 MD 文件，
   # 执行 H2（第二节）内容抽取，产出 JSONL 结果。与 H1 解耦，独立运行。
   h2-corpus:
-    if: github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h2-sample]')
+    if: always() && (github.event_name != 'pull_request' || contains(github.event.pull_request.title, '[h2-sample]'))
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     timeout-minutes: 60
     environment: ci-probe
-    needs: infra-probe
+    needs: [infra-probe, h1-corpus]
 
     steps:
     - uses: actions/checkout@v4
@@ -295,3 +301,46 @@ jobs:
           h2-extraction-failures.jsonl
           h2-corpus-summary.json
         retention-days: 7
+
+
+  # One-shot, read-only snapshot of DEV market-data metadata; never run the corpus jobs.
+  dev-market-data-inventory:
+    name: DEV market data inventory (read-only)
+    needs: [infra-probe, h1-corpus, h2-corpus]
+    concurrency:
+      group: nooshare-ci-probe-${{ github.repository }}
+      cancel-in-progress: false
+    if: always() && github.event_name == 'pull_request' && contains(github.event.pull_request.title, '[dev-market-data-inventory]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: ci-probe
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client and encrypted snapshot dependencies
+        run: |
+          sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true update -qq
+          sudo apt-get -o Acquire::Retries=5 -o Acquire::ForceIPv4=true install -y -qq stunnel4 postgresql-client netcat-openbsd python3-cryptography curl
+
+      - name: Read DEV catalog and market-data aggregates through PG-only tunnel
+        env:
+          NOOSHARE_INFRA: ${{ secrets.NOOSHARE_INFRA }}
+        run: |
+          set -euo pipefail
+          export STUNNEL_HOST="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_host)"
+          export STUNNEL_PSK="$(echo "$NOOSHARE_INFRA" | jq -r .stunnel_psk)"
+          export PG_PASSWORD="$(echo "$NOOSHARE_INFRA" | jq -r .pg_password)"
+          bash scripts/ci/export_dev_market_inventory.sh
+
+      - name: Upload encrypted DEV inventory
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-market-data-inventory-encrypted
+          path: ${{ runner.temp }}/dev-market-data-inventory.encrypted.json
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Remove encrypted export from runner
+        if: always()
+        run: rm -f "${{ runner.temp }}/dev-market-data-inventory.encrypted.json"

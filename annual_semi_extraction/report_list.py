@@ -84,6 +84,34 @@ def slot_from_row(line: str) -> Optional[ReportSlot]:
     )
 
 
+def classify_psql_failure(stderr: str) -> str:
+    """将 psql stderr 映射为固定错误类别，不回显连接串或服务器文本。"""
+    message = (stderr or "").lower()
+    if "role" in message and "does not exist" in message:
+        return "REPORT_LIST_ROLE_MISSING"
+    if "password authentication failed" in message or "authentication failed" in message:
+        return "REPORT_LIST_AUTH_FAILED"
+    if "permission denied" in message:
+        return "REPORT_LIST_PERMISSION_DENIED"
+    if "no pg_hba.conf entry" in message:
+        return "REPORT_LIST_HBA_DENIED"
+    if "relation" in message and "does not exist" in message:
+        return "REPORT_LIST_OBJECT_MISSING"
+    if any(token in message for token in (
+        "server closed the connection",
+        "connection reset by peer",
+        "unexpected eof",
+        "connection terminated unexpectedly",
+        "ssl syscall error",
+    )):
+        return "REPORT_LIST_CONNECTION_CLOSED"
+    if "timeout" in message or "timed out" in message:
+        return "REPORT_LIST_TIMEOUT"
+    if "syntax error" in message:
+        return "REPORT_LIST_SQL_ERROR"
+    return "REPORT_LIST_PG_FAIL"
+
+
 def load_report_list(
     *,
     start_year: int,
@@ -123,7 +151,7 @@ def load_report_list(
         return None, "REPORT_LIST_PG_FAIL"
 
     if result.returncode != 0:
-        return None, "REPORT_LIST_PG_FAIL"
+        return None, classify_psql_failure(result.stderr)
 
     lines = [ln for ln in result.stdout.splitlines() if ln.strip()]
     slots: list[ReportSlot] = []
