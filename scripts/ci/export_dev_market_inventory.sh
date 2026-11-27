@@ -331,7 +331,7 @@ COMMIT;
 SQL
 chmod 600 "$SQL_FILE"
 
-if ! PGPASSWORD="$PG_PASSWORD" psql \
+if ! PGSSLMODE=disable PGPASSWORD="$PG_PASSWORD" psql \
   -X --csv -v ON_ERROR_STOP=1 \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
   -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
