@@ -67,20 +67,17 @@ PSKsecrets = $PSK_FILE
 EOF
 chmod 600 "$CONF" "$PSK_FILE"
 nohup stunnel "$CONF" </dev/null >/dev/null 2>&1 &
-echo $! > "$WORK_DIR/ci-stunnel.pid"
-ready=0
-for attempt in $(seq 1 30); do
-  if nc -z 127.0.0.1 "$PG_PORT" 2>/dev/null; then
-    ready=1
-    break
-  fi
-  sleep 0.5
-done
-if [[ "$ready" != "1" ]]; then
-  echo "DEV_MARKET_INVENTORY=FAIL code=PG_TUNNEL_NOT_READY"
+STUNNEL_PID=$!
+echo "$STUNNEL_PID" > "$WORK_DIR/ci-stunnel.pid"
+# Do not probe 127.0.0.1:$PG_PORT here. A TCP readiness probe can consume
+# the SNI router's constrained PG slot; the actual read-only psql session
+# must be the first PG connection after tunnel startup.
+sleep 1
+if ! kill -0 "$STUNNEL_PID" 2>/dev/null; then
+  echo "DEV_MARKET_INVENTORY=FAIL code=PG_TUNNEL_PROCESS_EXITED"
   exit 1
 fi
-echo "DEV_MARKET_INVENTORY_TUNNEL=PG_ONLY_READY"
+echo "DEV_MARKET_INVENTORY_TUNNEL=PG_ONLY_PROCESS_READY"
 
 cat > "$SQL_FILE" <<SQL
 \\set ON_ERROR_STOP on
