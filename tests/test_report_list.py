@@ -55,3 +55,23 @@ def test_to_dict_shape():
     assert set(d.keys()) == {
         "slot_key", "s3_key", "stock_code", "report_year", "period", "winner_md_path"
     }
+
+
+
+def test_classify_psql_failure_distinguishes_stale_role():
+    from annual_semi_extraction.report_list import classify_psql_failure
+
+    assert classify_psql_failure('FATAL: role "ci_probe" does not exist') == "REPORT_LIST_ROLE_MISSING"
+
+
+def test_classify_psql_failure_distinguishes_connection_drop():
+    from annual_semi_extraction.report_list import classify_psql_failure
+
+    assert classify_psql_failure("server closed the connection unexpectedly") == "REPORT_LIST_CONNECTION_CLOSED"
+
+
+def test_classify_psql_failure_never_needs_to_echo_raw_error():
+    from annual_semi_extraction.report_list import classify_psql_failure
+
+    assert classify_psql_failure("permission denied for table reconciled_report") == "REPORT_LIST_PERMISSION_DENIED"
+    assert classify_psql_failure("relation annual_semi.reconciled_report does not exist") == "REPORT_LIST_OBJECT_MISSING"
