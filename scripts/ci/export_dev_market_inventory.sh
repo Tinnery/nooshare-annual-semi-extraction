@@ -9,6 +9,7 @@ SQL_FILE="$WORK_DIR/dev-market-data-inventory.sql"
 ZIP_OUT="$WORK_DIR/dev-market-data-inventory.zip"
 ENCRYPTED_OUT="$WORK_DIR/dev-market-data-inventory.encrypted.json"
 PSQL_ERR="$WORK_DIR/dev-market-data-psql.err"
+STUNNEL_LOG="$WORK_DIR/dev-market-data-stunnel.log"
 PG_PORT="${PG_LOCAL_PORT:-15432}"
 PG_HOST="127.0.0.1"
 PG_DB="nooshare_dev"
@@ -32,9 +33,9 @@ fi
 
 rm -rf "$OUT_DIR"
 mkdir -m 700 -p "$OUT_DIR"
-rm -f "$ENCRYPTED_OUT" "$PSQL_ERR"
-touch "$PSQL_ERR"
-chmod 600 "$PSQL_ERR"
+rm -f "$ENCRYPTED_OUT" "$PSQL_ERR" "$STUNNEL_LOG"
+touch "$PSQL_ERR" "$STUNNEL_LOG"
+chmod 600 "$PSQL_ERR" "$STUNNEL_LOG"
 
 # Reuse the repository's proven stunnel bootstrap rather than maintaining a second implementation.
 # It opens local PG/RustFS listeners; this audit issues PostgreSQL reads only and never calls S3.
@@ -334,17 +335,32 @@ if ! PGPASSWORD="$PG_PASSWORD" psql \
   -X --csv -v ON_ERROR_STOP=1 \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
   -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
-  python3 - "$PSQL_ERR" <<'PY'
+  python3 - "$PSQL_ERR" "$STUNNEL_LOG" "$WORK_DIR/ci-stunnel.pid" <<'PY'
 import pathlib
 import re
+import subprocess
 import sys
 
 psql_error = pathlib.Path(sys.argv[1]).read_text(errors="replace")
+stunnel_log = pathlib.Path(sys.argv[2]).read_text(errors="replace")
+pid_file = pathlib.Path(sys.argv[3])
+pid = pid_file.read_text().strip() if pid_file.exists() else ""
+alive = bool(pid) and subprocess.run(
+    ["kill", "-0", pid], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+).returncode == 0
+
 detail = " ".join(psql_error.split())
 detail = re.sub(r"(?i)(password|token|secret|psk)\s*[:=]\s*\S+", r"\1=[REDACTED]", detail)
 print("DEV_MARKET_INVENTORY=FAIL code=PG_SESSION_SETUP")
 print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" in psql_error else "PSQL_ERROR=OTHER")
 print("PSQL_DETAIL=" + detail[:400])
+print("STUNNEL_PROCESS=" + ("ALIVE" if alive else "EXITED"))
+print("STUNNEL_LOG_BYTES=" + str(len(stunnel_log.encode())))
+for line in stunnel_log.splitlines()[-80:]:
+    line = re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?\b", "[IP]", line)
+    line = re.sub(r"\b[a-fA-F0-9]{64,}\b", "[HEX_REDACTED]", line)
+    line = re.sub(r"(?i)(PSKsecrets\s*=).*", r"\1[REDACTED]", line)
+    print("STUNNEL_EVENT=" + line[:240])
 PY
   exit 1
 fi
