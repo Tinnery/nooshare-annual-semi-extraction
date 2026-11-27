@@ -486,6 +486,119 @@ ORDER BY started_at DESC
 LIMIT 20;
 \\o
 
+
+\o $OUT_DIR/bar_quality.csv
+WITH source_rows AS (
+  SELECT 'tong.stock_daily'::text AS relation, symbol, date, source,
+         volume::numeric AS volume, amount::numeric AS amount
+  FROM tong.stock_daily
+  UNION ALL
+  SELECT 'tong.index_daily', symbol, date, source,
+         volume::numeric, amount::numeric
+  FROM tong.index_daily
+  UNION ALL
+  SELECT 'tong.etf_daily', symbol, date, source,
+         volume::numeric, amount::numeric
+  FROM tong.etf_daily
+),
+source_profile AS (
+  SELECT relation,
+         count(*)::bigint AS rows,
+         count(DISTINCT symbol)::bigint AS symbols,
+         count(DISTINCT source)::bigint AS source_versions,
+         count(*) FILTER (WHERE volume IS NULL)::bigint AS null_volume,
+         count(*) FILTER (WHERE volume = 0)::bigint AS zero_volume,
+         count(*) FILTER (WHERE volume < 0)::bigint AS negative_volume,
+         count(*) FILTER (WHERE volume IS NOT NULL AND volume <> trunc(volume))::bigint AS fractional_volume,
+         count(*) FILTER (WHERE amount IS NULL)::bigint AS null_amount,
+         count(*) FILTER (WHERE amount < 0)::bigint AS negative_amount,
+         min(date)::text AS min_date,
+         max(date)::text AS max_date
+  FROM source_rows
+  GROUP BY relation
+),
+duplicate_source_keys AS (
+  SELECT relation, count(*)::bigint AS duplicate_symbol_date_keys
+  FROM (
+    SELECT relation, symbol, date
+    FROM source_rows
+    GROUP BY relation, symbol, date
+    HAVING count(*) > 1
+  ) d
+  GROUP BY relation
+)
+SELECT p.*, COALESCE(d.duplicate_symbol_date_keys, 0) AS duplicate_symbol_date_keys
+FROM source_profile p
+LEFT JOIN duplicate_source_keys d USING (relation)
+ORDER BY relation;
+\o
+
+\o $OUT_DIR/hfq_null_attribution.csv
+SELECT count(*)::bigint AS rows,
+       count(*) FILTER (WHERE open_hfq IS NULL AND open IS NOT NULL)::bigint AS open_hfq_null_raw_present,
+       count(*) FILTER (WHERE high_hfq IS NULL AND high IS NOT NULL)::bigint AS high_hfq_null_raw_present,
+       count(*) FILTER (WHERE low_hfq IS NULL AND low IS NOT NULL)::bigint AS low_hfq_null_raw_present,
+       count(*) FILTER (WHERE close_hfq IS NULL AND close IS NOT NULL)::bigint AS close_hfq_null_raw_present,
+       count(*) FILTER (WHERE close_hfq IS NULL AND close IS NULL)::bigint AS close_both_null,
+       count(*) FILTER (WHERE factor_cum IS NULL)::bigint AS null_factor,
+       count(*) FILTER (WHERE factor_cum <= 0)::bigint AS nonpositive_factor,
+       count(*) FILTER (WHERE hfq_return IS NULL)::bigint AS null_hfq_return,
+       count(DISTINCT symbol) FILTER (WHERE close_hfq IS NULL)::bigint AS symbols_with_null_hfq
+FROM public.hfq_daily;
+\o
+
+\o $OUT_DIR/market_union_latest_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+WITH target AS (
+  SELECT GREATEST(
+    (SELECT max(date) FROM public.hfq_daily),
+    (SELECT max(date) FROM tong.index_daily),
+    (SELECT max(date) FROM tong.etf_daily)
+  ) AS d
+)
+SELECT b.symbol, b.date, b.open, b.high, b.low, b.close, b.volume, b.amount, b.asset_class
+FROM (
+  SELECT symbol, date, open, high, low, close, volume, amount, 'stock'::text AS asset_class
+  FROM public.hfq_daily
+  UNION ALL
+  SELECT symbol, date, open, high, low, close, volume, amount, 'index'::text AS asset_class
+  FROM tong.index_daily
+  UNION ALL
+  SELECT symbol, date, open, high, low, close, volume, amount, 'etf'::text AS asset_class
+  FROM tong.etf_daily
+) b
+JOIN target t ON b.date = t.d;
+\o
+
+\o $OUT_DIR/stock_symbol_history_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM public.hfq_daily
+WHERE symbol = 'sh600519' AND date >= 20240101
+ORDER BY date;
+\o
+
+\o $OUT_DIR/stock_cross_section_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM public.hfq_daily
+WHERE date = (SELECT max(date) FROM public.hfq_daily);
+\o
+
+\o $OUT_DIR/index_cross_section_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM tong.index_daily
+WHERE date = (SELECT max(date) FROM tong.index_daily);
+\o
+
+\o $OUT_DIR/etf_cross_section_plan.csv
+EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON)
+SELECT symbol, date, open, high, low, close, volume, amount
+FROM tong.etf_daily
+WHERE date = (SELECT max(date) FROM tong.etf_daily);
+\o
+
 COMMIT;
 SQL
 chmod 600 "$SQL_FILE"
@@ -537,6 +650,49 @@ for line in stunnel_log.splitlines()[-160:]:
 PY
   exit 1
 fi
+
+
+python3 - "$OUT_DIR" <<'PY'
+import csv
+import json
+import pathlib
+import sys
+
+out = pathlib.Path(sys.argv[1])
+for name in (
+    "market_union_latest_plan.csv",
+    "stock_symbol_history_plan.csv",
+    "stock_cross_section_plan.csv",
+    "index_cross_section_plan.csv",
+    "etf_cross_section_plan.csv",
+):
+    path = out / name
+    with path.open(newline="", encoding="utf-8") as f:
+        row = next(csv.DictReader(f))
+    raw = row.get("QUERY PLAN") or row.get("QUERY_PLAN")
+    data = json.loads(raw)
+    root = data[0]
+    plan = root["Plan"]
+    nodes = []
+    def walk(node):
+        nodes.append(node.get("Node Type", "?"))
+        for child in node.get("Plans", []):
+            walk(child)
+    walk(plan)
+    print(
+        "QUERY_PLAN"
+        f" name={name.removesuffix('_plan.csv')}"
+        f" exec_ms={root.get('Execution Time')}"
+        f" planning_ms={root.get('Planning Time')}"
+        f" rows={plan.get('Actual Rows')}"
+        f" shared_hit={plan.get('Shared Hit Blocks', 0)}"
+        f" shared_read={plan.get('Shared Read Blocks', 0)}"
+        f" temp_read={plan.get('Temp Read Blocks', 0)}"
+        f" temp_written={plan.get('Temp Written Blocks', 0)}"
+        f" nodes={','.join(nodes)}"
+    )
+PY
+
 
 python3 - "$OUT_DIR" "$ZIP_OUT" "$ENCRYPTED_OUT" <<'PY'
 import base64
