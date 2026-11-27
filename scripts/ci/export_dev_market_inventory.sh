@@ -335,6 +335,8 @@ if ! PGPASSWORD="$PG_PASSWORD" psql \
   -X --csv -v ON_ERROR_STOP=1 \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
   -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
+  # Stop stunnel after the failed client has exited so its final connection state is flushed to disk.
+  bash scripts/ci/teardown.sh >/dev/null 2>&1 || true
   python3 - "$PSQL_ERR" "$STUNNEL_LOG" "$WORK_DIR/ci-stunnel.pid" <<'PY'
 import pathlib
 import re
@@ -356,7 +358,7 @@ print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" 
 print("PSQL_DETAIL=" + detail[:400])
 print("STUNNEL_PROCESS=" + ("ALIVE" if alive else "EXITED"))
 print("STUNNEL_LOG_BYTES=" + str(len(stunnel_log.encode())))
-for line in stunnel_log.splitlines()[-80:]:
+for line in stunnel_log.splitlines()[-160:]:
     line = re.sub(r"\b(?:\d{1,3}\.){3}\d{1,3}(?::\d+)?\b", "[IP]", line)
     line = re.sub(r"\b[a-fA-F0-9]{64,}\b", "[HEX_REDACTED]", line)
     line = re.sub(r"(?i)(PSKsecrets\s*=).*", r"\1[REDACTED]", line)
