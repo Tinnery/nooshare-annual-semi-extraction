@@ -334,34 +334,17 @@ if ! PGPASSWORD="$PG_PASSWORD" psql \
   -X --csv -v ON_ERROR_STOP=1 \
   -h "$PG_HOST" -p "$PG_PORT" -U "$PG_USER" -d "$PG_DB" \
   -f "$SQL_FILE" >/dev/null 2>"$PSQL_ERR"; then
-  python3 - "$WORK_DIR/unused-stunnel-log" "$PSQL_ERR" <<'PY'
+  python3 - "$PSQL_ERR" <<'PY'
 import pathlib
 import re
 import sys
 
-stunnel_log = pathlib.Path(sys.argv[1]).read_text(errors="replace")
-psql_error = pathlib.Path(sys.argv[2]).read_text(errors="replace")
-
-categories = {
-    "PSK_OR_IDENTITY": r"(?i)(PSK|identity).*(not found|unknown|failed|mismatch)|(?:not found|unknown|failed|mismatch).*(PSK|identity)",
-    "TLS_HANDSHAKE": r"(?i)(SSL_connect|SSL_accept|handshake|TLS alert|no shared cipher)",
-    "REMOTE_CONNECT": r"(?i)(connect_blocking|connection refused|network is unreachable|host is unreachable|timed out)",
-    "REMOTE_CLOSE": r"(?i)(connection reset|unexpected eof|connection closed)",
-    "CONFIG_OR_PROCESS": r"(?i)(configuration failed|invalid option|cannot open|permission denied|service .* failed)",
-}
-detected = [name for name, pattern in categories.items() if re.search(pattern, stunnel_log)]
+psql_error = pathlib.Path(sys.argv[1]).read_text(errors="replace")
+detail = " ".join(psql_error.split())
+detail = re.sub(r"(?i)(password|token|secret|psk)\s*[:=]\s*\S+", r"\1=[REDACTED]", detail)
 print("DEV_MARKET_INVENTORY=FAIL code=PG_SESSION_SETUP")
 print("PSQL_ERROR=SERVER_CLOSED" if "server closed the connection unexpectedly" in psql_error else "PSQL_ERROR=OTHER")
-detail = " ".join(psql_error.split())
-detail = re.sub(r"(?i)(password|token|secret|psk)\\s*[:=]\\s*\\S+", r"\\1=[REDACTED]", detail)
 print("PSQL_DETAIL=" + detail[:400])
-print("STUNNEL_DIAG=" + (",".join(detected) if detected else "NO_CLASSIFIED_ERROR"))
-print(f"STUNNEL_LOG_BYTES={len(stunnel_log.encode())}")
-for line in stunnel_log.splitlines()[-40:]:
-    line = re.sub(r"\\b(?:\\d{1,3}\\.){3}\\d{1,3}(?::\\d+)?\\b", "[IP]", line)
-    line = re.sub(r"\\b[a-fA-F0-9]{64,}\\b", "[HEX_REDACTED]", line)
-    line = re.sub(r"(?i)(PSKsecrets\\s*=).*", r"\\1[REDACTED]", line)
-    print("STUNNEL_EVENT=" + line[:220])
 PY
   exit 1
 fi
